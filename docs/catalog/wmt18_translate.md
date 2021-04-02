@@ -2,7 +2,6 @@
   <div itemscope itemprop="includedInDataCatalog" itemtype="http://schema.org/DataCatalog">
     <meta itemprop="name" content="TensorFlow Datasets" />
   </div>
-
   <meta itemprop="name" content="wmt18_translate" />
   <meta itemprop="description" content="Translate dataset based on the data from statmt.org.&#10;&#10;Versions exists for the different years using a combination of multiple data&#10;sources. The base `wmt_translate` allows you to create your own config to choose&#10;your own data/language pair by creating a custom `tfds.translate.wmt.WmtConfig`.&#10;&#10;```&#10;config = tfds.translate.wmt.WmtConfig(&#10;    version=&quot;0.0.1&quot;,&#10;    language_pair=(&quot;fr&quot;, &quot;de&quot;),&#10;    subsets={&#10;        tfds.Split.TRAIN: [&quot;commoncrawl_frde&quot;],&#10;        tfds.Split.VALIDATION: [&quot;euelections_dev2019&quot;],&#10;    },&#10;)&#10;builder = tfds.builder(&quot;wmt_translate&quot;, config=config)&#10;```&#10;&#10;To use this dataset:&#10;&#10;```python&#10;import tensorflow_datasets as tfds&#10;&#10;ds = tfds.load(&#x27;wmt18_translate&#x27;, split=&#x27;train&#x27;)&#10;for ex in ds.take(4):&#10;  print(ex)&#10;```&#10;&#10;See [the guide](https://www.tensorflow.org/datasets/overview) for more&#10;informations on [tensorflow_datasets](https://www.tensorflow.org/datasets).&#10;&#10;" />
   <meta itemprop="url" content="https://www.tensorflow.org/datasets/catalog/wmt18_translate" />
@@ -36,21 +35,29 @@ builder = tfds.builder("wmt_translate", config=config)
 
 *   **Homepage**:
     [http://www.statmt.org/wmt18/translation-task.html](http://www.statmt.org/wmt18/translation-task.html)
+
 *   **Source code**:
-    [`tfds.translate.wmt18.Wmt18Translate`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/translate/wmt18.py)
+    [`tfds.translate.Wmt18Translate`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/translate/wmt18.py)
+
 *   **Versions**:
+
     *   **`1.0.0`** (default): No release notes.
+
 *   **Download size**: `Unknown size`
+
 *   **Dataset size**: `Unknown size`
-*   **Manual download instructions**: This dataset requires you to download the
-    source data manually into `download_config.manual_dir`
-    (defaults to `~/tensorflow_datasets/manual/`):<br/>
+
+*   **Manual download instructions**: This dataset requires you to
+    download the source data manually into `download_config.manual_dir`
+    (defaults to `~/tensorflow_datasets/downloads/manual/`):<br/>
     Some of the wmt configs here, require a manual download.
     Please look into wmt.py to see the exact path (and file name) that has to
     be downloaded.
+
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
     Unknown
+
 *   **Splits**:
 
 Split | Examples
@@ -75,9 +82,13 @@ Split | Examples
 }
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
     Not supported.
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+    Missing.
 
 ## wmt18_translate/cs-en (default config)
 

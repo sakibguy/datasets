@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for extractor."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
+from unittest import mock
 
-from absl.testing import absltest
 import tensorflow.compat.v2 as tf
 from tensorflow_datasets import testing
 from tensorflow_datasets.core.download import extractor
@@ -58,7 +53,7 @@ class ExtractorTest(testing.TestCase):
   def setUp(self):
     super(ExtractorTest, self).setUp()
     self.extractor = extractor.get_extractor()
-    self.extractor._pbar_path = absltest.mock.MagicMock()
+    self.extractor._pbar_path = mock.MagicMock()
     # Where archive will be extracted:
     self.to_path = os.path.join(self.tmp_dir, 'extracted_arch')
     # Obviously it must not exist before test runs:
@@ -72,7 +67,8 @@ class ExtractorTest(testing.TestCase):
 
   def _test_extract(self, method, archive_name, expected_files):
     from_path = os.path.join(self.test_data, 'archives', archive_name)
-    self.extractor.extract(from_path, method, self.to_path).get()
+    path = self.extractor.extract(from_path, method, self.to_path).get()
+    self.assertIsInstance(path, os.PathLike)
     for name, content in expected_files.items():
       path = os.path.join(self.to_path, name)
       self.assertEqual(_read(path), content, 'File %s has bad content.' % path)

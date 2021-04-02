@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.shuffle."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
 
@@ -97,7 +92,8 @@ class ShuffleTest(testing.TestCase):
         if not bucket._fobj:
           continue
         bucket._fobj.close()
-        size += len(open(bucket._path, 'rb').read())
+        with open(bucket._path, 'rb') as f:
+          size += len(f.read())
       self.assertEqual(size, expected_size)
     # Check records can be read as expected:
     records = list(iter(shuffler))

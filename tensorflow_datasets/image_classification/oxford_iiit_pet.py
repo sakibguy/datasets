@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Oxford-IIIT pet dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -73,7 +68,9 @@ class OxfordIIITPet(tfds.core.GeneratorBasedBuilder):
             "label": tfds.features.ClassLabel(names=_LABEL_CLASSES),
             "species": tfds.features.ClassLabel(names=_SPECIES_CLASSES),
             "file_name": tfds.features.Text(),
-            "segmentation_mask": tfds.features.Image(shape=(None, None, 1))
+            "segmentation_mask": tfds.features.Image(
+                shape=(None, None, 1), use_colormap=True
+            )
         }),
         supervised_keys=("image", "label"),
         homepage="http://www.robots.ox.ac.uk/~vgg/data/pets/",
@@ -86,12 +83,8 @@ class OxfordIIITPet(tfds.core.GeneratorBasedBuilder):
     # Note, that the extension of archives is .tar.gz even though the actual
     # archives format is uncompressed tar.
     dl_paths = dl_manager.download_and_extract({
-        "images": tfds.download.Resource(
-            url=_BASE_URL + "/images.tar.gz",
-            extract_method=tfds.download.ExtractMethod.TAR),
-        "annotations": tfds.download.Resource(
-            url=_BASE_URL + "/annotations.tar.gz",
-            extract_method=tfds.download.ExtractMethod.TAR)
+        "images": _BASE_URL + "/images.tar.gz",
+        "annotations": _BASE_URL + "/annotations.tar.gz",
     })
 
     images_path_dir = os.path.join(dl_paths["images"], "images")

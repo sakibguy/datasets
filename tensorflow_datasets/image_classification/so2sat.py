@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """So2SAT remote sensing dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import numpy as np
 import tensorflow.compat.v2 as tf
@@ -66,13 +61,18 @@ class So2satConfig(tfds.core.BuilderConfig):
     if selection not in _DATA_OPTIONS:
       raise ValueError('selection must be one of %s' % _DATA_OPTIONS)
 
-    v2 = tfds.core.Version(
-        '2.0.0', 'New split API (https://tensorflow.org/datasets/splits)')
-    v2_1 = tfds.core.Version(
-        '2.1.0', 'Using updated optical channels calibration factor.')
-    super(So2satConfig, self).__init__(version=v2_1,
-                                       supported_versions=[v2],
-                                       **kwargs)
+    v2 = tfds.core.Version('2.0.0')
+    v2_1 = tfds.core.Version('2.1.0')
+
+    super(So2satConfig, self).__init__(
+        version=v2_1,
+        supported_versions=[v2],
+        release_notes={
+            '2.0.0': 'New split API (https://tensorflow.org/datasets/splits)',
+            '2.1.0': 'Using updated optical channels calibration factor.',
+        },
+        **kwargs,
+    )
     self.selection = selection
 
 

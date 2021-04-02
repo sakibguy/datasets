@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Describable Textures Dataset (DTD)."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -52,7 +47,7 @@ class Dtd(tfds.core.GeneratorBasedBuilder):
   VERSION = tfds.core.Version("3.0.1")
 
   def _info(self):
-    names_file = tfds.core.get_tfds_path(
+    names_file = tfds.core.tfds_path(
         os.path.join("image_classification", "dtd_key_attributes.txt"))
     return tfds.core.DatasetInfo(
         builder=self,
@@ -67,9 +62,8 @@ class Dtd(tfds.core.GeneratorBasedBuilder):
 
   def _split_generators(self, dl_manager):
     # Note: The file extension is .tar.gz, but it is actually a .tar file.
-    data_path = dl_manager.download_and_extract(
-        tfds.download.Resource(
-            url=_DATA_URL, extract_method=tfds.download.ExtractMethod.TAR))
+    data_path = dl_manager.download_and_extract(_DATA_URL)
+
     # Note: DTD defines 10-fold CV partitions. Our TRAIN/TEST/VALIDATION are
     # those of the first fold.
     return [

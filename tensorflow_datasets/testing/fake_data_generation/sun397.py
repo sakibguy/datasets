@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 r"""Generate sun397-like files, smaller and with random data.
 
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import io
 import os
@@ -92,7 +87,7 @@ def _encode_image(image, image_format=None, fobj=None):
 def _generate_data():
   """Generate random data for testing the Sun397 dataset builder."""
 
-  names_file = tfds.core.get_tfds_path(
+  names_file = tfds.core.tfds_path(
       os.path.join("image", "sun397_labels.txt"))
   label_names = tfds.features.ClassLabel(names_file=names_file).names
 

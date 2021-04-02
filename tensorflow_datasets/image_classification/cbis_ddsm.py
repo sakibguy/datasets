@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """CBIS-DDSM mammography dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import csv
 import os
@@ -41,17 +36,6 @@ The default config is made of patches extracted from the original mammograms,
 following the description from http://arxiv.org/abs/1708.09427, in order to
 frame the task to solve in a traditional image classification setting.
 
-Because special software and libraries are needed to download and read the
-images contained in the dataset, TFDS assumes that the user has downloaded the
-original DCIM files and converted them to PNG.
-
-The following commands (or equivalent) should be used to generate the PNG files,
-in order to guarantee reproducible results:
-
-```
-  find $DATASET_DCIM_DIR -name '*.dcm' | \\
-  xargs -n1 -P8 -I{} bash -c 'f={}; dcmj2pnm $f | convert - ${f/.dcm/.png}'
-```
 """
 
 _CITATION = """\
@@ -123,8 +107,14 @@ class CuratedBreastImagingDDSMConfig(tfds.core.BuilderConfig):
   """BuilderConfig for CuratedBreastImagingDDSM."""
 
   def __init__(self, image_size=None, patch_size=None, **kwargs):
-    kwargs['version'] = tfds.core.Version(
-        '2.0.0', 'New split API (https://tensorflow.org/datasets/splits)')
+    kwargs['version'] = tfds.core.Version('3.0.0')
+    kwargs['release_notes'] = {
+        '3.0.0': """
+        Better cropping sampling
+        (https://github.com/tensorflow/datasets/pull/2502)
+        """,
+        '2.0.1': 'New split API (https://tensorflow.org/datasets/splits)',
+    }
     super(CuratedBreastImagingDDSMConfig, self).__init__(**kwargs)
     self.image_size = image_size
     self.patch_size = patch_size
@@ -136,8 +126,21 @@ class CuratedBreastImagingDDSM(tfds.core.GeneratorBasedBuilder):
   MANUAL_DOWNLOAD_INSTRUCTIONS = """\
   You can download the images from
   https://wiki.cancerimagingarchive.net/display/Public/CBIS-DDSM
-  Please look at the source file (cbis_ddsm.py) to see the instructions
-  on how to convert them into png (using dcmj2pnm).
+
+  Because special software and libraries are needed to download and read the
+  images contained in the dataset, TFDS assumes that the user has downloaded the
+  original DCIM files and converted them to PNG.
+
+  The following commands (or equivalent) should be used to generate the PNG
+  files, in order to guarantee reproducible results:
+
+  ```sh
+  find $DATASET_DCIM_DIR -name '*.dcm' | \\
+  xargs -n1 -P8 -I{} bash -c 'f={}; dcmj2pnm $f | convert - ${f/.dcm/.png}'
+  ```
+
+  Resulting images should be put in `manual_dir`, like:
+  `<manual_dir>/Mass-Training_P_01981_RIGHT_MLO_1/1.3.6.../000000.png`.
   """
 
   BUILDER_CONFIGS = [
@@ -204,12 +207,12 @@ class CuratedBreastImagingDDSM(tfds.core.GeneratorBasedBuilder):
     features['abnormalities'].update({
         'calc_type':
             tfds.features.ClassLabel(
-                names_file=tfds.core.get_tfds_path(
+                names_file=tfds.core.tfds_path(
                     os.path.join(
                         'image_classification', 'cbis_ddsm_calc_types.txt'))),
         'calc_distribution':
             tfds.features.ClassLabel(
-                names_file=tfds.core.get_tfds_path(
+                names_file=tfds.core.tfds_path(
                     os.path.join(
                         'image_classification',
                         'cbis_ddsm_calc_distributions.txt'))),
@@ -223,12 +226,12 @@ class CuratedBreastImagingDDSM(tfds.core.GeneratorBasedBuilder):
     features['abnormalities'].update({
         'mass_shape':
             tfds.features.ClassLabel(
-                names_file=tfds.core.get_tfds_path(
+                names_file=tfds.core.tfds_path(
                     os.path.join(
                         'image_classification', 'cbis_ddsm_mass_shapes.txt'))),
         'mass_margins':
             tfds.features.ClassLabel(
-                names_file=tfds.core.get_tfds_path(
+                names_file=tfds.core.tfds_path(
                     os.path.join(
                         'image_classification', 'cbis_ddsm_mass_margins.txt'))),
     })
@@ -243,7 +246,7 @@ class CuratedBreastImagingDDSM(tfds.core.GeneratorBasedBuilder):
             tfds.features.Image(shape=(None, None, 1), encoding_format='jpeg'),
         'label':
             tfds.features.ClassLabel(
-                names_file=tfds.core.get_tfds_path(
+                names_file=tfds.core.tfds_path(
                     os.path.join(
                         'image_classification', 'cbis_ddsm_patch_labels.txt'))),
     })
@@ -298,12 +301,7 @@ class CuratedBreastImagingDDSM(tfds.core.GeneratorBasedBuilder):
         'mass-test': _MASS_TEST_CSV_URL,
         'mass-train': _MASS_TRAIN_CSV_URL
     }
-    resources = {
-        key: tfds.download.Resource(
-            url=url, extract_method=tfds.download.ExtractMethod.NO_EXTRACT)
-        for key, url in resources_urls.items()
-    }
-    resource_paths = dl_manager.download_and_extract(resources)
+    resource_paths = dl_manager.download_and_extract(resources_urls)
     patients_data = _load_csv_files(dl_manager.manual_dir, resource_paths)
 
     # Statistics about the resulting splits.
@@ -413,7 +411,7 @@ class CuratedBreastImagingDDSM(tfds.core.GeneratorBasedBuilder):
           if abnormality['pathology'].startswith('MALIGNANT'):
             benign_or_malignant = 'MALIGNANT'
           else:
-            benign_or_malignant = 'BENING'
+            benign_or_malignant = 'BENIGN'
           if abnormality['type'] == 'calc':
             label = benign_or_malignant + '_CALCIFICATION'
           elif abnormality['type'] == 'mass':
@@ -585,7 +583,7 @@ def _read_image(filepath, image_size=None):
   cv2 = tfds.core.lazy_imports.cv2
   with tf.io.gfile.GFile(filepath, 'rb') as f:
     image = cv2.imdecode(
-        np.fromstring(f.read(), dtype=np.uint8), flags=cv2.IMREAD_GRAYSCALE)
+        np.frombuffer(f.read(), dtype=np.uint8), flags=cv2.IMREAD_GRAYSCALE)
     if image_size:
       # Note: cv2.resize actually expects (width, size).
       image = cv2.resize(image, (image_size[1], image_size[0]))
@@ -593,13 +591,25 @@ def _read_image(filepath, image_size=None):
     return image
 
 
+def _find_contours(*args, **kwargs):
+  cv2 = tfds.core.lazy_imports.cv2
+  tuple_ = cv2.findContours(*args, **kwargs)
+  if len(tuple_) == 2:  # Recent opencv returns: (contours, hierachy)
+    return tuple_[0]
+  elif len(tuple_) == 3:  # Old opencv returns: (ret, contours, hierachy)
+    return tuple_[1]
+  else:
+    raise AssertionError('Unknown {}')
+
+
 def _get_breast_mask(image, min_breast_color_threshold=0.05):
   """Get the binary mask of the breast region of the image."""
   cv2 = tfds.core.lazy_imports.cv2
   threshold = int(image.max() * min_breast_color_threshold)
   _, image_binary = cv2.threshold(image, threshold, 255, cv2.THRESH_BINARY)
-  _, contours, _ = cv2.findContours(image_binary, cv2.RETR_LIST,
-                                    cv2.CHAIN_APPROX_SIMPLE)
+  contours = _find_contours(
+      image_binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
+  )
   contours_areas = [cv2.contourArea(cont) for cont in contours]
   biggest_contour_idx = np.argmax(contours_areas)
   return cv2.drawContours(
@@ -609,8 +619,7 @@ def _get_breast_mask(image, min_breast_color_threshold=0.05):
 
 def _get_roi_from_mask(mask):
   cv2 = tfds.core.lazy_imports.cv2
-  _, contours, _ = cv2.findContours(mask, cv2.RETR_LIST,
-                                    cv2.CHAIN_APPROX_SIMPLE)
+  contours = _find_contours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
   contours_areas = [cv2.contourArea(cont) for cont in contours]
   biggest_contour_idx = np.argmax(contours_areas)
   return contours[biggest_contour_idx]
@@ -708,8 +717,8 @@ def _sample_positive_patches(image,
     # Determine the region where random samples should be sampled from.
     max_h, min_h = max(abnorm_h, patch_size[0]), min(abnorm_h, patch_size[0])
     max_w, min_w = max(abnorm_w, patch_size[1]), min(abnorm_w, patch_size[1])
-    min_y = abnorm_y - int((1.0 - min_overlap_threshold) * max_h)
-    min_x = abnorm_x - int((1.0 - min_overlap_threshold) * max_w)
+    min_y = abnorm_y - max_h + min_overlap_threshold * min_h
+    min_x = abnorm_x - max_w + min_overlap_threshold * min_w
     max_y = abnorm_y + abnorm_h - int(min_overlap_threshold * min_h)
     max_x = abnorm_x + abnorm_w - int(min_overlap_threshold * min_w)
     # Ensure that all sampled batches are within the image.

@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.transform.image.image_transform."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+import os
 
 import numpy as np
 import tensorflow.compat.v2 as tf
@@ -60,7 +57,7 @@ class BaseDecodeTest(testing.FeatureExpectationsTestCase):
           channels=feature.shape[-1],
       )
 
-    image_path = utils.get_tfds_path('testing/test_data/test_image.jpg')
+    image_path = os.fspath(utils.tfds_path('testing/test_data/test_image.jpg'))
     with tf.io.gfile.GFile(image_path, 'rb') as f:
       serialized_img = f.read()
 
@@ -94,7 +91,7 @@ class BaseDecodeTest(testing.FeatureExpectationsTestCase):
 
   def test_video_custom_decode(self):
 
-    image_path = utils.get_tfds_path('testing/test_data/test_image.jpg')
+    image_path = os.fspath(utils.tfds_path('testing/test_data/test_image.jpg'))
     with tf.io.gfile.GFile(image_path, 'rb') as f:
       serialized_img = f.read()
 

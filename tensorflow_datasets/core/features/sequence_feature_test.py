@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.features.sequence_feature."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import numpy as np
 import tensorflow.compat.v2 as tf
@@ -66,6 +61,7 @@ class SequenceDictFeatureTest(testing.FeatureExpectationsTestCase):
                 raise_msg='Input sequence length do not match',
             ),
         ],
+        test_attributes=dict(_length=3)
     )
 
   def test_label(self):
@@ -95,6 +91,7 @@ class SequenceDictFeatureTest(testing.FeatureExpectationsTestCase):
                 expected={'label': []},
             ),
         ],
+        test_attributes=dict(_length=None)
     )
 
   def test_nested(self):
@@ -504,6 +501,74 @@ class SequenceFeatureTest(testing.FeatureExpectationsTestCase):
             testing.FeatureExpectationItem(
                 value=[],
                 expected=[],
+            ),
+        ],
+    )
+
+  def test_image_unknown_len(self):
+
+    imgs = [
+        np.random.randint(256, size=(28, 28, 3), dtype=np.uint8),
+        np.random.randint(256, size=(28, 28, 3), dtype=np.uint8),
+    ]
+    imgs_stacked = np.stack(imgs)
+
+    self.assertFeature(
+        feature=feature_lib.Sequence(feature_lib.Image(shape=(None, None, 3))),
+        dtype=tf.uint8,
+        shape=(None, None, None, 3),  # (length, h, w, c)
+        tests=[
+            testing.FeatureExpectationItem(
+                value=[],  # Empty input
+                expected=np.empty(shape=(0, 0, 0, 3), dtype=np.uint8),
+            ),
+            testing.FeatureExpectationItem(
+                value=imgs,
+                expected=imgs_stacked,
+            ),
+        ],
+    )
+
+  def test_image_nested_empty_len(self):
+    imgs = [
+        np.random.randint(256, size=(28, 28, 3), dtype=np.uint8),
+        np.random.randint(256, size=(28, 28, 3), dtype=np.uint8),
+    ]
+    imgs_stacked = np.stack(imgs)
+
+    self.assertFeature(
+        feature=feature_lib.Sequence({
+            'a': feature_lib.Image(shape=(None, None, 3)),
+            'b': tf.int32,
+        }),
+        shape={
+            'a': (None, None, None, 3),
+            'b': (None,),
+        },
+        dtype={
+            'a': tf.uint8,
+            'b': tf.int32,
+        },
+        tests=[
+            testing.FeatureExpectationItem(
+                value={
+                    'a': imgs,
+                    'b': [1, 2],
+                },
+                expected={
+                    'a': imgs_stacked,
+                    'b': [1, 2],
+                },
+            ),
+            testing.FeatureExpectationItem(
+                value={
+                    'a': [],
+                    'b': [],
+                },
+                expected={
+                    'a': np.empty(shape=(0, 0, 0, 3), dtype=np.uint8),
+                    'b': [],
+                },
             ),
         ],
     )

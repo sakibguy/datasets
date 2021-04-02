@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """UCF-101 dataset from https://www.crcv.ucf.edu/data/UCF101.php."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -55,8 +50,7 @@ _LABELS_FNAME = 'video/ucf101_labels.txt'
 class Ucf101Config(tfds.core.BuilderConfig):
   """"Configuration for UCF101 split and possible video rescaling."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, split_number, width=None, height=None, **kwargs):
+  def __init__(self, *, split_number, width=None, height=None, **kwargs):
     """The parameters specifying how the dataset will be processed.
 
     The dataset comes with three separate splits. You can specify which split
@@ -69,7 +63,13 @@ class Ucf101Config(tfds.core.BuilderConfig):
       height: An integer with the height or None.
       **kwargs: Passed on to the constructor of `BuilderConfig`.
     """
-    super(Ucf101Config, self).__init__(**kwargs)
+    super(Ucf101Config, self).__init__(
+        version=tfds.core.Version('2.0.0'),
+        release_notes={
+            '2.0.0': 'New split API (https://tensorflow.org/datasets/splits)',
+        },
+        **kwargs,
+    )
     if (width is None) ^ (height is None):
       raise ValueError('Either both dimensions should be set, or none of them')
     self.width = width
@@ -78,10 +78,6 @@ class Ucf101Config(tfds.core.BuilderConfig):
       raise ValueError('Unknown split number {}, should be 1, 2 or 3'.format(
           split_number))
     self.split_number = split_number
-
-
-_VERSION = tfds.core.Version(
-    '2.0.0', 'New split API (https://tensorflow.org/datasets/splits)')
 
 
 class Ucf101(tfds.core.GeneratorBasedBuilder):
@@ -98,7 +94,6 @@ class Ucf101(tfds.core.GeneratorBasedBuilder):
           width=256,
           height=256,
           split_number=1,
-          version=_VERSION,
       ),
       Ucf101Config(
           name='ucf101_1',
@@ -106,7 +101,6 @@ class Ucf101(tfds.core.GeneratorBasedBuilder):
           width=None,
           height=None,
           split_number=1,
-          version=_VERSION,
       ),
       Ucf101Config(
           name='ucf101_2',
@@ -114,7 +108,6 @@ class Ucf101(tfds.core.GeneratorBasedBuilder):
           width=None,
           height=None,
           split_number=2,
-          version=_VERSION,
       ),
       Ucf101Config(
           name='ucf101_3',
@@ -122,7 +115,6 @@ class Ucf101(tfds.core.GeneratorBasedBuilder):
           width=None,
           height=None,
           split_number=3,
-          version=_VERSION,
       ),
   ]
 
@@ -138,7 +130,7 @@ class Ucf101(tfds.core.GeneratorBasedBuilder):
 
     video_shape = (
         None, self.builder_config.height, self.builder_config.width, 3)
-    labels_names_file = tfds.core.get_tfds_path(_LABELS_FNAME)
+    labels_names_file = tfds.core.tfds_path(_LABELS_FNAME)
     features = tfds.features.FeaturesDict({
         'video': tfds.features.Video(video_shape,
                                      ffmpeg_extra_args=ffmpeg_extra_args,
@@ -149,7 +141,7 @@ class Ucf101(tfds.core.GeneratorBasedBuilder):
         builder=self,
         description='A 101-label video classification dataset.',
         features=features,
-        homepage='https://www.crcv.ucf.edu/data/UCF101.php',
+        homepage='https://www.crcv.ucf.edu/data-sets/ucf101/',
         citation=_CITATION,
     )
 

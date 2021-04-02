@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 r"""Script to generate Caltech101 like files with random data for testing.
 
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -74,7 +69,7 @@ def _get_jpeg(height, width):
 
 def _generate_images():
   """Generates training images."""
-  names_file = tfds.core.get_tfds_path(caltech._LABELS_FNAME)  # pylint: disable=protected-access
+  names_file = tfds.core.tfds_path(caltech._LABELS_FNAME)  # pylint: disable=protected-access
   label_names = tfds.features.ClassLabel(
       names_file=names_file).names[:NUM_CLASSES]
   for label in label_names:

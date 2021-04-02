@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Provides `image_as_moving_sequence`."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
 
@@ -49,7 +44,7 @@ def _create_moving_sequence(image, pad_lefts, total_padding):
 
     padded_images = tf.map_fn(
         get_padded_image, [pad_lefts], dtype=tf.uint8, infer_shape=False,
-        back_prop=False)
+    )
 
   return padded_images
 

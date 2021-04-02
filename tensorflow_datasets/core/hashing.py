@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Stable hashing function using md5.
 
 Note that the properties we are looking at here are:
@@ -46,28 +45,30 @@ The split name is being used as salt to avoid having the same keys in two splits
 result in same order.
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import hashlib
 from typing import Union
 
-import six
-import tensorflow.compat.v2 as tf
+import numpy as np
 
 
-HashKey = Union[str, bytes, int]
+HashKey = Union[str, bytes, int, np.ndarray]
 
 
-def _to_bytes(data):
-  if not isinstance(data, (six.string_types, bytes)):
-    data = str(data)
+def _to_bytes(data: HashKey) -> bytes:
+  """Converts the key to bytes."""
+  if isinstance(data, bytes):
+    return data
   elif isinstance(data, str):
     # For windows compatibility, we normalize the key in case a
     # filepath is passed as key ('path\\to\\file' -> 'path/to/file')
     data = data.replace('\\', '/')
-  return tf.compat.as_bytes(data)
+  elif isinstance(data, int):
+    data = str(data)
+  elif isinstance(data, np.ndarray) and data.size == 1:  # Singleton array
+    return _to_bytes(data.item())
+  else:
+    raise TypeError(f'Invalid key type: {data!r} ({type(data)})')
+  return data.encode('utf-8')
 
 
 class Hasher(object):

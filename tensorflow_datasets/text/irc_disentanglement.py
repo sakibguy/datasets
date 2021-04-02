@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python2, python3
 """irc_disentanglement dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
 import os
@@ -187,12 +182,7 @@ class IrcDisentanglement(tfds.core.GeneratorBasedBuilder):
   def _split_generators(self, dl_manager: tfds.download.DownloadManager
                        ) -> List[tfds.core.SplitGenerator]:
     """Returns SplitGenerators."""
-    base_dir = dl_manager.download_and_extract(
-        tfds.download.Resource(
-            url=_DOWNLOAD_URL,
-            # Specify extract method manually as filename reported by github.com
-            # misses the .zip extension so auto-detection doesn't work.
-            extract_method=tfds.download.ExtractMethod.ZIP))
+    base_dir = dl_manager.download_and_extract(_DOWNLOAD_URL)
     data_dir = os.path.join(base_dir, _DOWNLOAD_ARCHIVE_SUBDIR)
 
     return [

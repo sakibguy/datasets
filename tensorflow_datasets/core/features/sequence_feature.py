@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Sequence feature."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import numpy as np
+import tensorflow.compat.v2 as tf
 
 from tensorflow_datasets.core import utils
 from tensorflow_datasets.core.features import feature as feature_lib
 from tensorflow_datasets.core.features import features_dict
 from tensorflow_datasets.core.features import top_level_feature
+from tensorflow_datasets.core.utils import type_utils
+
+Json = type_utils.Json
 
 
 class Sequence(top_level_feature.TopLevelFeature):
@@ -92,6 +91,7 @@ class Sequence(top_level_feature.TopLevelFeature):
     # Convert {} => FeaturesDict, tf.int32 => Tensor(shape=(), dtype=tf.int32)
     self._feature = features_dict.to_feature(feature)
     self._length = length
+    assert not kwargs, 'Json export/import should be updated'
     super(Sequence, self).__init__(**kwargs)
 
   @property
@@ -110,13 +110,13 @@ class Sequence(top_level_feature.TopLevelFeature):
     """See base class for details."""
     # Add the additional length dimension to every shape
     tensor_info = self._feature.get_tensor_info()
-    return utils.map_nested(self._add_length_dim, tensor_info)
+    return tf.nest.map_structure(self._add_length_dim, tensor_info)
 
   def get_serialized_info(self):
     """See base class for details."""
     # Add the additional length dimension to every serialized features
     tensor_info = self._feature.get_serialized_info()
-    return utils.map_nested(self._add_length_dim, tensor_info)
+    return tf.nest.map_structure(self._add_length_dim, tensor_info)
 
   def encode_example(self, example_dict):
     # Convert nested dict[list] into list[nested dict]
@@ -131,13 +131,7 @@ class Sequence(top_level_feature.TopLevelFeature):
 
     # Empty sequences return empty arrays
     if not sequence_elements:
-      def _build_empty_np(serialized_info):
-        return np.empty(
-            shape=tuple(s if s else 0 for s in serialized_info.shape),
-            dtype=serialized_info.dtype.as_numpy_dtype,
-        )
-
-      return utils.map_nested(_build_empty_np, self.get_serialized_info())
+      return tf.nest.map_structure(build_empty_np, self.get_serialized_info())
 
     # Encode each individual elements
     sequence_elements = [
@@ -146,21 +140,7 @@ class Sequence(top_level_feature.TopLevelFeature):
     ]
 
     # Then convert back list[nested dict] => nested dict[list]
-    def _stack_nested(sequence_elements):
-      """Recursivelly stack the tensors from the same dict field."""
-      if isinstance(sequence_elements[0], dict):
-        return {
-            # Stack along the first dimension
-            k: _stack_nested(sub_sequence)
-            for k, sub_sequence in utils.zip_dict(*sequence_elements)
-        }
-      # Note: As each field can be a nested ragged list, we don't check here
-      # that all elements from the list have matching dtype/shape.
-      # Checking is done in `example_serializer` when elements
-      # are converted to numpy array and stacked togethers.
-      return list(sequence_elements)
-
-    return _stack_nested(sequence_elements)
+    return stack_nested(sequence_elements)
 
   def _flatten(self, x):
     """See base class for details."""
@@ -208,6 +188,42 @@ class Sequence(top_level_feature.TopLevelFeature):
       inner_feature_repr = inner_feature_repr[len('FeaturesDict('):-len(')')]
     return '{}({})'.format(type(self).__name__, inner_feature_repr)
 
+  @classmethod
+  def from_json_content(cls, value: Json) -> 'Sequence':
+    return cls(
+        feature=feature_lib.FeatureConnector.from_json(value['feature']),
+        length=value['length']
+    )
+
+  def to_json_content(self) -> Json:
+    return {
+        'feature': self.feature.to_json(),
+        'length': self._length,
+    }
+
+
+def build_empty_np(serialized_info):
+  """Build empty sequence with the shape of serialized_info."""
+  return np.empty(
+      shape=tuple(s if s else 0 for s in serialized_info.shape),
+      dtype=serialized_info.dtype.as_numpy_dtype,
+  )
+
+
+def stack_nested(sequence_elements):
+  """Recursivelly stack the tensors from the same dict field."""
+  if isinstance(sequence_elements[0], dict):
+    return {
+        # Stack along the first dimension
+        k: stack_nested(sub_sequence)
+        for k, sub_sequence in utils.zip_dict(*sequence_elements)
+    }
+  # Note: As each field can be a nested ragged list, we don't check here
+  # that all elements from the list have matching dtype/shape.
+  # Checking is done in `example_serializer` when elements
+  # are converted to numpy array and stacked togethers.
+  return list(sequence_elements)
+
 
 def _np_to_list(elem):
   """Returns list from list, tuple or ndarray."""
@@ -231,6 +247,7 @@ def _transpose_dict_list(dict_list):
   # 2. Extract the sequence length (and ensure the length is constant for all
   # elements)
   length = {'value': None}  # dict because `nonlocal` is Python3 only
+
   def update_length(elem):
     if length['value'] is None:
       length['value'] = len(elem)
@@ -243,6 +260,7 @@ def _transpose_dict_list(dict_list):
 
   # 3. Extract each individual elements
   return [
-      utils.map_nested(lambda elem: elem[i], dict_list, dict_only=True)   # pylint: disable=cell-var-from-loop
+      utils.map_nested(
+          lambda elem: elem[i], dict_list, dict_only=True)   # pylint: disable=cell-var-from-loop
       for i in range(length['value'])  # pytype: disable=wrong-arg-types
   ]

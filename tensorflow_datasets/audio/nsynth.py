@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """NSynth Dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import csv
 import os
@@ -122,16 +117,22 @@ class NsynthConfig(tfds.core.BuilderConfig):
       name_parts.append("full")
     if estimate_f0_and_loudness:
       name_parts.append("f0_and_loudness")
-    v230 = tfds.core.Version(
-        "2.3.0", "New `loudness_db` feature in decibels (unormalized).")
-    v231 = tfds.core.Version(
-        "2.3.1", "F0 computed with normalization fix in CREPE.")
-    v232 = tfds.core.Version(
-        "2.3.2", "Use Audio feature.")
+    v230 = tfds.core.Version("2.3.0")
+    v231 = tfds.core.Version("2.3.1")
+    v232 = tfds.core.Version("2.3.2")
+    v233 = tfds.core.Version("2.3.3")
     super(NsynthConfig, self).__init__(
         name=".".join(name_parts),
-        version=v232,
-        supported_versions=[v231, v230],
+        version=v233,
+        supported_versions=[v232, v231, v230],
+        release_notes={
+            "2.3.3":
+            "F0 computed with fix in CREPE wave normalization "
+            "(https://github.com/marl/crepe/issues/49).",
+            "2.3.2": "Use Audio feature.",
+            "2.3.1": "F0 computed with normalization fix in CREPE.",
+            "2.3.0": "New `loudness_db` feature in decibels (unormalized).",
+        },
         **kwargs)
     self.gansynth_subset = gansynth_subset
     self.estimate_f0_and_loudness = estimate_f0_and_loudness

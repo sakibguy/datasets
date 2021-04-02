@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for `tensorflow_datasets.core.visualization.show_examples`."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-import mock
+from unittest import mock
 
 from tensorflow_datasets import testing
-from tensorflow_datasets.core import registered
+from tensorflow_datasets.core import load
 from tensorflow_datasets.core import visualization
 
 # Import for registration
@@ -35,18 +30,33 @@ class ShowExamplesTest(testing.TestCase):
   @mock.patch('matplotlib.pyplot.figure')
   def test_show_examples(self, mock_fig):
     with testing.mock_data(num_examples=20):
-      ds, ds_info = registered.load(
-          'imagenet2012', split='train', with_info=True)
+      ds, ds_info = load.load(
+          'imagenet2012', split='train', with_info=True
+      )
     visualization.show_examples(ds, ds_info)
 
-  # TODO(tfds): Should add test when there isn't enough examples (ds.take(3))
+  @mock.patch('matplotlib.pyplot.figure')
+  def test_show_examples_supervised(self, _):
+    with testing.mock_data(num_examples=20):
+      ds, ds_info = load.load(
+          'imagenet2012', split='train', with_info=True, as_supervised=True
+      )
+    visualization.show_examples(ds, ds_info)
+
+  @mock.patch('matplotlib.pyplot.figure')
+  def test_show_examples_missing_sample(self, _):
+    with testing.mock_data(num_examples=3):
+      ds, ds_info = load.load(
+          'imagenet2012', split='train', with_info=True
+      )
+    visualization.show_examples(ds.take(3), ds_info)
 
 
 class ShowStatisticsTest(testing.TestCase):
 
   def test_show_examples(self):
     with testing.mock_data():
-      builder = registered.builder('imagenet2012')
+      builder = load.builder('imagenet2012')
       visualization.show_statistics(builder.info)
 
 

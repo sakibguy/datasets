@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """opus dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 from absl import logging
@@ -146,8 +141,7 @@ DATASET_MAP = {ds.name: ds for ds in [  # pylint:disable=g-complex-comprehension
 class OpusConfig(tfds.core.BuilderConfig):
   """BuilderConfig for Opus."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, language_pair, subsets, **kwargs):
+  def __init__(self, *, language_pair, subsets, **kwargs):
     """BuilderConfig for Opus.
 
     Args:
@@ -207,7 +201,7 @@ class Opus(tfds.core.GeneratorBasedBuilder):
     src, target = self.builder_config.language_pair
     return tfds.core.DatasetInfo(
         builder=self,
-        description=_DESCRIPTION + "\n" + self.builder_config.description,
+        description=_DESCRIPTION,
         features=tfds.features.Translation(
             languages=self.builder_config.language_pair),
         supervised_keys=(src, target),

@@ -2,7 +2,6 @@
   <div itemscope itemprop="includedInDataCatalog" itemtype="http://schema.org/DataCatalog">
     <meta itemprop="name" content="TensorFlow Datasets" />
   </div>
-
   <meta itemprop="name" content="nsynth" />
   <meta itemprop="description" content="The NSynth Dataset is an audio dataset containing ~300k musical notes, each&#10;with a unique pitch, timbre, and envelope. Each note is annotated with three&#10;additional pieces of information based on a combination of human evaluation&#10;and heuristic algorithms: Source, Family, and Qualities.&#10;&#10;To use this dataset:&#10;&#10;```python&#10;import tensorflow_datasets as tfds&#10;&#10;ds = tfds.load(&#x27;nsynth&#x27;, split=&#x27;train&#x27;)&#10;for ex in ds.take(4):&#10;  print(ex)&#10;```&#10;&#10;See [the guide](https://www.tensorflow.org/datasets/overview) for more&#10;informations on [tensorflow_datasets](https://www.tensorflow.org/datasets).&#10;&#10;" />
   <meta itemprop="url" content="https://www.tensorflow.org/datasets/catalog/nsynth" />
@@ -21,18 +20,26 @@ heuristic algorithms: Source, Family, and Qualities.
 
 *   **Homepage**:
     [https://g.co/magenta/nsynth-dataset](https://g.co/magenta/nsynth-dataset)
+
 *   **Source code**:
-    [`tfds.audio.nsynth.Nsynth`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/audio/nsynth.py)
+    [`tfds.audio.Nsynth`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/audio/nsynth.py)
+
 *   **Versions**:
-    *   **`2.3.2`** (default): Use Audio feature.
-    *   `2.3.1`: F0 computed with normalization fix in CREPE.
+
     *   `2.3.0`: New `loudness_db` feature in decibels (unormalized).
+    *   `2.3.1`: F0 computed with normalization fix in CREPE.
+    *   `2.3.2`: Use Audio feature.
+    *   **`2.3.3`** (default): F0 computed with fix in CREPE wave normalization
+        (https://github.com/marl/crepe/issues/49).
+
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
     No
+
 *   **Supervised keys** (See
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
+
 *   **Citation**:
 
 ```
@@ -53,8 +60,8 @@ heuristic algorithms: Source, Family, and Qualities.
 }
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
     Not supported.
 
 ## nsynth/full (default config)
@@ -69,11 +76,11 @@ heuristic algorithms: Source, Family, and Qualities.
 
 *   **Splits**:
 
-Split   | Examples
-:------ | -------:
-'test'  | 4,096
-'train' | 289,205
-'valid' | 12,678
+Split     | Examples
+:-------- | -------:
+`'test'`  | 4,096
+`'train'` | 289,205
+`'valid'` | 12,678
 
 *   **Features**:
 
@@ -102,6 +109,40 @@ FeaturesDict({
     'velocity': ClassLabel(shape=(), dtype=tf.int64, num_classes=128),
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/nsynth-full-2.3.3.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## nsynth/gansynth_subset
 
@@ -117,11 +158,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split   | Examples
-:------ | -------:
-'test'  | 8,518
-'train' | 60,788
-'valid' | 17,469
+Split     | Examples
+:-------- | -------:
+`'test'`  | 8,518
+`'train'` | 60,788
+`'valid'` | 17,469
 
 *   **Features**:
 
@@ -150,6 +191,40 @@ FeaturesDict({
     'velocity': ClassLabel(shape=(), dtype=tf.int64, num_classes=128),
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/nsynth-gansynth_subset-2.3.3.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## nsynth/gansynth_subset.f0_and_loudness
 
@@ -167,11 +242,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split   | Examples
-:------ | -------:
-'test'  | 8,518
-'train' | 60,788
-'valid' | 17,469
+Split     | Examples
+:-------- | -------:
+`'test'`  | 8,518
+`'train'` | 60,788
+`'valid'` | 17,469
 
 *   **Features**:
 
@@ -208,3 +283,37 @@ FeaturesDict({
     'velocity': ClassLabel(shape=(), dtype=tf.int64, num_classes=128),
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/nsynth-gansynth_subset.f0_and_loudness-2.3.3.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->

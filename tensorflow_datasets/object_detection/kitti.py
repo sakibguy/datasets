@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Kitti dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
 import csv
@@ -73,10 +68,13 @@ RawBoundingBox = collections.namedtuple("RawBoundingBox",
 class Kitti(tfds.core.GeneratorBasedBuilder):
   """Kitti dataset."""
 
-  VERSION = tfds.core.Version("3.2.0", "Devkit updated.")
+  VERSION = tfds.core.Version("3.2.0")
   SUPPORTED_VERSIONS = [
       tfds.core.Version("3.1.0"),
   ]
+  RELEASE_NOTES = {
+      "3.2.0": "Devkit updated."
+  }
 
   def _info(self):
     # Annotation descriptions are in the object development kit.
@@ -175,7 +173,7 @@ class Kitti(tfds.core.GeneratorBasedBuilder):
       if image_id not in image_ids:
         continue
       annotations = all_annotations[image_id]
-      img = cv2.imdecode(np.fromstring(fobj.read(), dtype=np.uint8),
+      img = cv2.imdecode(np.frombuffer(fobj.read(), dtype=np.uint8),
                          cv2.IMREAD_COLOR)
       img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
       height, width, _ = img.shape

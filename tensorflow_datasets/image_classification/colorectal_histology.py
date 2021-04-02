@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Texture tiles from colorectal cancer histology."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import numpy as np
@@ -72,8 +67,10 @@ def _load_tif(path):
 
 class ColorectalHistology(tfds.core.GeneratorBasedBuilder):
   """Biological 8-class classification problem."""
-  VERSION = tfds.core.Version(
-      "2.0.0", "New split API (https://tensorflow.org/datasets/splits)")
+  VERSION = tfds.core.Version("2.0.0")
+  RELEASE_NOTES = {
+      "2.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+  }
 
   def _info(self):
     return tfds.core.DatasetInfo(
@@ -119,8 +116,10 @@ class ColorectalHistology(tfds.core.GeneratorBasedBuilder):
 
 class ColorectalHistologyLarge(tfds.core.GeneratorBasedBuilder):
   """10 Large 5000 x 5000 colorectal histology images without labels."""
-  VERSION = tfds.core.Version(
-      "2.0.0", "New split API (https://tensorflow.org/datasets/splits)")
+  VERSION = tfds.core.Version("2.0.0")
+  RELEASE_NOTES = {
+      "2.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+  }
 
   def _info(self):
     return tfds.core.DatasetInfo(

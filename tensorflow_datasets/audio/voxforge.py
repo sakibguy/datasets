@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """VoxForge dataset."""
 
 from __future__ import absolute_import
@@ -22,6 +21,7 @@ from __future__ import print_function
 
 import collections
 import datetime
+import io
 import os
 import textwrap
 import numpy as np
@@ -50,6 +50,8 @@ from each speaker belongs to exactly one split.
 """.format(_LAST_DATE.isoformat())
 
 _HOMEPAGE = 'http://www.voxforge.org/'
+
+_SAMPLE_RATE = 16000
 
 
 _URLS_LIST_FILE = 'https://storage.googleapis.com/tfds-data/downloads/voxforge/voxforge_urls.txt'
@@ -91,6 +93,13 @@ def _compute_split_boundaries(split_probs, n_items):
   return split_boundaries
 
 
+def _wav_obj_to_samples(wav_obj):
+  """Read a `tarfile.ExFileObject`."""
+  sample_rate, samples = tfds.core.lazy_imports.scipy.io.wavfile.read(
+      io.BytesIO(wav_obj.read()))
+  return samples, sample_rate
+
+
 def _get_inter_splits_by_group(items_and_groups, split_probs, split_number):
   """Split items to train/dev/test, so all items in group go into same split.
 
@@ -125,7 +134,7 @@ def _get_inter_splits_by_group(items_and_groups, split_probs, split_number):
   return split_to_ids
 
 
-class Voxforge(tfds.core.GeneratorBasedBuilder):
+class Voxforge(tfds.core.BeamBasedBuilder):
   """A Language classification dataset based on the VoxForge website."""
 
   VERSION = tfds.core.Version('1.0.0')
@@ -143,7 +152,8 @@ class Voxforge(tfds.core.GeneratorBasedBuilder):
         builder=self,
         description=_DESCRIPTION,
         features=tfds.features.FeaturesDict({
-            'audio': tfds.features.Audio(file_format='wav', sample_rate=16000),
+            'audio': tfds.features.Audio(file_format='wav',
+                                         sample_rate=_SAMPLE_RATE),
             'label': tfds.features.ClassLabel(names=LABELS),
             'speaker_id': tf.string
         }),
@@ -166,13 +176,11 @@ class Voxforge(tfds.core.GeneratorBasedBuilder):
                   archive_path))
         archive_urls.append(archive_path)
 
-    archives = archive_urls
-
     archives_and_speaker_ids = []
-    for archive, archive_url in zip(archives, archive_urls):
+    for archive_url in archive_urls:
       _, archive_name = os.path.split(archive_url)
       speaker_id = archive_name.split('-')[0]
-      archives_and_speaker_ids.append((archive, speaker_id))
+      archives_and_speaker_ids.append((archive_url, speaker_id))
 
     split_probs = [('train', 0.7), ('validation', 0.1), ('test', 0.2)]
     splits = _get_inter_splits_by_group(archives_and_speaker_ids, split_probs,
@@ -196,17 +204,31 @@ class Voxforge(tfds.core.GeneratorBasedBuilder):
         ),
     ]
 
-  def _generate_examples(self, file_names, dl_manager):
-    """Yields examples."""
-    for fname in file_names:
-      folder, archive_name = os.path.split(fname)
-      speaker_id = archive_name.split('-')[0]
-      label_idx = folder.index('/Trunk') - 2
-      label = folder[label_idx:label_idx + 2]
-      iter_archive = dl_manager.iter_archive(fname)
-      for wav_path, wav_obj in iter_archive:
-        if not wav_path.endswith('.wav'):
-          continue
-        _, wav_name = os.path.split(wav_path)
-        key = '{}_{}_{}'.format(label, archive_name, wav_name[:-len('.wav')])
-        yield key, {'audio': wav_obj, 'label': label, 'speaker_id': speaker_id}
+  def _build_pcollection(self, pipeline, file_names, dl_manager):
+    """Build Pcollection of examples."""
+    beam = tfds.core.lazy_imports.apache_beam
+    return (pipeline
+            | beam.Create(file_names)
+            | beam.FlatMap(_generate_examples, dl_manager=dl_manager))
+
+
+def _generate_examples(fname, dl_manager):
+  """Yields examples."""
+  folder, archive_name = os.path.split(fname)
+  speaker_id = archive_name.split('-')[0]
+  label_idx = folder.index('/Trunk') - 2
+  label = folder[label_idx:label_idx + 2]
+  iter_archive = dl_manager.iter_archive(fname)
+  for wav_path, wav_obj in iter_archive:
+    if not wav_path.endswith('.wav'):
+      continue
+    _, wav_name = os.path.split(wav_path)
+    key = '{}_{}_{}'.format(label, archive_name, wav_name[:-len('.wav')])
+    samples, sample_rate = _wav_obj_to_samples(wav_obj)
+    if sample_rate != _SAMPLE_RATE:
+      raise ValueError(
+          f'Data sample rate was {sample_rate}, but must be {_SAMPLE_RATE}')
+    yield key, {
+        'audio': samples,
+        'label': label,
+        'speaker_id': speaker_id}

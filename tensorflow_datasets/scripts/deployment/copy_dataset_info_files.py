@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 r"""Copy the info files from placer to GCS bucket.
 """
 
@@ -33,8 +32,7 @@ flags.DEFINE_string(
     'from_directory', tfds.core.constants.DATA_DIR,
     'Where to get the info files from (datasets/ dir on placer).')
 flags.DEFINE_string(
-    'to_directory', tfds.core.gcs_path('dataset_info'),
-    'Path where dataset info files will be copied.')
+    'to_directory', None, 'Path where dataset info files will be copied.')
 
 FLAGS = flags.FLAGS
 
@@ -51,11 +49,9 @@ def _copy_metadata(from_dir, to_dir):
       tf.io.gfile.copy(from_path, to_path, overwrite=True)
 
 
-def copy(from_dir: str, to_dir: str) -> None:
+def copy(from_dir: tfds.core.PathLike, to_dir: tfds.core.PathLike) -> None:
   """Copy the info files from within `from_dir` to `to_dir`."""
-  predicate_fn = lambda _: True  # All datasets
-
-  for full_name in tfds.core.registered.list_full_names(predicate_fn):
+  for full_name in tfds.core.load.list_full_names():
     from_full_name_dir = os.path.join(from_dir, full_name)
     to_full_name_dir = os.path.join(to_dir, full_name)
 
@@ -71,7 +67,10 @@ def copy(from_dir: str, to_dir: str) -> None:
 
 
 def main(_):
-  copy(FLAGS.from_directory, FLAGS.to_directory)
+  copy(
+      FLAGS.from_directory,
+      FLAGS.to_directory or tfds.core.gcs_path('dataset_info'),
+  )
 
 if __name__ == '__main__':
   app.run(main)

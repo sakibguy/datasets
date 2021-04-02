@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,15 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
-"""`tfds.features.FeatureConnector` API defining feature types."""
+"""API defining dataset features (image, text, scalar,...).
 
-from tensorflow_datasets.core.features import text
+See [the guide](https://www.tensorflow.org/datasets/features).
+
+"""
 
 from tensorflow_datasets.core.features.audio_feature import Audio
 from tensorflow_datasets.core.features.bounding_boxes import BBox
 from tensorflow_datasets.core.features.bounding_boxes import BBoxFeature
 from tensorflow_datasets.core.features.class_label_feature import ClassLabel
+from tensorflow_datasets.core.features.dataset_feature import Dataset
 from tensorflow_datasets.core.features.feature import FeatureConnector
 from tensorflow_datasets.core.features.feature import Tensor
 from tensorflow_datasets.core.features.feature import TensorInfo
@@ -34,11 +36,11 @@ from tensorflow_datasets.core.features.translation_feature import TranslationVar
 from tensorflow_datasets.core.features.video_feature import Video
 
 __all__ = [
-    "text",
     "Audio",
     "BBox",
     "BBoxFeature",
     "ClassLabel",
+    "Dataset",
     "FeatureConnector",
     "FeaturesDict",
     "Tensor",

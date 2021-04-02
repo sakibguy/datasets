@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.tfrecords_reader."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import functools
 import itertools
 import os
+from unittest import mock
 
-from absl.testing import absltest
 import six
 
 import tensorflow.compat.v2 as tf
@@ -57,7 +52,7 @@ def _write_tfrecord_from_shard_spec(shard_spec, get):
     skip, take = instruction.skip, instruction.take
     stop = skip+take if take > 0 else None
     iterators.append(itertools.islice(iterator, skip, stop))
-  tfrecords_writer._write_tfrecord(shard_spec.path, itertools.chain(*iterators))
+  tfrecords_writer._write_examples(shard_spec.path, itertools.chain(*iterators))
 
 
 class GetDatasetFilesTest(testing.TestCase):
@@ -154,7 +149,7 @@ class GetDatasetFilesTest(testing.TestCase):
   def test_missing_shard_lengths(self):
     with self.assertRaisesWithPredicateMatch(ValueError, 'Shard empty.'):
       split_info = [
-          splits.SplitInfo(name='train', shard_lengths=[]),
+          splits.SplitInfo(name='train', shard_lengths=[], num_bytes=0),
       ]
       tfrecords_reader.make_file_instructions('mnist', split_info, 'train')
 
@@ -167,6 +162,7 @@ class ReadInstructionTest(testing.TestCase):
         'train': 200,
         'test': 101,
         'validation': 30,
+        'dev-train': 10
     }
 
   def check_from_ri(self, ri, expected):
@@ -240,6 +236,9 @@ class ReadInstructionTest(testing.TestCase):
     # Slices resulting in empty datasets are valid with 'closest' rounding:
     self.check_from_spec('validation[:1%]', [('validation', None, 0)])
 
+    # Supports splits with '-' in name.
+    ri = self.check_from_spec('dev-train', [('dev-train', None, None)])
+
   def test_add(self):
     ri1 = tfrecords_reader.ReadInstruction.from_spec('train[10:20]')
     ri2 = tfrecords_reader.ReadInstruction.from_spec('test[10:20]')
@@ -301,8 +300,9 @@ class ReaderTest(testing.TestCase):
 
   def setUp(self):
     super(ReaderTest, self).setUp()
-    with absltest.mock.patch.object(example_parser,
-                                    'ExampleParser', testing.DummyParser):
+    with mock.patch.object(
+        example_parser, 'ExampleParser', testing.DummyParser
+    ):
       self.reader = tfrecords_reader.Reader(self.tmp_dir, 'some_spec')
       self.reader.read = functools.partial(
           self.reader.read,
@@ -313,8 +313,9 @@ class ReaderTest(testing.TestCase):
   def _write_tfrecord(self, split_name, shards_number, records):
     path = os.path.join(self.tmp_dir, 'mnist-%s.tfrecord' % split_name)
     num_examples = len(records)
-    with absltest.mock.patch.object(tfrecords_writer, '_get_number_shards',
-                                    return_value=shards_number):
+    with mock.patch.object(
+        tfrecords_writer, '_get_number_shards', return_value=shards_number
+    ):
       shard_specs = tfrecords_writer._get_shard_specs(
           num_examples, 0, [num_examples], path)
     serialized_records = [six.b(rec) for rec in records]
@@ -324,18 +325,31 @@ class ReaderTest(testing.TestCase):
     return splits.SplitInfo(
         name=split_name,
         shard_lengths=[int(s.examples_number) for s in shard_specs],
+        num_bytes=0,
     )
 
   def test_nodata_instruction(self):
     # Given instruction corresponds to no data.
     with self.assertRaisesWithPredicateMatch(AssertionError,
                                              'corresponds to no data!'):
-      train_info = splits.SplitInfo(name='train', shard_lengths=[2, 3, 2, 3, 2])
-      self.reader.read('mnist', 'train[0:0]', [train_info])
+      train_info = splits.SplitInfo(
+          name='train',
+          shard_lengths=[2, 3, 2, 3, 2],
+          num_bytes=0,
+      )
+      self.reader.read(
+          name='mnist',
+          instructions='train[0:0]',
+          split_infos=[train_info],
+      )
 
   def test_noskip_notake(self):
     train_info = self._write_tfrecord('train', 5, 'abcdefghijkl')
-    ds = self.reader.read('mnist', 'train', [train_info])
+    ds = self.reader.read(
+        name='mnist',
+        instructions='train',
+        split_infos=[train_info],
+    )
     read_data = list(tfds.as_numpy(ds))
     self.assertEqual(read_data, [six.b(l) for l in 'abcdefghijkl'])
 
@@ -346,7 +360,11 @@ class ReaderTest(testing.TestCase):
 
   def test_overlap(self):
     train_info = self._write_tfrecord('train', 5, 'abcdefghijkl')
-    ds = self.reader.read('mnist', 'train+train[:2]', [train_info])
+    ds = self.reader.read(
+        name='mnist',
+        instructions='train+train[:2]',
+        split_infos=[train_info],
+    )
     read_data = list(tfds.as_numpy(ds))
     self.assertEqual(read_data, [six.b(l) for l in 'abcdefghijklab'])
 
@@ -363,7 +381,11 @@ class ReaderTest(testing.TestCase):
     self.assertEqual(train_info.shard_lengths, [2, 3, 2, 3, 2])  # 12 ex.
     self.assertEqual(test_info.shard_lengths, [2, 3, 2])  # 7 ex.
     split_info = [train_info, test_info]
-    ds = self.reader.read('mnist', 'train[1:-1]+test[:-50%]', split_info)
+    ds = self.reader.read(
+        name='mnist',
+        instructions='train[1:-1]+test[:-50%]',
+        split_infos=split_info,
+    )
     read_data = list(tfds.as_numpy(ds))
     self.assertEqual(read_data, [six.b(l) for l in 'bcdefghijkmno'])
 
@@ -374,8 +396,12 @@ class ReaderTest(testing.TestCase):
 
   def test_shuffle_files(self):
     train_info = self._write_tfrecord('train', 5, 'abcdefghijkl')
-    ds = self.reader.read('mnist', 'train', [train_info],
-                          shuffle_files=True)
+    ds = self.reader.read(
+        name='mnist',
+        instructions='train',
+        split_infos=[train_info],
+        shuffle_files=True,
+    )
     shards = [  # The shards of the dataset:
         [b'a', b'b'],
         [b'c', b'd', b'e'],
@@ -400,9 +426,12 @@ class ReaderTest(testing.TestCase):
         shuffle_seed=123,
     )
     ds = self.reader.read(
-        'mnist', 'train', [split_info],
+        name='mnist',
+        instructions='train',
+        split_infos=[split_info],
         read_config=read_config,
-        shuffle_files=True)
+        shuffle_files=True,
+    )
     ds_values = list(tfds.as_numpy(ds))
 
     # Check that shuffle=True with a seed provides deterministic results.
@@ -415,12 +444,20 @@ class ReaderTest(testing.TestCase):
     instructions = [
         tfrecords_reader.ReadInstruction('train', from_=k, to=k+25, unit='%')
         for k in range(0, 100, 25)]
-    tests = self.reader.read('mnist', instructions, [train_info])
+    tests = self.reader.read(
+        name='mnist',
+        instructions=instructions,
+        split_infos=[train_info],
+    )
     instructions = [
         (tfrecords_reader.ReadInstruction('train', to=k, unit='%') +
          tfrecords_reader.ReadInstruction('train', from_=k+25, unit='%'))
         for k in range(0, 100, 25)]
-    trains = self.reader.read('mnist', instructions, [train_info])
+    trains = self.reader.read(
+        name='mnist',
+        instructions=instructions,
+        split_infos=[train_info],
+    )
     read_tests = [list(r) for r in tfds.as_numpy(tests)]
     read_trains = [list(r) for r in tfds.as_numpy(trains)]
     self.assertEqual(read_tests, [[b'a', b'b', b'c'],
@@ -455,8 +492,8 @@ class ReaderTest(testing.TestCase):
 
     def read(num_workers, index):
       return list(tfds.as_numpy(self.reader.read(
-          'mnist',
-          'train',
+          name='mnist',
+          instructions='train',
           split_infos=[split_info],
           read_config=read_config_lib.ReadConfig(
               input_context=tf.distribute.InputContext(

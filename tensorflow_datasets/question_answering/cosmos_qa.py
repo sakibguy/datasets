@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +14,6 @@
 # limitations under the License.
 
 """The Cosmos QA dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import csv
 import json
@@ -96,7 +92,7 @@ class CosmosQA(tfds.core.GeneratorBasedBuilder):
     """This function returns the examples in the raw (text) form."""
     with tf.io.gfile.GFile(file_path) as f:
       # Test is in jsonl format whereas train and dev in tsv.
-      if file_path.endswith('.jsonl'):
+      if file_path.suffix == '.jsonl':
         for line in f:
           row = json.loads(line)
           row['label'] = -1

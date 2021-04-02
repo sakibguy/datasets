@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """CelebA dataset.
 
 Large-scale CelebFaces Attributes (CelebA) Dataset
@@ -21,10 +20,6 @@ Large-scale CelebFaces Attributes (CelebA) Dataset
 Deep Learning Face Attributes in the Wild
 Ziwei Liu and Ping Luo and Xiaogang Wang and Xiaoou Tang
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -94,7 +89,7 @@ computer vision tasks: face attribute recognition, face detection, and landmark\
  (or facial part) localization.
 
 Note: CelebA dataset may contain potential bias. The fairness indicators
-[example](https://github.com/tensorflow/fairness-indicators/blob/master/fairness_indicators/documentation/examples/Fairness_Indicators_TFCO_CelebA_Case_Study.ipynb)
+[example](https://www.tensorflow.org/responsible_ai/fairness_indicators/tutorials/Fairness_Indicators_TFCO_CelebA_Case_Study)
 goes into detail about several considerations to keep in mind while using the
 CelebA dataset.
 """
@@ -103,11 +98,13 @@ CelebA dataset.
 class CelebA(tfds.core.GeneratorBasedBuilder):
   """CelebA dataset. Aligned and cropped. With metadata."""
 
-  VERSION = tfds.core.Version(
-      "2.0.1", "New split API (https://tensorflow.org/datasets/splits)")
+  VERSION = tfds.core.Version("2.0.1")
   SUPPORTED_VERSIONS = [
       tfds.core.Version("2.0.0"),
   ]
+  RELEASE_NOTES = {
+      "2.0.1": "New split API (https://tensorflow.org/datasets/splits)",
+  }
 
   def _info(self):
     return tfds.core.DatasetInfo(

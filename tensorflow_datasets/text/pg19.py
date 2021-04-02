@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """PG-19 language modeling dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import tensorflow.compat.v2 as tf
@@ -49,7 +44,7 @@ stored in metadata.csv which contains
 (book_id, short_book_title, publication_date, book_link).
 """
 
-_DATA_DIR = 'gs://deepmind-gutenberg'
+_DATA_DIR = tfds.core.as_path('gs://deepmind-gutenberg')
 
 
 class Pg19(tfds.core.GeneratorBasedBuilder):

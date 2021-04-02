@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for py_utils."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+import collections
+import pathlib
 
-import hashlib
-import os
+import pytest
+
+import tensorflow as tf
 from tensorflow_datasets import testing
 from tensorflow_datasets.core import constants
+from tensorflow_datasets.core import utils
 from tensorflow_datasets.core.utils import py_utils
 
 
@@ -182,21 +182,38 @@ class PyUtilsTest(testing.TestCase):
           'a/b': 2,  # Collision
       })
 
-  def test_tfds_dir(self):
-    """Test the proper suffix only, since the prefix can vary."""
-    self.assertEqual(
-        os.path.basename(py_utils.tfds_dir()), 'tensorflow_datasets')
+  def test_reraise(self):
 
+    class CustomError(Exception):
 
-class ReadChecksumDigestTest(testing.TestCase):
+      def __init__(self, *args, **kwargs):  # pylint: disable=super-init-not-called
+        pass  # Do not call super() to ensure this would work with bad code.
 
-  def test_digest(self):
-    digest, size = py_utils.read_checksum_digest(
-        os.path.join(self.test_data, '6pixels.png'), hashlib.sha256)
-    self.assertEqual(
-        digest,
-        '04f38ebed34d3b027d2683193766155912fba647158c583c3bdb4597ad8af34c')
-    self.assertEqual(102, size)
+    with self.assertRaisesRegex(ValueError, 'Caught: '):
+      with py_utils.try_reraise('Caught: '):
+        raise ValueError
+
+    with self.assertRaisesRegex(ValueError, 'Caught: With message'):
+      with py_utils.try_reraise('Caught: '):
+        raise ValueError('With message')
+
+    with self.assertRaisesRegex(CustomError, 'Caught: 123'):
+      with py_utils.try_reraise('Caught: '):
+        raise CustomError(123)
+
+    with self.assertRaisesRegex(CustomError, "('Caught: ', 123, {})"):
+      with py_utils.try_reraise('Caught: '):
+        raise CustomError(123, {})
+
+    with self.assertRaisesRegex(Exception, 'Caught: '):
+      with py_utils.try_reraise('Caught: '):
+        ex = CustomError(123, {})
+        ex.args = 'Not a tuple'
+        raise ex
+
+    with self.assertRaisesRegex(RuntimeError, 'Caught: message'):
+      with py_utils.try_reraise('Caught: '):
+        raise tf.errors.FailedPreconditionError(None, None, 'message')
 
 
 class GetClassPathUrlTest(testing.TestCase):
@@ -216,5 +233,85 @@ class GetClassPathUrlTest(testing.TestCase):
         (constants.SRC_BASE_URL + 'tensorflow_datasets/core/utils/py_utils.py'))
 
 
-if __name__ == '__main__':
-  testing.test_main()
+def test_list_info_files(tmp_path: pathlib.Path):
+  tmp_path.joinpath('test.tfrecord').touch()
+  tmp_path.joinpath('test.riegeli').touch()
+  tmp_path.joinpath('info.json').touch()
+
+  # Have a info file in the sub-directory. Shouldn't be listed.
+  tmp_path.joinpath('diff').mkdir()
+  tmp_path.joinpath('diff/info.json').touch()
+  info_files = py_utils.list_info_files(tmp_path)
+
+  assert info_files == ['info.json']
+
+
+def _flatten_with_path(v):
+  return list(py_utils.flatten_with_path(v))
+
+
+def test_flatten_with_path():
+  """Test that the flatten function works as expected."""
+  assert _flatten_with_path([{'foo': 42}]) == [((0, 'foo'), 42)]
+
+  assert _flatten_with_path('value') == [((), 'value')]
+  assert _flatten_with_path({'key': 'value'}) == [(('key',), 'value')]
+  # Order doesn't matter
+  ordered_dict1 = collections.OrderedDict(
+      [('key1', 'value1'), ('key2', 'value2')]
+  )
+  ordered_dict2 = collections.OrderedDict(
+      [('key2', 'value2'), ('key1', 'value1')]
+  )
+  expected_result = [(('key1',), 'value1'), (('key2',), 'value2')]
+  assert _flatten_with_path(ordered_dict1) == expected_result
+  assert _flatten_with_path(ordered_dict2) == expected_result
+
+  complex_dict = {
+      'key': 'value',
+      'nested': {
+          'subkey': ['subvalue0', 'subvalue1'],
+          'subnested': {
+              'subsubkey1': 'subsubvalue1',
+              'subsubkey2': 'subsubvalue2',
+          },
+      },
+      'key2': 'value2',
+  }
+  assert _flatten_with_path(complex_dict) == [
+      (('key',), 'value'),
+      (('key2',), 'value2'),
+      (('nested', 'subkey', 0), 'subvalue0'),
+      (('nested', 'subkey', 1), 'subvalue1'),
+      (('nested', 'subnested', 'subsubkey1',), 'subsubvalue1'),
+      (('nested', 'subnested', 'subsubkey2',), 'subsubvalue2'),
+  ]
+  # Order is consistent with tf.nest.flatten
+  assert (
+      [v for _, v in _flatten_with_path(complex_dict)]
+      == tf.nest.flatten(complex_dict)
+  )
+
+
+@pytest.mark.parametrize(
+    ['url', 'filename'],
+    [
+        (
+            'http://test.com/appspot.com/tsvsWithoutLabels%2FAX.tsv?'
+            'Id=firebase&Expires=2498860800',
+            'tsvsWithoutLabels_AX.tsv'  # `%2F` -> `_`
+        ),
+    ]
+)
+def test_basename_from_url(url: str, filename: str):
+  assert utils.basename_from_url(url) == filename
+
+
+def test_incomplete_file(tmp_path: pathlib.Path):
+  tmp_path = utils.as_path(tmp_path)
+  filepath = tmp_path / 'test.txt'
+  with py_utils.incomplete_file(filepath) as tmp_filepath:
+    tmp_filepath.write_text('content')
+    assert not filepath.exists()
+  assert filepath.read_text() == 'content'
+  assert not tmp_filepath.exists()  # Tmp file is deleted

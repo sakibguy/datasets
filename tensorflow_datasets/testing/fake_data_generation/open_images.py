@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 r"""Generate open_images like files, smaller and with random data.
 
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import random
@@ -75,9 +70,9 @@ def _write_tar(path, split_name, image_ids, prefix=None):
 def _write_image_level_labels(fname, image_ids, machine=False):
   """Writes CSV with 0-10 labels per image."""
   lines = ['ImageID,Source,LabelName,Condidence']
-  all_class_label = ClassLabel(names_file=py_utils.get_tfds_path(
+  all_class_label = ClassLabel(names_file=py_utils.tfds_path(
       os.path.join('object_detection', 'open_images_classes_all.txt')))
-  trainable_class_label = ClassLabel(names_file=py_utils.get_tfds_path(
+  trainable_class_label = ClassLabel(names_file=py_utils.tfds_path(
       os.path.join('object_detection', 'open_images_classes_trainable.txt')))
   for i, image_id in enumerate(image_ids):
     if i < 1:
@@ -102,7 +97,7 @@ def _write_bbox_labels(fname, image_ids):
   """Writes CSV with 0-10 labels per image."""
   lines = ['ImageID,Source,LabelName,Confidence,XMin,XMax,YMin,YMax,IsOccluded,'
            'IsTruncated,IsGroupOf,IsDepiction,IsInside']
-  boxable_class_label = ClassLabel(names_file=py_utils.get_tfds_path(
+  boxable_class_label = ClassLabel(names_file=py_utils.tfds_path(
       os.path.join('object_detection', 'open_images_classes_boxable.txt')))
   for image_id in image_ids:
     labels = random.sample(boxable_class_label.names, random.randint(0, 10))

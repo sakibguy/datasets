@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python2, python3
 """Summarizing abstract from covid19 publications."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import json
 import os
@@ -69,8 +64,7 @@ class Covid19sum(tfds.core.GeneratorBasedBuilder):
   MANUAL_DOWNLOAD_INSTRUCTIONS = """
     This dataset need to be manually downloaded through kaggle api:
     `kaggle datasets download allen-institute-for-ai/CORD-19-research-challenge`
-    Place the downloaded zip file in the manual folder
-    (defaults to ~/tensorflow_datasets/manual/).
+    Place the downloaded zip file in the manual folder.
     """
 
   VERSION = tfds.core.Version("1.0.0")

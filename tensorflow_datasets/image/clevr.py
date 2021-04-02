@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """CLEVR dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
 import json
@@ -51,10 +46,13 @@ _DOWNLOAD_URL = "https://dl.fbaipublicfiles.com/clevr/CLEVR_v1.0.zip"
 class CLEVR(tfds.core.GeneratorBasedBuilder):
   """CLEVR dataset."""
 
-  VERSION = tfds.core.Version("3.1.0", "Add question/answer text.")
+  VERSION = tfds.core.Version("3.1.0")
   SUPPORTED_VERSIONS = [
       tfds.core.Version("3.0.0"),
   ]
+  RELEASE_NOTES = {
+      "3.1.0": "Add question/answer text.",
+  }
 
   def _info(self):
     features = {

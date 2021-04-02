@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,25 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """ClassLabel feature."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
-import six
 import tensorflow.compat.v2 as tf
-from tensorflow_datasets.core import api_utils
 from tensorflow_datasets.core.features import feature
+from tensorflow_datasets.core.utils import type_utils
+
+Json = type_utils.Json
 
 
 class ClassLabel(feature.Tensor):
   """`FeatureConnector` for integer class labels."""
 
-  @api_utils.disallow_positional_args
-  def __init__(self, num_classes=None, names=None, names_file=None):
+  def __init__(self, *, num_classes=None, names=None, names_file=None):
     """Constructs a ClassLabel FeatureConnector.
 
     There are 3 ways to define a ClassLabel, which correspond to the 3
@@ -146,8 +141,12 @@ class ClassLabel(feature.Tensor):
       )
 
     # If a string is given, convert to associated integer
-    if isinstance(example_data, six.string_types):
+    if isinstance(example_data, str):
       example_data = self.str2int(example_data)
+    elif isinstance(example_data, bytes):
+      # Accept bytes if user yield `tensor.numpy()`
+      # Python 3 doesn't interpret byte strings as strings directly.
+      example_data = self.str2int(example_data.decode("utf-8"))
 
     # Allowing -1 to mean no label.
     if not -1 <= example_data < self._num_classes:
@@ -172,12 +171,29 @@ class ClassLabel(feature.Tensor):
   def _additional_repr_info(self):
     return {"num_classes": self.num_classes}
 
+  def repr_html(self, ex: int) -> str:
+    """Class labels are displayed with their name."""
+    if ex == -1:
+      return "-"
+    elif not self._int2str:
+      return str(ex)
+    else:
+      return f"{ex} ({self.int2str(ex)})"
+
+  @classmethod
+  def from_json_content(cls, value: Json) -> "ClassLabel":
+    return cls(**value)
+
+  def to_json_content(self) -> Json:
+    return {"num_classes": self.num_classes}
+
 
 def _get_names_filepath(data_dir, feature_name):
   return os.path.join(data_dir, "{}.labels.txt".format(feature_name))
 
 
 def _load_names_from_file(names_filepath):
+  names_filepath = os.fspath(names_filepath)
   with tf.io.gfile.GFile(names_filepath, "r") as f:
     return [
         name.strip()

@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """The SuperGLUE benchmark."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import json
 import os
@@ -285,8 +280,8 @@ _AXG_CITATION = """\
 class SuperGlueConfig(tfds.core.BuilderConfig):
   """BuilderConfig for SuperGLUE."""
 
-  @tfds.core.disallow_positional_args
   def __init__(self,
+               *,
                features,
                data_url,
                citation,
@@ -470,7 +465,7 @@ class SuperGlue(tfds.core.GeneratorBasedBuilder):
 
     return tfds.core.DatasetInfo(
         builder=self,
-        description=_GLUE_DESCRIPTION + self.builder_config.description,
+        description=_GLUE_DESCRIPTION,
         features=tfds.features.FeaturesDict(features),
         homepage=self.builder_config.url,
         citation=self.builder_config.citation + "\n" + _SUPER_GLUE_CITATION,

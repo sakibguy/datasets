@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Base decoders.
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import abc
 import functools
 
 import six
 import tensorflow.compat.v2 as tf
-from tensorflow_datasets.core import api_utils
-from tensorflow_datasets.core.utils import py_utils
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -56,8 +49,7 @@ class Decoder(object):
   def __init__(self):
     self.feature = None
 
-  @api_utils.disallow_positional_args
-  def setup(self, feature):
+  def setup(self, *, feature):
     """Transformation contructor.
 
     The initialization of decode object is deferred because the objects only
@@ -75,7 +67,7 @@ class Decoder(object):
   def dtype(self):
     """Returns the `dtype` after decoding."""
     tensor_info = self.feature.get_tensor_info()
-    return py_utils.map_nested(lambda t: t.dtype, tensor_info)
+    return tf.nest.map_structure(lambda t: t.dtype, tensor_info)
 
   @abc.abstractmethod
   def decode_example(self, serialized_example):
@@ -97,7 +89,6 @@ class Decoder(object):
         serialized_example,
         dtype=self.dtype,
         parallel_iterations=10,
-        back_prop=False,
         name='sequence_decode',
     )
 
@@ -124,7 +115,7 @@ class SkipDecoding(Decoder):
   @property
   def dtype(self):
     tensor_info = self.feature.get_serialized_info()
-    return py_utils.map_nested(lambda t: t.dtype, tensor_info)
+    return tf.nest.map_structure(lambda t: t.dtype, tensor_info)
 
   def decode_example(self, serialized_example):
     """Forward the serialized feature field."""

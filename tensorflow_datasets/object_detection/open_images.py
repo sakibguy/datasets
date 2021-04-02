@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,15 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Open images datasets.
 
 https://storage.googleapis.com/openimages/web/index.html
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
 import csv
@@ -150,8 +145,10 @@ class OpenImagesV4Config(tfds.core.BuilderConfig):
         is roughly this value.
       **kwargs: keyword arguments forward to super.
     """
-    kwargs['version'] = tfds.core.Version(
-        '2.0.0', 'New split API (https://tensorflow.org/datasets/splits)')
+    kwargs['version'] = tfds.core.Version('2.0.0')
+    kwargs['release_notes'] = {
+        '2.0.0': 'New split API (https://tensorflow.org/datasets/splits)',
+    }
     super(OpenImagesV4Config, self).__init__(**kwargs)
     self._target_pixels = target_pixels
 
@@ -181,13 +178,13 @@ class OpenImagesV4(tfds.core.GeneratorBasedBuilder):
     source_class_label = tfds.features.ClassLabel(
         names=IMAGE_LEVEL_SOURCES + BBOX_SOURCES)
     all_class_label = tfds.features.ClassLabel(
-        names_file=tfds.core.get_tfds_path(os.path.join(
+        names_file=tfds.core.tfds_path(os.path.join(
             'object_detection', 'open_images_classes_all.txt')))
     trainable_class_label = tfds.features.ClassLabel(
-        names_file=tfds.core.get_tfds_path(os.path.join(
+        names_file=tfds.core.tfds_path(os.path.join(
             'object_detection', 'open_images_classes_trainable.txt')))
     boxable_class_label = tfds.features.ClassLabel(
-        names_file=tfds.core.get_tfds_path(os.path.join(
+        names_file=tfds.core.tfds_path(os.path.join(
             'object_detection', 'open_images_classes_boxable.txt')))
     return tfds.core.DatasetInfo(
         builder=self,
@@ -310,7 +307,7 @@ def _resize_image_if_necessary(image_fobj, target_pixels=None):
   cv2 = tfds.core.lazy_imports.cv2
   # Decode image using OpenCV2.
   image = cv2.imdecode(
-      np.fromstring(image_fobj.read(), dtype=np.uint8), flags=3)
+      np.frombuffer(image_fobj.read(), dtype=np.uint8), flags=3)
   # Get image height and width.
   height, width, _ = image.shape
   actual_pixels = height * width

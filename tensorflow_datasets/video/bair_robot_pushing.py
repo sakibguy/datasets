@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Berkeley (BAIR) robot pushing dataset.
 
 Self-Supervised Visual Planning with Temporal Skip Connections
 Frederik Ebert, Chelsea Finn, Alex X. Lee, and Sergey Levine.
 https://arxiv.org/abs/1710.05268
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -53,8 +48,10 @@ _CITATION = """\
 class BairRobotPushingSmall(tfds.core.GeneratorBasedBuilder):
   """Robot pushing dataset from BAIR (Small 64x64 version)."""
 
-  VERSION = tfds.core.Version(
-      "2.0.0", "New split API (https://tensorflow.org/datasets/splits)")
+  VERSION = tfds.core.Version("2.0.0")
+  RELEASE_NOTES = {
+      "2.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+  }
 
   def _info(self):
     # The Bair dataset consist of a sequence of frames (video) with associated
@@ -140,4 +137,4 @@ class BairRobotPushingSmall(tfds.core.GeneratorBasedBuilder):
         #     {'action': [...], 'image_main': img_frame1, ...},  # Frame 1
         #     ...,
         # ]
-        yield "%s_%s" % (filepath, video_id), all_frames
+        yield "%s_%s" % (filename, video_id), all_frames

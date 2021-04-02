@@ -2,7 +2,6 @@
   <div itemscope itemprop="includedInDataCatalog" itemtype="http://schema.org/DataCatalog">
     <meta itemprop="name" content="TensorFlow Datasets" />
   </div>
-
   <meta itemprop="name" content="gap" />
   <meta itemprop="description" content="GAP is a gender-balanced dataset containing 8,908 coreference-labeled pairs of &#10;(ambiguous pronoun, antecedent name), sampled from Wikipedia and released by &#10;Google AI Language for the evaluation of coreference resolution in practical &#10;applications.&#10;&#10;To use this dataset:&#10;&#10;```python&#10;import tensorflow_datasets as tfds&#10;&#10;ds = tfds.load(&#x27;gap&#x27;, split=&#x27;train&#x27;)&#10;for ex in ds.take(4):&#10;  print(ex)&#10;```&#10;&#10;See [the guide](https://www.tensorflow.org/datasets/overview) for more&#10;informations on [tensorflow_datasets](https://www.tensorflow.org/datasets).&#10;&#10;" />
   <meta itemprop="url" content="https://www.tensorflow.org/datasets/catalog/gap" />
@@ -21,22 +20,29 @@ applications.
 
 *   **Homepage**:
     [https://github.com/google-research-datasets/gap-coreference](https://github.com/google-research-datasets/gap-coreference)
+
 *   **Source code**:
-    [`tfds.text.gap.Gap`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/text/gap.py)
+    [`tfds.text.Gap`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/text/gap.py)
+
 *   **Versions**:
+
     *   **`0.1.0`** (default): No release notes.
+
 *   **Download size**: `2.29 MiB`
+
 *   **Dataset size**: `Unknown size`
+
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    No
+    Unknown
+
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 2,000
-'train'      | 2,000
-'validation' | 454
+Split          | Examples
+:------------- | -------:
+`'test'`       | 2,000
+`'train'`      | 2,000
+`'validation'` | 454
 
 *   **Features**:
 
@@ -59,6 +65,7 @@ FeaturesDict({
 *   **Supervised keys** (See
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
+
 *   **Citation**:
 
 ```
@@ -80,6 +87,40 @@ FeaturesDict({
 }
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
     Not supported.
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gap-0.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->

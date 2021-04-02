@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """BinarizedMNIST."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import numpy as np
 from six.moves import urllib
@@ -53,6 +48,9 @@ class BinarizedMNIST(tfds.core.GeneratorBasedBuilder):
   """A specific binarization of the MNIST dataset."""
 
   VERSION = tfds.core.Version("1.0.0")
+  RELEASE_NOTES = {
+      "1.0.0": "Initial Release",
+  }
 
   def _info(self):
     return tfds.core.DatasetInfo(

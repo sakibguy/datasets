@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,20 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Video feature."""
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
-import subprocess
 import tempfile
+from typing import Sequence
 
-import six
+import numpy as np
 import tensorflow.compat.v2 as tf
+from tensorflow_datasets.core import utils
 from tensorflow_datasets.core.features import image_feature
 from tensorflow_datasets.core.features import sequence_feature
+from tensorflow_datasets.core.utils import type_utils
+
+Json = type_utils.Json
 
 
 class Video(sequence_feature.Sequence):
@@ -44,6 +44,7 @@ class Video(sequence_feature.Sequence):
       [num_frames, height, width, channels], where channels must be 1 or 3
 
   Example:
+
     * In the DatasetInfo object:
 
     ```
@@ -68,7 +69,7 @@ class Video(sequence_feature.Sequence):
     }
     ```
 
-    or path to video:
+    or path to video (including `os.PathLike` objects):
 
     ```
     yield {
@@ -76,7 +77,7 @@ class Video(sequence_feature.Sequence):
     }
     ```
 
-    or file object:
+    or file object (or `bytes`):
 
     ```
     yield {
@@ -86,7 +87,14 @@ class Video(sequence_feature.Sequence):
 
   """
 
-  def __init__(self, shape, encoding_format='png', ffmpeg_extra_args=()):
+  def __init__(
+      self,
+      shape: Sequence[int],
+      encoding_format: str = 'png',
+      ffmpeg_extra_args: Sequence[str] = (),
+      use_colormap: bool = False,
+      dtype=tf.uint8,
+  ):
     """Initializes the connector.
 
     Args:
@@ -99,6 +107,11 @@ class Video(sequence_feature.Sequence):
           ``
           ffmpeg -i <input_file> <ffmpeg_extra_args> %010d.<encoding_format>
           ``
+      use_colormap: Forwarded to `tfds.features.Image`. If `True`,
+        `tfds.as_dataframe` will display each value in the image with a
+        different color.
+      dtype: tf.uint16 or tf.uint8 (default).
+        tf.uint16 can be used only with png encoding_format
     Raises:
       ValueError: If the shape is invalid
     """
@@ -108,58 +121,37 @@ class Video(sequence_feature.Sequence):
     self._encoding_format = encoding_format
     self._extra_ffmpeg_args = list(ffmpeg_extra_args or [])
     super(Video, self).__init__(
-        image_feature.Image(shape=shape[1:], encoding_format=encoding_format),
+        image_feature.Image(
+            shape=shape[1:],
+            dtype=dtype,
+            encoding_format=encoding_format,
+            use_colormap=use_colormap,
+        ),
         length=shape[0],
     )
 
-  @property
-  def _ffmpeg_path(self):
-    return 'ffmpeg'
-
-
   def _ffmpeg_decode(self, path_or_fobj):
-    if isinstance(path_or_fobj, six.string_types):
-      ffmpeg_args = [self._ffmpeg_path, '-i', path_or_fobj]
+    if isinstance(path_or_fobj, type_utils.PathLikeCls):
+      ffmpeg_args = ['-i', os.fspath(path_or_fobj)]
       ffmpeg_stdin = None
     else:
-      ffmpeg_args = [self._ffmpeg_path, '-i', 'pipe:0']
+      ffmpeg_args = ['-i', 'pipe:0']
       ffmpeg_stdin = path_or_fobj.read()
-
-    ffmpeg_dir = tempfile.mkdtemp()
-    output_pattern = os.path.join(ffmpeg_dir, '%010d.' + self._encoding_format)
     ffmpeg_args += self._extra_ffmpeg_args
-    ffmpeg_args.append(output_pattern)
-    try:
-      process = subprocess.Popen(ffmpeg_args,
-                                 stdin=subprocess.PIPE,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
-      stdout_data, stderr_data = process.communicate(ffmpeg_stdin)
-      ffmpeg_ret_code = process.returncode
-      if ffmpeg_ret_code:
-        raise ValueError(
-            'ffmpeg returned error code {}, command={}\n'
-            'stdout={}\nstderr={}\n'.format(ffmpeg_ret_code,
-                                            ' '.join(ffmpeg_args),
-                                            stdout_data,
-                                            stderr_data))
-      frames = []
-      for image_name in sorted(tf.io.gfile.listdir(ffmpeg_dir)):
-        image_path = os.path.join(ffmpeg_dir, image_name)
-        with tf.io.gfile.GFile(image_path, 'rb') as frame_file:
-          frames.append(six.BytesIO(frame_file.read()))
-      return frames
-    except OSError as exception:
-      raise IOError(
-          'It seems that ffmpeg is not installed on the system. Please follow '
-          'the instrutions at https://ffmpeg.org/. '
-          'Original exception: {}'.format(exception))
-    finally:
-      tf.io.gfile.rmtree(ffmpeg_dir)
+
+    with tempfile.TemporaryDirectory() as ffmpeg_dir:
+      out_pattern = os.path.join(ffmpeg_dir, f'%010d.{self._encoding_format}')
+      ffmpeg_args.append(out_pattern)
+      utils.ffmpeg_run(ffmpeg_args, ffmpeg_stdin)
+      frames = [  # Load all encoded images
+          p.read_bytes() for p in sorted(utils.as_path(ffmpeg_dir).iterdir())
+      ]
+    return frames
 
   def encode_example(self, video_or_path_or_fobj):
     """Converts the given image into a dict convertible to tf example."""
-    if isinstance(video_or_path_or_fobj, six.string_types):
+    if isinstance(video_or_path_or_fobj, type_utils.PathLikeCls):
+      video_or_path_or_fobj = os.fspath(video_or_path_or_fobj)
       if not os.path.isfile(video_or_path_or_fobj):
         _, video_temp_path = tempfile.mkstemp()
         try:
@@ -178,6 +170,26 @@ class Video(sequence_feature.Sequence):
         encoded_video = self._ffmpeg_decode(video_temp_path)
     elif hasattr(video_or_path_or_fobj, 'read'):
       encoded_video = self._ffmpeg_decode(video_or_path_or_fobj)
-    else:
+    else:  # List of images, np.array,...
       encoded_video = video_or_path_or_fobj
     return super(Video, self).encode_example(encoded_video)
+
+  @classmethod
+  def from_json_content(cls, value: Json) -> 'Video':
+    shape = tuple(value['shape'])
+    encoding_format = value['encoding_format']
+    ffmpeg_extra_args = value['ffmpeg_extra_args']
+    return cls(shape, encoding_format, ffmpeg_extra_args)
+
+  def to_json_content(self) -> Json:
+    return {
+        'shape': list(self.shape),
+        'encoding_format': self._encoding_format,
+        'ffmpeg_extra_args': self._extra_ffmpeg_args
+    }
+
+  def repr_html(self, ex: np.ndarray) -> str:
+    """Video are displayed as `<video>`."""
+    return image_feature.make_video_repr_html(
+        ex, use_colormap=self.feature._use_colormap  # pylint: disable=protected-access
+    )

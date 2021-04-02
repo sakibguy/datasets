@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Corrupted ImageNet2012 dataset.
 
 Apply common corruptions to the images in ImageNet2012 dataset.
 """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 from absl import logging
 import numpy as np
 import tensorflow.compat.v2 as tf
@@ -89,8 +85,7 @@ _CROP_PADDING = 32
 class Imagenet2012CorruptedConfig(tfds.core.BuilderConfig):
   """BuilderConfig for Imagenet2012Corrupted."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, corruption_type=None, severity=1, **kwargs):
+  def __init__(self, *, corruption_type=None, severity=1, **kwargs):
     """BuilderConfig for Imagenet2012Corrupted.
 
     Args:
@@ -105,10 +100,11 @@ class Imagenet2012CorruptedConfig(tfds.core.BuilderConfig):
 
 
 _VERSION = tfds.core.Version('3.1.0')
-
-# Version history:
-# 3.1.0: Implement missing corruptions. Fix crop/resize ordering, file encoding
-# 0.0.1: Initial dataset.
+_RELEASE_NOTES = {
+    '0.0.1': 'Initial dataset',
+    '3.1.0':
+    'Implement missing corruptions. Fix crop/resize ordering, file encoding',
+}
 
 
 def _make_builder_configs():
@@ -130,6 +126,7 @@ def _make_builder_configs():
           Imagenet2012CorruptedConfig(
               name=name_str,
               version=_VERSION,
+              release_notes=_RELEASE_NOTES,
               description=description_str,
               corruption_type=each_corruption,
               severity=each_severity,
@@ -171,7 +168,7 @@ class Imagenet2012Corrupted(Imagenet2012):
     Returns:
       tfds.core.DatasetInfo.
     """
-    names_file = tfds.core.get_tfds_path(_LABELS_FNAME)
+    names_file = tfds.core.tfds_path(_LABELS_FNAME)
     return tfds.core.DatasetInfo(
         builder=self,
         description=_DESCRIPTION,

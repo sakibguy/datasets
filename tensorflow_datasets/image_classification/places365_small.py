@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Dataset class for Places365-Standard small(256x256) dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 import csv
 import os
 import six.moves.urllib as urllib
@@ -60,7 +55,7 @@ class Places365Small(tfds.core.GeneratorBasedBuilder):
   VERSION = tfds.core.Version("2.0.0")
 
   def _info(self):
-    names_file = tfds.core.get_tfds_path(_LABELS_FNAME)
+    names_file = tfds.core.tfds_path(_LABELS_FNAME)
     return tfds.core.DatasetInfo(
         builder=self,
         description=(_DESCRIPTION),

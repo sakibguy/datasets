@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Lost and Found Road Hazard Dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 from os import path
 import re
@@ -139,9 +134,13 @@ class LostAndFound(tfds.core.GeneratorBasedBuilder):
         'image_right':
             tfds.features.Image(shape=(1024, 2048, 3), encoding_format='png'),
         'segmentation_label':
-            tfds.features.Image(shape=(1024, 2048, 1), encoding_format='png'),
+            tfds.features.Image(
+                shape=(1024, 2048, 1), encoding_format='png', use_colormap=True
+            ),
         'instance_id':
-            tfds.features.Image(shape=(1024, 2048, 1), encoding_format='png'),
+            tfds.features.Image(
+                shape=(1024, 2048, 1), encoding_format='png', use_colormap=True
+            ),
         'disparity_map':
             tfds.features.Image(shape=(1024, 2048, 1), encoding_format='png')
     }

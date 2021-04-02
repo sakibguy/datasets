@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Imagenette: a subset of 10 easily classified classes from Imagenet.
 
 (tench, English springer, cassette player, chain saw, church, French horn,
 garbage truck, gas pump, golf ball, parachute)
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -67,7 +62,6 @@ class ImagenetteConfig(tfds.core.BuilderConfig):
         # `320px-v2`,...
         name=size + ("-v2" if base == "imagenette2" else ""),
         description="{} variant.".format(size),
-        version=tfds.core.Version("0.1.0"),
         **kwargs)
     # e.g. `imagenette2-320.tgz`
     self.dirname = base + {
@@ -88,12 +82,12 @@ def _make_builder_configs():
 class Imagenette(tfds.core.GeneratorBasedBuilder):
   """A smaller subset of 10 easily classified classes from Imagenet."""
 
-  VERSION = tfds.core.Version("0.1.1")
+  VERSION = tfds.core.Version("1.0.0")
 
   BUILDER_CONFIGS = _make_builder_configs()
 
   def _info(self):
-    names_file = tfds.core.get_tfds_path(_LABELS_FNAME)
+    names_file = tfds.core.tfds_path(_LABELS_FNAME)
     return tfds.core.DatasetInfo(
         builder=self,
         description=_DESCRIPTION,

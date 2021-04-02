@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Common corruptions to images.
 
 Define 15+4 common image corruptions: Gaussian noise, shot noise, impulse_noise,
@@ -22,10 +21,6 @@ pixelate, jpeg compression, frost, snow, and motion blur.
 
 4 extra corruptions: gaussian blur, saturate, spatter, and speckle noise.
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import io
 import subprocess
@@ -552,7 +547,7 @@ def snow(x, severity=1):
         output = f.read()
 
   snow_layer = cv2.imdecode(
-      np.fromstring(output, np.uint8), cv2.IMREAD_UNCHANGED) / 255.
+      np.frombuffer(output, np.uint8), cv2.IMREAD_UNCHANGED) / 255.
   snow_layer = snow_layer[..., np.newaxis]
 
   x = c[6] * x + (1 - c[6]) * np.maximum(
@@ -595,7 +590,7 @@ def motion_blur(x, severity=1):
         output = f.read()
 
   x = tfds.core.lazy_imports.cv2.imdecode(
-      np.fromstring(output, np.uint8),
+      np.frombuffer(output, np.uint8),
       tfds.core.lazy_imports.cv2.IMREAD_UNCHANGED)
 
   if x.shape != (224, 224):

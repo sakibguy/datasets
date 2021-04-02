@@ -2,7 +2,6 @@
   <div itemscope itemprop="includedInDataCatalog" itemtype="http://schema.org/DataCatalog">
     <meta itemprop="name" content="TensorFlow Datasets" />
   </div>
-
   <meta itemprop="name" content="glue" />
   <meta itemprop="description" content="GLUE, the General Language Understanding Evaluation benchmark&#10;(https://gluebenchmark.com/) is a collection of resources for training,&#10;evaluating, and analyzing natural language understanding systems.&#10;&#10;To use this dataset:&#10;&#10;```python&#10;import tensorflow_datasets as tfds&#10;&#10;ds = tfds.load(&#x27;glue&#x27;, split=&#x27;train&#x27;)&#10;for ex in ds.take(4):&#10;  print(ex)&#10;```&#10;&#10;See [the guide](https://www.tensorflow.org/datasets/overview) for more&#10;informations on [tensorflow_datasets](https://www.tensorflow.org/datasets).&#10;&#10;" />
   <meta itemprop="url" content="https://www.tensorflow.org/datasets/catalog/glue" />
@@ -19,19 +18,26 @@ GLUE, the General Language Understanding Evaluation benchmark
 evaluating, and analyzing natural language understanding systems.
 
 *   **Source code**:
-    [`tfds.text.glue.Glue`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/text/glue.py)
+    [`tfds.text.Glue`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/text/glue.py)
+
 *   **Versions**:
+
     *   **`1.0.0`** (default): New split API
         (https://tensorflow.org/datasets/splits)
+    *   `1.0.1`: Update dead URL links.
+
 *   **Dataset size**: `Unknown size`
+
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    No
+    Unknown
+
 *   **Supervised keys** (See
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
     Not supported.
 
 ## glue/cola (default config)
@@ -48,11 +54,11 @@ evaluating, and analyzing natural language understanding systems.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 1,063
-'train'      | 8,551
-'validation' | 1,043
+Split          | Examples
+:------------- | -------:
+`'test'`       | 1,063
+`'train'`      | 8,551
+`'validation'` | 1,043
 
 *   **Features**:
 
@@ -84,6 +90,40 @@ Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
 
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-cola-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
 ## glue/sst2
 
 *   **Config description**: The Stanford Sentiment Treebank consists of
@@ -98,11 +138,11 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 1,821
-'train'      | 67,349
-'validation' | 872
+Split          | Examples
+:------------- | -------:
+`'test'`       | 1,821
+`'train'`      | 67,349
+`'validation'` | 872
 
 *   **Features**:
 
@@ -135,6 +175,40 @@ Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
 
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-sst2-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
 ## glue/mrpc
 
 *   **Config description**: The Microsoft Research Paraphrase Corpus (Dolan &
@@ -149,11 +223,11 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 1,725
-'train'      | 3,668
-'validation' | 408
+Split          | Examples
+:------------- | -------:
+`'test'`       | 1,725
+`'train'`      | 3,668
+`'validation'` | 408
 
 *   **Features**:
 
@@ -186,6 +260,40 @@ Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
 
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-mrpc-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
 ## glue/qqp
 
 *   **Config description**: The Quora Question Pairs2 dataset is a collection of
@@ -199,11 +307,11 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 390,965
-'train'      | 363,849
-'validation' | 40,430
+Split          | Examples
+:------------- | -------:
+`'test'`       | 390,965
+`'train'`      | 363,849
+`'validation'` | 40,430
 
 *   **Features**:
 
@@ -237,6 +345,40 @@ Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
 
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-qqp-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
 ## glue/stsb
 
 *   **Config description**: The Semantic Textual Similarity Benchmark (Cer et
@@ -251,11 +393,11 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 1,379
-'train'      | 5,749
-'validation' | 1,500
+Split          | Examples
+:------------- | -------:
+`'test'`       | 1,379
+`'train'`      | 5,749
+`'validation'` | 1,500
 
 *   **Features**:
 
@@ -288,6 +430,40 @@ Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
 
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-stsb-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
 ## glue/mnli
 
 *   **Config description**: The Multi-Genre Natural Language Inference Corpus is
@@ -309,13 +485,13 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split                   | Examples
-:---------------------- | -------:
-'test_matched'          | 9,796
-'test_mismatched'       | 9,847
-'train'                 | 392,702
-'validation_matched'    | 9,815
-'validation_mismatched' | 9,832
+Split                     | Examples
+:------------------------ | -------:
+`'test_matched'`          | 9,796
+`'test_mismatched'`       | 9,847
+`'train'`                 | 392,702
+`'validation_matched'`    | 9,815
+`'validation_mismatched'` | 9,832
 
 *   **Features**:
 
@@ -364,6 +540,40 @@ FeaturesDict({
 Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-mnli-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## glue/mnli_mismatched
 
@@ -377,10 +587,10 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 9,847
-'validation' | 9,832
+Split          | Examples
+:------------- | -------:
+`'test'`       | 9,847
+`'validation'` | 9,832
 
 *   **Features**:
 
@@ -429,6 +639,40 @@ FeaturesDict({
 Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-mnli_mismatched-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## glue/mnli_matched
 
@@ -442,10 +686,10 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 9,796
-'validation' | 9,815
+Split          | Examples
+:------------- | -------:
+`'test'`       | 9,796
+`'validation'` | 9,815
 
 *   **Features**:
 
@@ -494,6 +738,40 @@ FeaturesDict({
 Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-mnli_matched-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## glue/qnli
 
@@ -517,11 +795,11 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 5,463
-'train'      | 104,743
-'validation' | 5,463
+Split          | Examples
+:------------- | -------:
+`'test'`       | 5,463
+`'train'`      | 104,743
+`'validation'` | 5,463
 
 *   **Features**:
 
@@ -554,6 +832,40 @@ Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
 
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-qnli-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
 ## glue/rte
 
 *   **Config description**: The Recognizing Textual Entailment (RTE) datasets
@@ -571,11 +883,11 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 3,000
-'train'      | 2,490
-'validation' | 277
+Split          | Examples
+:------------- | -------:
+`'test'`       | 3,000
+`'train'`      | 2,490
+`'validation'` | 277
 
 *   **Features**:
 
@@ -634,6 +946,40 @@ Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
 
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-rte-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
 ## glue/wnli
 
 *   **Config description**: The Winograd Schema Challenge (Levesque et al.,
@@ -664,11 +1010,11 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 146
-'train'      | 635
-'validation' | 71
+Split          | Examples
+:------------- | -------:
+`'test'`       | 146
+`'train'`      | 635
+`'validation'` | 71
 
 *   **Features**:
 
@@ -701,6 +1047,40 @@ Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
 
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-wnli-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
 ## glue/ax
 
 *   **Config description**: A manually-curated evaluation dataset for
@@ -716,9 +1096,9 @@ the correct citation for each contained dataset.
 
 *   **Splits**:
 
-Split  | Examples
-:----- | -------:
-'test' | 1,104
+Split    | Examples
+:------- | -------:
+`'test'` | 1,104
 
 *   **Features**:
 
@@ -744,3 +1124,37 @@ FeaturesDict({
 Note that each GLUE dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset.
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/glue-ax-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->

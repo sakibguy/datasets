@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,33 +13,72 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Imagenet datasets."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import io
 import os
 import tarfile
+
+from absl import logging
 
 import tensorflow.compat.v2 as tf
 import tensorflow_datasets.public_api as tfds
 
 
 _DESCRIPTION = '''\
-ILSVRC 2012, aka ImageNet is an image dataset organized according to the
-WordNet hierarchy. Each meaningful concept in WordNet, possibly described by
-multiple words or word phrases, is called a "synonym set" or "synset". There are
-more than 100,000 synsets in WordNet, majority of them are nouns (80,000+). In
-ImageNet, we aim to provide on average 1000 images to illustrate each synset.
-Images of each concept are quality-controlled and human-annotated. In its
-completion, we hope ImageNet will offer tens of millions of cleanly sorted
-images for most of the concepts in the WordNet hierarchy.
+ILSVRC 2012, commonly known as 'ImageNet' is an image dataset organized
+according to the WordNet hierarchy. Each meaningful concept in WordNet,
+possibly described by multiple words or word phrases, is called a "synonym set"
+or "synset". There are more than 100,000 synsets in WordNet, majority of them
+are nouns (80,000+). In ImageNet, we aim to provide on average 1000 images to
+illustrate each synset. Images of each concept are quality-controlled and
+human-annotated. In its completion, we hope ImageNet will offer tens of
+millions of cleanly sorted images for most of the concepts in the WordNet
+hierarchy.
 
-Note that labels were never publicly released for the test set, so we only
-include splits for the training and validation sets here.
+The test split contains 100K images but no labels because no labels have been
+publicly released. We provide support for the test split from 2012 with the
+minor patch released on October 10, 2019. In order to manually download this
+data, a user must perform the following operations:
+
+1. Download the 2012 test split available [here](http://www.image-net.org/challenges/LSVRC/2012/downloads.php#images).
+2. Download the October 10, 2019 patch. There is a Google Drive link to the
+patch provided on the same page.
+3. Combine the two tar-balls, manually overwriting any images in the original
+archive with images from the patch. According to the instructions on
+image-net.org, this procedure overwrites just a few images.
+
+The resulting tar-ball may then be processed by TFDS.
+
+To assess the accuracy of a model on the ImageNet test split, one must run
+inference on all images in the split, export those results to a text file that
+must be uploaded to the ImageNet evaluation server. The maintainers of the
+ImageNet evaluation server permits a single user to submit up to 2 submissions
+per week in order to prevent overfitting.
+
+To evaluate the accuracy on the test split, one must first create an account at
+image-net.org. This account must be approved by the site administrator. After
+the account is created, one can submit the results to the test server at
+http://www.image-net.org/challenges/LSVRC/2013/test_server
+The submission consists of several ASCII text files corresponding to multiple
+tasks. The task of interest is "Classification submission (top-5 cls error)".
+A sample of an exported text file looks like the following:
+
+```
+771 778 794 387 650
+363 691 764 923 427
+737 369 430 531 124
+755 930 755 59 168
+```
+
+The export format is described in full in "readme.txt" within the 2013
+development kit available here:
+http://imagenet.stanford.edu/image/ilsvrc2013/ILSVRC2013_devkit.tgz
+Please see the section entitled "3.3 CLS-LOC submission format". Briefly, the
+format of the text file is 100,000 lines corresponding to each image in the test
+split. Each line of integers correspond to the rank-ordered, top 5 predictions
+for each test image. The integers are 1-indexed corresponding to the line number
+in the corresponding labels file. See imagenet2012_labels.txt.
 '''
 
 # Web-site is asking to cite paper from 2015.
@@ -97,8 +136,22 @@ PNG_IMAGES = ['n02105855_2933.JPEG']
 class Imagenet2012(tfds.core.GeneratorBasedBuilder):
   """Imagenet 2012, aka ILSVRC 2012."""
 
-  VERSION = tfds.core.Version(
-      '5.0.0', 'New split API (https://tensorflow.org/datasets/splits)')
+  VERSION = tfds.core.Version('5.1.0')
+  SUPPORTED_VERSIONS = [
+      tfds.core.Version('5.0.0'),
+  ]
+  RELEASE_NOTES = {
+      '5.1.0': 'Added test split.',
+      '5.0.0': 'New split API (https://tensorflow.org/datasets/splits)',
+      '4.0.0': '(unpublished)',
+      '3.0.0': """
+      Fix colorization on ~12 images (CMYK -> RGB).
+      Fix format for consistency (convert the single png image to Jpeg).
+      Faster generation reading directly from the archive.
+      """,
+      '2.0.1': 'Encoding fix. No changes from user point of view.',
+      '2.0.0': 'Fix validation labels.',
+  }
 
   MANUAL_DOWNLOAD_INSTRUCTIONS = """\
   manual_dir should contain two files: ILSVRC2012_img_train.tar and
@@ -108,7 +161,7 @@ class Imagenet2012(tfds.core.GeneratorBasedBuilder):
   """
 
   def _info(self):
-    names_file = tfds.core.get_tfds_path(_LABELS_FNAME)
+    names_file = tfds.core.tfds_path(_LABELS_FNAME)
     return tfds.core.DatasetInfo(
         builder=self,
         description=_DESCRIPTION,
@@ -133,8 +186,8 @@ class Imagenet2012(tfds.core.GeneratorBasedBuilder):
     Returns:
       dict, mapping from image name (str) to label (str).
     """
-    labels_path = tfds.core.get_tfds_path(_VALIDATION_LABELS_FNAME)
-    with tf.io.gfile.GFile(labels_path) as labels_f:
+    labels_path = tfds.core.tfds_path(_VALIDATION_LABELS_FNAME)
+    with tf.io.gfile.GFile(os.fspath(labels_path)) as labels_f:
       # `splitlines` to remove trailing `\r` in Windows
       labels = labels_f.read().strip().splitlines()
     with tf.io.gfile.GFile(val_path, 'rb') as tar_f_obj:
@@ -145,28 +198,38 @@ class Imagenet2012(tfds.core.GeneratorBasedBuilder):
   def _split_generators(self, dl_manager):
     train_path = os.path.join(dl_manager.manual_dir, 'ILSVRC2012_img_train.tar')
     val_path = os.path.join(dl_manager.manual_dir, 'ILSVRC2012_img_val.tar')
-    # We don't import the original test split, as it doesn't include labels.
-    # These were never publicly released.
-    if not tf.io.gfile.exists(train_path) or not tf.io.gfile.exists(val_path):
+    test_path = os.path.join(dl_manager.manual_dir, 'ILSVRC2012_img_test.tar')
+    splits = []
+    _add_split_if_exists(
+        split_list=splits,
+        split=tfds.Split.TRAIN,
+        split_path=train_path,
+        dl_manager=dl_manager,
+    )
+    _add_split_if_exists(
+        split_list=splits,
+        split=tfds.Split.VALIDATION,
+        split_path=val_path,
+        dl_manager=dl_manager,
+        validation_labels=self._get_validation_labels(val_path),
+    )
+    _add_split_if_exists(
+        split_list=splits,
+        split=tfds.Split.TEST,
+        split_path=test_path,
+        dl_manager=dl_manager,
+        labels_exist=False,
+    )
+    if not splits:
       raise AssertionError(
           'ImageNet requires manual download of the data. Please download '
-          'the train and val set and place them into: {}, {}'.format(
-              train_path, val_path))
-    return [
-        tfds.core.SplitGenerator(
-            name=tfds.Split.TRAIN,
-            gen_kwargs={
-                'archive': dl_manager.iter_archive(train_path),
-            },
-        ),
-        tfds.core.SplitGenerator(
-            name=tfds.Split.VALIDATION,
-            gen_kwargs={
-                'archive': dl_manager.iter_archive(val_path),
-                'validation_labels': self._get_validation_labels(val_path),
-            },
-        ),
-    ]
+          'the data and place them into:\n'
+          f' * train: {train_path}\n'
+          f' * test: {test_path}\n'
+          f' * validation: {val_path}\n'
+          'At least one of the split should be available.'
+      )
+    return splits
 
   def _fix_image(self, image_fname, image):
     """Fix image color system and format starting from v 3.0.0."""
@@ -178,8 +241,12 @@ class Imagenet2012(tfds.core.GeneratorBasedBuilder):
       image = io.BytesIO(tfds.core.utils.png_to_jpeg(image.read()))
     return image
 
-  def _generate_examples(self, archive, validation_labels=None):
+  def _generate_examples(self, archive, validation_labels=None,
+                         labels_exist=True):
     """Yields examples."""
+    if not labels_exist:  # Test split
+      for key, example in self._generate_examples_test(archive):
+        yield key, example
     if validation_labels:  # Validation split
       for key, example in self._generate_examples_validation(archive,
                                                              validation_labels):
@@ -210,3 +277,33 @@ class Imagenet2012(tfds.core.GeneratorBasedBuilder):
           'label': labels[fname],
       }
       yield fname, record
+
+  def _generate_examples_test(self, archive):
+    for fname, fobj in archive:
+      record = {
+          'file_name': fname,
+          'image': fobj,
+          'label': -1,
+      }
+      yield fname, record
+
+
+def _add_split_if_exists(split_list, split, split_path, dl_manager, **kwargs):
+  """Add split to given list of splits only if the file exists."""
+  if not tf.io.gfile.exists(split_path):
+    logging.warning(
+        'ImageNet 2012 Challenge %s split not found at %s. '
+        'Proceeding with data generation anyways but the split will be '
+        'missing from the dataset...',
+        str(split), split_path,
+    )
+  else:
+    split_list.append(
+        tfds.core.SplitGenerator(
+            name=split,
+            gen_kwargs={
+                'archive': dl_manager.iter_archive(split_path),
+                **kwargs
+            },
+        ),
+    )

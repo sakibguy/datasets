@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Wiki40B: A clean Wikipedia dataset for 40+ languages."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -68,8 +63,7 @@ WIKIPEDIA_LANGUAGES = [
 class Wiki40bConfig(tfds.core.BuilderConfig):
   """BuilderConfig for Wiki40B."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, language=None, **kwargs):
+  def __init__(self, *, language=None, **kwargs):
     """BuilderConfig for Wiki40B.
 
     Args:
@@ -111,7 +105,7 @@ class Wiki40b(tfds.core.BeamBasedBuilder):
         supervised_keys=None,
         homepage=_URL,
         citation=_CITATION,
-        redistribution_info={"license": _LICENSE},
+        license=_LICENSE,
     )
 
   def _split_generators(self, dl_manager):

@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,24 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.dataset_info."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import json
 import os
 import tempfile
 import numpy as np
-import six
+
 import tensorflow.compat.v2 as tf
 from tensorflow_datasets import testing
-from tensorflow_datasets.core import dataset_builder
 from tensorflow_datasets.core import dataset_info
+from tensorflow_datasets.core import download
 from tensorflow_datasets.core import features
-from tensorflow_datasets.core.utils import py_utils
+from tensorflow_datasets.core import utils
 from tensorflow_datasets.image_classification import mnist
 
 from google.protobuf import text_format
@@ -38,7 +33,7 @@ from tensorflow_metadata.proto.v0 import schema_pb2
 
 tf.enable_v2_behavior()
 
-_TFDS_DIR = py_utils.tfds_dir()
+_TFDS_DIR = utils.tfds_path()
 _INFO_DIR = os.path.join(_TFDS_DIR, "testing", "test_data", "dataset_info",
                          "mnist", "3.0.1")
 _INFO_DIR_UNLABELED = os.path.join(_TFDS_DIR, "testing", "test_data",
@@ -77,31 +72,18 @@ class DatasetInfoTest(testing.TestCase):
   @classmethod
   def setUpClass(cls):
     super(DatasetInfoTest, cls).setUpClass()
-    dataset_builder._is_py2_download_and_prepare_disabled = False
     cls._tfds_tmp_dir = testing.make_tmp_dir()
     cls._builder = DummyDatasetSharedGenerator(data_dir=cls._tfds_tmp_dir)
 
   @classmethod
   def tearDownClass(cls):
     super(DatasetInfoTest, cls).tearDownClass()
-    dataset_builder._is_py2_download_and_prepare_disabled = True
     testing.rm_tmp_dir(cls._tfds_tmp_dir)
 
-  def test_undefined_dir(self):
-    with self.assertRaisesWithPredicateMatch(ValueError,
-                                             "undefined dataset_info_dir"):
-      info = dataset_info.DatasetInfo(builder=self._builder)
-      info.read_from_directory(None)
-
   def test_non_existent_dir(self):
-    # The error messages raised by Windows is different from Unix.
-    if os.name == "nt":
-      err = "The system cannot find the path specified"
-    else:
-      err = "No such file or dir"
     info = dataset_info.DatasetInfo(builder=self._builder)
     with self.assertRaisesWithPredicateMatch(
-        tf.errors.NotFoundError, err):
+        FileNotFoundError, "from a directory which does not exist"):
       info.read_from_directory(_NON_EXISTENT_DIR)
 
   def test_reading(self):
@@ -129,13 +111,16 @@ class DatasetInfoTest(testing.TestCase):
 
     self.assertEqual("image", info.supervised_keys[0])
     self.assertEqual("label", info.supervised_keys[1])
+    self.assertEqual(
+        info.module_name, "tensorflow_datasets.testing.test_utils"
+    )
 
   def test_reading_empty_properties(self):
     info = dataset_info.DatasetInfo(builder=self._builder)
     info.read_from_directory(_INFO_DIR_UNLABELED)
 
     # Assert supervised_keys has not been set
-    self.assertEqual(None, info.supervised_keys)
+    self.assertIsNone(None, info.supervised_keys)
 
   def test_writing(self):
     # First read in stuff.
@@ -168,9 +153,9 @@ class DatasetInfoTest(testing.TestCase):
     # Assert correct license was written.
     self.assertEqual(existing_json["redistributionInfo"]["license"], license_)
 
-    if six.PY3:
-      # Only test on Python 3 to avoid u'' formatting issues
-      self.assertEqual(repr(info), INFO_STR)
+    # Do not check the full string as it display the generated path.
+    self.assertEqual(_INFO_STR % mnist_builder.data_dir, repr(info))
+    self.assertIn("'test': <SplitInfo num_examples=", repr(info))
 
   def test_restore_after_modification(self):
     # Create a DatasetInfo
@@ -180,7 +165,7 @@ class DatasetInfoTest(testing.TestCase):
         supervised_keys=("input", "output"),
         homepage="http://some-location",
         citation="some citation",
-        redistribution_info={"license": "some license"}
+        license="some license",
     )
     info.download_size = 456
     info.as_proto.splits.add(name="train", num_bytes=512)
@@ -264,14 +249,18 @@ class DatasetInfoTest(testing.TestCase):
   def test_statistics_generation(self):
     with testing.tmp_dir(self.get_temp_dir()) as tmp_dir:
       builder = DummyDatasetSharedGenerator(data_dir=tmp_dir)
-      builder.download_and_prepare()
+      builder.download_and_prepare(
+          download_config=download.DownloadConfig(
+              compute_stats=download.ComputeStatsMode.AUTO,
+          ),
+      )
 
       # Overall
       self.assertEqual(30, builder.info.splits.total_num_examples)
 
       # Per split.
-      test_split = builder.info.splits["test"].get_proto()
-      train_split = builder.info.splits["train"].get_proto()
+      test_split = builder.info.splits["test"].to_proto()
+      train_split = builder.info.splits["train"].to_proto()
       expected_schema = text_format.Parse("""
       feature {
         name: "x"
@@ -311,7 +300,11 @@ class DatasetInfoTest(testing.TestCase):
   def test_schema_generation_variable_sizes(self):
     with testing.tmp_dir(self.get_temp_dir()) as tmp_dir:
       builder = RandomShapedImageGenerator(data_dir=tmp_dir)
-      builder.download_and_prepare()
+      builder.download_and_prepare(
+          download_config=download.DownloadConfig(
+              compute_stats=download.ComputeStatsMode.AUTO,
+          ),
+      )
 
       expected_schema = text_format.Parse(
           """
@@ -367,31 +360,37 @@ feature {
     self.assertEqual(2, len(info.as_proto.schema.feature))
 
 
-INFO_STR = """tfds.core.DatasetInfo(
+# pylint: disable=g-inconsistent-quotes
+_INFO_STR = '''tfds.core.DatasetInfo(
     name='mnist',
-    version=3.0.1,
-    description='The MNIST database of handwritten digits.',
+    full_name='mnist/3.0.1',
+    description="""
+    The MNIST database of handwritten digits.
+    """,
     homepage='https://storage.googleapis.com/cvdf-datasets/mnist/',
+    data_path='%s',
+    download_size=1.95 KiB,
+    dataset_size=11.06 MiB,
     features=FeaturesDict({
         'image': Image(shape=(28, 28, 1), dtype=tf.uint8),
         'label': ClassLabel(shape=(), dtype=tf.int64, num_classes=10),
     }),
-    total_num_examples=40,
-    splits={
-        'test': 20,
-        'train': 20,
-    },
     supervised_keys=('image', 'label'),
-    citation=\"\"\"@article{lecun2010mnist,
+    splits={
+        'test': <SplitInfo num_examples=20, num_shards=1>,
+        'train': <SplitInfo num_examples=20, num_shards=1>,
+    },
+    citation="""@article{lecun2010mnist,
       title={MNIST handwritten digit database},
       author={LeCun, Yann and Cortes, Corinna and Burges, CJ},
       journal={ATT Labs [Online]. Available: http://yann. lecun. com/exdb/mnist},
       volume={2},
       year={2010}
-    }\"\"\",
+    }
+    """,
     redistribution_info=license: "test license",
-)
-"""
+)'''
+# pylint: enable=g-inconsistent-quotes
 
 
 if __name__ == "__main__":

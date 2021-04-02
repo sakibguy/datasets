@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """To serialize Dict or sequence to Example."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
 import numpy as np
@@ -63,15 +58,18 @@ def _dict_to_tf_example(example_dict, tensor_info_dict):
 
   Args:
     example_dict: `dict`, dict of values, tensor,...
-    tensor_info_dict: `dict` of `tfds.feature.TensorInfo`
+    tensor_info_dict: `dict` of `tfds.features.TensorInfo`
 
   Returns:
     example_proto: `tf.train.Example`, the encoded example proto.
   """
   def run_with_reraise(fn, k, example_data, tensor_info):
-    with utils.try_reraise(
-        "Error while serializing feature `{}`: `{}`: ".format(k, tensor_info)):
+    try:
       return fn(example_data, tensor_info)
+    except Exception as e:  # pylint: disable=broad-except
+      utils.reraise(
+          e, f"Error while serializing feature `{k}`: `{tensor_info}`: ",
+      )
 
   if tensor_info_dict:
     # Add the RaggedTensor fields for the nested sequences

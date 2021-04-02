@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Wikipedia dataset containing cleaned articles of all languages."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
+import bz2
 import codecs
 import json
 import re
@@ -30,11 +26,12 @@ import six
 import tensorflow.compat.v2 as tf
 import tensorflow_datasets.public_api as tfds
 
-if six.PY3:
-  import bz2  # pylint:disable=g-import-not-at-top
-else:
-  # py2's built-in bz2 package does not support reading from file objects.
-  import bz2file as bz2  # pylint:disable=g-import-not-at-top
+from absl import flags  # pylint:disable=g-bad-import-order,g-import-not-at-top
+FLAGS = flags.FLAGS
+flags.DEFINE_boolean(
+    "wikipedia_auto_select_flume_mode", True,
+    "If True, will automatically determine whether to run flume on borg or "
+    "locally based on the dump size for each language.")
 
 _CITATION = """\
 @ONLINE {wikidump,
@@ -89,6 +86,7 @@ WIKIPEDIA_LANGUAGES = [
     "war", "wo", "wuu", "xal", "xh", "xmf", "yi", "yo", "za", "zea", "zh",
     "zh-classical", "zh-min-nan", "zh-yue", "zu"]
 
+# Use mirror (your.org) to avoid download caps.
 _BASE_URL_TMPL = "https://dumps.wikimedia.your.org/{lang}wiki/{date}/"
 _INFO_FILE = "dumpstatus.json"
 
@@ -96,8 +94,7 @@ _INFO_FILE = "dumpstatus.json"
 class WikipediaConfig(tfds.core.BuilderConfig):
   """BuilderConfig for Wikipedia."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, language=None, date=None, **kwargs):
+  def __init__(self, *, language=None, date=None, **kwargs):
     """BuilderConfig for Wikipedia.
 
     Args:
@@ -107,36 +104,35 @@ class WikipediaConfig(tfds.core.BuilderConfig):
       **kwargs: keyword arguments forwarded to super.
     """
     super(WikipediaConfig, self).__init__(
-        name="{0}.{1}".format(date, language),
-        description="Wikipedia dataset for {0}, parsed from {1} dump.".format(
-            language, date),
+        name=f"{date}.{language}",
+        description=
+        f"Wikipedia dataset for {language}, parsed from {date} dump.",
         **kwargs)
     self.date = date
     self.language = language
 
 
-_VERSION = tfds.core.Version(
-    "1.0.0", "New split API (https://tensorflow.org/datasets/splits)")
-
-
 class Wikipedia(tfds.core.BeamBasedBuilder):
   """Wikipedia dataset."""
-  # Use mirror (your.org) to avoid download caps.
+
+  VERSION = tfds.core.Version("1.0.0")
+  RELEASE_NOTES = {
+      "1.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+  }
 
   BUILDER_CONFIGS = [
-      WikipediaConfig(  # pylint:disable=g-complex-comprehension
-          version=_VERSION,
-          language=lang,
-          date="20200301",
-      ) for lang in WIKIPEDIA_LANGUAGES
+      WikipediaConfig(language=lang, date="20201201")
+      for lang in WIKIPEDIA_LANGUAGES
   ] + [
       # Old versions files do not exists anymore but config are kept as
       # previously generated datasets can still be read.
-      WikipediaConfig(  # pylint:disable=g-complex-comprehension
-          version=_VERSION,
-          language=lang,
-          date="20190301",
-      ) for lang in WIKIPEDIA_LANGUAGES
+      WikipediaConfig(language=lang, date="20200301")
+      for lang in WIKIPEDIA_LANGUAGES
+  ] + [
+      # Old versions files do not exists anymore but config are kept as
+      # previously generated datasets can still be read.
+      WikipediaConfig(language=lang, date="20190301")
+      for lang in WIKIPEDIA_LANGUAGES
   ]
 
   def _info(self):
@@ -144,16 +140,14 @@ class Wikipedia(tfds.core.BeamBasedBuilder):
         builder=self,
         description=_DESCRIPTION,
         features=tfds.features.FeaturesDict({
-            "title":
-                tfds.features.Text(),
-            "text":
-                tfds.features.Text(),
+            "title": tfds.features.Text(),
+            "text": tfds.features.Text(),
         }),
         # No default supervised_keys.
         supervised_keys=None,
         homepage="https://dumps.wikimedia.org",
         citation=_CITATION,
-        redistribution_info={"license": _LICENSE},
+        license=_LICENSE,
     )
 
   def _split_generators(self, dl_manager):
@@ -185,13 +179,11 @@ class Wikipedia(tfds.core.BeamBasedBuilder):
       # Use dictionary since testing mock always returns the same result.
     downloaded_files = dl_manager.download({"xml": xml_urls})
 
-    return [
-        tfds.core.SplitGenerator(  # pylint:disable=g-complex-comprehension
-            name=tfds.Split.TRAIN,
-            gen_kwargs={"filepaths": downloaded_files["xml"], "language": lang})
-    ]
+    return {
+        tfds.Split.TRAIN: self._generate_examples(downloaded_files["xml"], lang)
+    }
 
-  def _build_pcollection(self, pipeline, filepaths, language):
+  def _generate_examples(self, filepaths, language):
     """Build PCollection of examples in the raw (text) form."""
 
     beam = tfds.core.lazy_imports.apache_beam
@@ -260,8 +252,7 @@ class Wikipedia(tfds.core.BeamBasedBuilder):
       }
 
     return (
-        pipeline
-        | beam.Create(filepaths)
+        beam.Create(filepaths)
         | beam.FlatMap(_extract_content)
         | beam.transforms.Reshuffle()
         | beam.FlatMap(_clean_content)

@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.download.download_manager."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
+import collections
 import hashlib
 import json
 import os
 import pickle
+from unittest import mock
 
-from absl.testing import absltest
 import promise
+
+import tensorflow as tf
+
 from tensorflow_datasets import testing
+from tensorflow_datasets.core import utils
 from tensorflow_datasets.core.download import checksums as checksums_lib
 from tensorflow_datasets.core.download import download_manager as dm
 from tensorflow_datasets.core.download import downloader
@@ -44,21 +44,44 @@ def _sha256(str_):
   return hashlib.sha256(str_.encode('utf8')).hexdigest()
 
 
+def _as_path(nested_paths):
+  return tf.nest.map_structure(utils.as_path, nested_paths)
+
+
+def _info_path(path):
+  return path.with_name(f'{path.name}.INFO')
+
+
+class PathDict(collections.UserDict):
+  """Like `dict` but normalize path-like objects.
+
+  It means `d[Path('/path/')]` and `d['/path/']` are equivalent.
+
+  """
+
+  def __getitem__(self, key):
+    return super().__getitem__(os.fspath(key))
+
+  def __setitem__(self, key, value):
+    return super().__setitem__(os.fspath(key), utils.as_path(value))
+
+
 class Artifact(object):
   # For testing only.
 
-  def __init__(self, name, url=None):
+  def __init__(self, name, url=None, content=None):
     url = url or f'http://foo-bar.ch/{name}'
-    content = f'content of {name}'
+    content = content or f'content of {name}'
     self.url = url
     self.url_info = checksums_lib.UrlInfo(
         size=len(content),
         checksum=_sha256(content),
+        filename=name,
     )
     self.file_name = resource_lib.get_dl_fname(url, self.url_info.checksum)
-    self.file_path = f'/dl_dir/{self.file_name}'
+    self.file_path = utils.as_path(f'/dl_dir/{self.file_name}')
     self.url_name = resource_lib.get_dl_fname(url, _sha256(url))
-    self.url_path = f'/dl_dir/{self.url_name}'
+    self.url_path = utils.as_path(f'/dl_dir/{self.url_name}')
 
 
 class DownloadManagerTest(testing.TestCase):
@@ -85,16 +108,22 @@ class DownloadManagerTest(testing.TestCase):
   def _make_downloader_mock(self):
     """`downloader.download` patch which creates the returns the path."""
 
-    def _download(url, tmpdir_path):
+    def _download(url, tmpdir_path, verify):
+      del verify
       self.downloaded_urls.append(url)  # Record downloader.download() calls
       # If the name isn't explicitly provided, then it is extracted from the
       # url.
       filename = self.dl_fnames.get(url, os.path.basename(url))
       # Save the file in the tmp_dir
-      self.fs.add_file(os.path.join(tmpdir_path, filename))
-      return promise.Promise.resolve(self.dl_results[url])
+      path = os.path.join(tmpdir_path, filename)
+      self.fs.add_file(path)
+      dl_result = downloader.DownloadResult(
+          path=utils.as_path(path),
+          url_info=self.dl_results[url],
+      )
+      return promise.Promise.resolve(dl_result)
 
-    return absltest.mock.patch.object(
+    return mock.patch.object(
         downloader._Downloader, 'download', side_effect=_download)
 
   def _make_extractor_mock(self):
@@ -108,16 +137,16 @@ class DownloadManagerTest(testing.TestCase):
             f'Destination {dest} do not match extraction method {method}')
       return promise.Promise.resolve(self.extract_results[path])
 
-    return absltest.mock.patch.object(
+    return mock.patch.object(
         extractor._Extractor, 'extract', side_effect=_extract).start()
 
   def setUp(self):
-    super(DownloadManagerTest, self).setUp()
+    super().setUp()
 
     # Input of the DownloadManager
     self.dl_results = {}
     self.dl_fnames = {}
-    self.extract_results = {}
+    self.extract_results = PathDict()
 
     # Track calls to downloader/extractor
     self.downloaded_urls = []
@@ -127,12 +156,18 @@ class DownloadManagerTest(testing.TestCase):
     self.fs = testing.MockFs()  # Dict file_path -> file_content
 
     # Start all mocks
-    self.fs.mock().start()
-    absltest.mock.patch.object(checksums_lib, 'store_checksums').start()
+    self.fs.__enter__()
     self._make_downloader_mock().start()
     self._make_extractor_mock().start()
 
-    self.addCleanup(absltest.mock.patch.stopall)
+    self.addCleanup(mock.patch.stopall)
+
+  def tearDown(self):
+    super().tearDown()
+    self.fs.__exit__(None, None, None)
+
+  def assertContainFiles(self, filepaths):
+    self.assertCountEqual(_as_path(list(self.fs.files)), _as_path(filepaths))
 
   def _write_info(self, path, info):
     content = json.dumps(info)
@@ -144,14 +179,16 @@ class DownloadManagerTest(testing.TestCase):
       url_infos=None,
       dl_dir='/dl_dir',
       extract_dir='/extract_dir',
+      manual_dir='/manual_dir',
       **kwargs
   ):
     manager = dm.DownloadManager(
         dataset_name='mnist',
         download_dir=dl_dir,
         extract_dir=extract_dir,
-        manual_dir='/manual_dir',
+        manual_dir=manual_dir,
         register_checksums=register_checksums,
+        register_checksums_path='/checksums/checksums.tsv',
         **kwargs
     )
     if url_infos:
@@ -163,10 +200,11 @@ class DownloadManagerTest(testing.TestCase):
     a, b, c = [Artifact(i) for i in 'abc']
     # File `a` is cached
     self.fs.add_file(a.file_path)
-    self.fs.add_file(a.file_path + '.INFO')
+    self.fs.add_file(_info_path(a.file_path))
     # INFO file of c has been deleted:
     self.fs.add_file(c.file_path)
 
+    # A url is cached, so not downloaded.
     self.dl_results[b.url] = b.url_info
     self.dl_results[c.url] = c.url_info
     manager = self._get_manager(url_infos={
@@ -189,6 +227,32 @@ class DownloadManagerTest(testing.TestCase):
     self.assertEqual(  # Downloaded size include cached downloads
         manager.downloaded_size, sum([art.url_info.size for art in (a, b, c)]))
 
+  def test_manually_downloaded(self):
+    """One file is manually downloaded, one not."""
+    a, b = [Artifact(i) for i in 'ab']
+
+    a_manual_path = '/manual_dir/a'
+    # File a is manually downloaded
+    self.fs.add_file(a_manual_path)
+    self.fs.add_file(b.file_path)
+
+    self.dl_results[b.url] = b.url_info
+    manager = self._get_manager(
+        register_checksums=False,  # Register with manual download not supported
+        url_infos={
+            art.url: art.url_info for art in (a, b)
+        },
+    )
+    downloads = manager.download({
+        'manual': a.url,
+        'download': b.url,
+    })
+    expected = {
+        'manual': utils.as_path(a_manual_path),
+        'download': b.file_path,
+    }
+    self.assertEqual(downloads, expected)
+
   def test_extract(self):
     """One file already extracted, one file with NO_EXTRACT, one to extract."""
     cached = resource_lib.Resource(path='/dl_dir/cached', extract_method=ZIP)
@@ -203,13 +267,13 @@ class DownloadManagerTest(testing.TestCase):
         'new': new_,
         'noextract': no_extract,
     })
-    expected = {
+    expected = _as_path({
         'cached': '/extract_dir/ZIP.cached',
         'new': '/extract_dir/TAR.new',
         'noextract': '/dl_dir/noextract',
-    }
+    })
     self.assertEqual(res, expected)
-    self.assertCountEqual(self.extracted_paths, ['/dl_dir/new'])
+    self.assertCountEqual(self.extracted_paths, [_as_path('/dl_dir/new')])
 
   def test_extract_twice_parallel(self):
     # Make sure calling extract twice on same resource actually does the
@@ -218,10 +282,12 @@ class DownloadManagerTest(testing.TestCase):
     manager = self._get_manager()
     out1 = manager.extract(['/dl_dir/foo.tar', '/dl_dir/foo.tar'])
     out2 = manager.extract('/dl_dir/foo.tar')
-    self.assertEqual(out1, ['/extract_dir/TAR.foo', '/extract_dir/TAR.foo'])
-    self.assertEqual(out2, '/extract_dir/TAR.foo')
+    self.assertEqual(
+        out1, _as_path(['/extract_dir/TAR.foo', '/extract_dir/TAR.foo'])
+    )
+    self.assertEqual(out2, _as_path('/extract_dir/TAR.foo'))
     # Result is memoize so extract has only been called once
-    self.assertCountEqual(self.extracted_paths, ['/dl_dir/foo.tar'])
+    self.assertCountEqual(self.extracted_paths, [_as_path('/dl_dir/foo.tar')])
 
   def test_download_and_extract(self):
     a, b = Artifact('a.zip'), Artifact('b')
@@ -237,7 +303,28 @@ class DownloadManagerTest(testing.TestCase):
     })
     res = manager.download_and_extract({'a': a.url, 'b': b.url})
     self.assertEqual(res, {
-        'a': '/extract_dir/ZIP.%s' % a.file_name,
+        'a': _as_path('/extract_dir/ZIP.%s' % a.file_name),
+        'b': b.file_path,
+    })
+
+  def test_download_and_extract_no_manual_dir(self):
+    a, b = Artifact('a.zip'), Artifact('b')
+    self.dl_results[a.url] = a.url_info
+    self.dl_results[b.url] = b.url_info
+    self.extract_results[a.file_path] = f'/extract_dir/ZIP.{a.file_name}'
+    # url_b doesn't need any extraction.
+
+    # Result is the same after caching:
+    manager = self._get_manager(
+        manual_dir=None,
+        url_infos={
+            a.url: a.url_info,
+            b.url: b.url_info,
+        },
+    )
+    res = manager.download_and_extract({'a': a.url, 'b': b.url})
+    self.assertEqual(res, {
+        'a': _as_path('/extract_dir/ZIP.%s' % a.file_name),
         'b': b.file_path,
     })
 
@@ -253,22 +340,21 @@ class DownloadManagerTest(testing.TestCase):
         a.url: a.url_info,
     })
     res = manager.download_and_extract({'a': a.url})
-    self.assertEqual(res, {
+    self.assertEqual(res, _as_path({
         'a': '/extract_dir/ZIP.%s' % a.file_name,
-    })
-
+    }))
 
   def test_download_and_extract_already_downloaded(self):
     a = Artifact('a')  # Extract can't be deduced from the url, but from .INFO
     # File was already downloaded:
     self.fs.add_file(a.file_path)
-    self._write_info(a.file_path + '.INFO', {'original_fname': 'a.zip'})
+    self._write_info(_info_path(a.file_path), {'original_fname': 'a.zip'})
     self.extract_results[a.file_path] = f'/extract_dir/ZIP.{a.file_name}'
     manager = self._get_manager(url_infos={
         a.url: a.url_info,
     })
     res = manager.download_and_extract(a.url)
-    self.assertEqual(res, f'/extract_dir/ZIP.{a.file_name}')
+    self.assertEqual(res, _as_path(f'/extract_dir/ZIP.{a.file_name}'))
     # No url downloaded, but file extracted.
     self.assertCountEqual(self.downloaded_urls, [])
     self.assertCountEqual(self.extracted_paths, [a.file_path])
@@ -276,15 +362,11 @@ class DownloadManagerTest(testing.TestCase):
   def test_force_download_and_extract(self):
     a = Artifact('a.tar.gz')
     self.dl_results[a.url] = a.url_info
-    self.extract_results[a.file_path] = (
-        f'/extract_dir/TAR_GZ.{a.file_name}')
+    self.extract_results[a.file_path] = f'/extract_dir/TAR_GZ.{a.file_name}'
 
     # Old content already exists
-    self.fs.files = {
-        a.file_path: 'old content',
-        a.file_path + '.INFO': '{}',
-        f'/extract_dir/TAR_GZ.{a.file_name}': 'old content',
-    }
+    self.fs.add_file(a.file_path, content='old content')
+    self.fs.add_file(_info_path(a.file_path), content='{}')
 
     # Redownloading the data overwrite the content
     manager = self._get_manager(
@@ -292,14 +374,15 @@ class DownloadManagerTest(testing.TestCase):
         force_extraction=True,
         url_infos={
             a.url: a.url_info,
-        })
+        },
+    )
     res = manager.download_and_extract(a.url)
-    self.assertEqual(res, f'/extract_dir/TAR_GZ.{a.file_name}')
+    self.assertEqual(res, _as_path(f'/extract_dir/TAR_GZ.{a.file_name}'))
 
     self.assertCountEqual(self.downloaded_urls, [a.url])
     self.assertCountEqual(self.extracted_paths, [a.file_path])
     self.assertNotEqual(a.file_path, 'old content')
-    self.assertNotEqual(a.file_path + '.INFO', '{}')
+    self.assertNotEqual(_info_path(a.file_path), '{}')
     self.assertNotEqual(f'/extract_dir/TAR_GZ.{a.file_name}', 'old content')
 
   def test_wrong_checksum(self):
@@ -309,7 +392,11 @@ class DownloadManagerTest(testing.TestCase):
     manager = self._get_manager(
         register_checksums=False,
         url_infos={
-            a.url: checksums_lib.UrlInfo(size=a.url_info.size, checksum=sha_b),
+            a.url: checksums_lib.UrlInfo(
+                size=a.url_info.size,
+                checksum=sha_b,
+                filename=a.url_info.filename,
+            ),
         },
     )
     with self.assertRaises(dm.NonMatchingChecksumError):
@@ -347,7 +434,7 @@ class DownloadManagerTest(testing.TestCase):
     )
     self.assertEqual(dl_manager.download(a.url), a.url_path)
     self.assertCountEqual(self.downloaded_urls, [a.url])
-    self.assertCountEqual(self.fs.files, [a.url_path, a.url_path + '.INFO'])
+    self.assertContainFiles([a.url_path, _info_path(a.url_path)])
 
     # Reuse downloaded cache
     dl_manager = self._get_manager(
@@ -355,16 +442,7 @@ class DownloadManagerTest(testing.TestCase):
     )
     self.assertEqual(dl_manager.download(a.url), a.url_path)
     self.assertCountEqual(self.downloaded_urls, [a.url])
-    self.assertCountEqual(self.fs.files, [a.url_path, a.url_path + '.INFO'])
-
-    # Reuse downloaded cache, even if url_info is present
-    dl_manager = self._get_manager(
-        register_checksums=False,
-        url_infos={a.url: a.url_info},
-    )
-    self.assertEqual(dl_manager.download(a.url), a.url_path)
-    self.assertCountEqual(self.downloaded_urls, [a.url])
-    self.assertCountEqual(self.fs.files, [a.url_path, a.url_path + '.INFO'])
+    self.assertContainFiles([a.url_path, _info_path(a.url_path)])
 
     # Reuse downloaded cache and register the checksums
     dl_manager = self._get_manager(
@@ -373,7 +451,9 @@ class DownloadManagerTest(testing.TestCase):
     self.assertEqual(dl_manager.download(a.url), a.file_path)
     self.assertCountEqual(self.downloaded_urls, [a.url])
     # The files have been renamed `url_path` -> `file_path`
-    self.assertCountEqual(self.fs.files, [a.file_path, a.file_path + '.INFO'])
+    self.assertContainFiles([
+        a.file_path, _info_path(a.file_path), '/checksums/checksums.tsv',
+    ])
 
     # After checksums have been registered, `file_path` is used
     dl_manager = self._get_manager(
@@ -382,7 +462,9 @@ class DownloadManagerTest(testing.TestCase):
     )
     self.assertEqual(dl_manager.download(a.url), a.file_path)
     self.assertCountEqual(self.downloaded_urls, [a.url])
-    self.assertCountEqual(self.fs.files, [a.file_path, a.file_path + '.INFO'])
+    self.assertContainFiles([
+        a.file_path, _info_path(a.file_path), '/checksums/checksums.tsv',
+    ])
 
     # Registering checksums twice still reuse the cached `file_path`
     dl_manager = self._get_manager(
@@ -391,7 +473,9 @@ class DownloadManagerTest(testing.TestCase):
     )
     self.assertEqual(dl_manager.download(a.url), a.file_path)
     self.assertCountEqual(self.downloaded_urls, [a.url])  # Still one download
-    self.assertCountEqual(self.fs.files, [a.file_path, a.file_path + '.INFO'])
+    self.assertContainFiles([
+        a.file_path, _info_path(a.file_path), '/checksums/checksums.tsv',
+    ])
 
     # Checksums unknown, so `file_path` unknown, re-downloading
     dl_manager = self._get_manager(
@@ -399,40 +483,35 @@ class DownloadManagerTest(testing.TestCase):
     )
     self.assertEqual(dl_manager.download(a.url), a.url_path)
     self.assertCountEqual(self.downloaded_urls, [a.url, a.url])  # Re-download!!
-    self.assertCountEqual(self.fs.files, [
-        a.url_path,
-        a.url_path + '.INFO',
-        a.file_path,  # `file_path` still exists from previous download
-        a.file_path + '.INFO',
+    self.assertContainFiles([
+        a.url_path, _info_path(a.url_path),
+        # `file_path` still exists from previous download
+        a.file_path, _info_path(a.file_path),
+        '/checksums/checksums.tsv',
     ])
 
-  def test_download_cached_checksums_error(self):
-    """Tests that the download is cached, even if record_checksums fails."""
+  def test_download_cached_url_info_added(self):
     a = Artifact('x')
     self.dl_results[a.url] = a.url_info
 
-    class StoreChecksumsError(Exception):
-      pass
-
+    # url_info unknown: File download in url_path
     dl_manager = self._get_manager(
-        register_checksums=True,
+        register_checksums=False,
     )
-    with absltest.mock.patch.object(
-        checksums_lib, 'store_checksums', side_effect=StoreChecksumsError()):
-      with self.assertRaises(StoreChecksumsError):
-        dl_manager.download(a.url)
-    # Even after failure, the file was properly downloaded
+    self.assertEqual(dl_manager.download(a.url), a.url_path)
     self.assertCountEqual(self.downloaded_urls, [a.url])
-    self.assertCountEqual(self.fs.files, [a.url_path, a.url_path + '.INFO'])
+    self.assertContainFiles([a.url_path, _info_path(a.url_path)])
 
-    # When the user retry, it should suceed without redownloading the file
+    # If url_info added:
+    # * Reuse downloaded cache
+    # * Rename url_path -> file_path
     dl_manager = self._get_manager(
-        register_checksums=True,
+        register_checksums=False,
+        url_infos={a.url: a.url_info},
     )
     self.assertEqual(dl_manager.download(a.url), a.file_path)
     self.assertCountEqual(self.downloaded_urls, [a.url])
-    # The files have been renamed `url_path` -> `file_path`
-    self.assertCountEqual(self.fs.files, [a.file_path, a.file_path + '.INFO'])
+    self.assertContainFiles([a.file_path, _info_path(a.file_path)])
 
   def test_download_url_info_in_info_file_missmatch(self):
     """Tests failure when downloaded checksums and `.INFO` mismatch."""
@@ -448,6 +527,7 @@ class DownloadManagerTest(testing.TestCase):
     self.dl_results[a.url] = checksums_lib.UrlInfo(
         size=a.url_info.size,
         checksum=_sha256('Other content'),
+        filename=a.url_info.filename,
     )
     dl_manager = self._get_manager(
         register_checksums=False,
@@ -463,6 +543,64 @@ class DownloadManagerTest(testing.TestCase):
         force_download=True,
     )
     dl_manager.download(a.url)
+
+  def test_register_checksums_url_info_already_exists(self):
+    a = Artifact('a.tar.gz')
+
+    # File already downloaded to it's final path (with checksums)
+    self.fs.add_file(a.file_path)
+    self.fs.add_file(_info_path(a.file_path))
+
+    # Download the file reuse existing path
+    manager = self._get_manager(
+        register_checksums=True,
+        url_infos={a.url: a.url_info},  # Url_info already registered
+    )
+    res = manager.download(a.url)
+    self.assertEqual(res, a.file_path)
+
+    # Checksums are created and url recorded
+    self.assertEqual(
+        self.fs.files['/checksums/checksums.tsv'],
+        f'{a.url}\t{a.url_info.size}\t{a.url_info.checksum}\t{a.url_info.filename}\n',
+    )
+
+  def test_download_cached_url_path_checksum_updated(self):
+    old_a = Artifact('a.tar.gz')
+    new_a = Artifact('a.tar.gz', content='New a content')  # New checksums
+
+    # Urls are equals, but not checksums
+    self.assertEqual(old_a.url, new_a.url)
+    self.assertNotEqual(old_a.url_info.checksum, new_a.url_info.checksum)
+
+    self.dl_results[old_a.url] = old_a.url_info
+
+    # Old file downloaded to it's url path (with old checksums)
+    dl_manager = self._get_manager(
+        register_checksums=False,
+    )
+    self.assertEqual(dl_manager.download(old_a.url), old_a.url_path)
+    self.assertCountEqual(self.downloaded_urls, [old_a.url])
+    self.assertContainFiles([old_a.url_path, _info_path(old_a.url_path)])
+
+    # The website has been updated with new content.
+    self.dl_results[old_a.url] = new_a.url_info
+
+    # url_info added but do not match cached download anymore
+    # -> Redownload new content
+    dl_manager = self._get_manager(
+        register_checksums=False,
+        url_infos={old_a.url: new_a.url_info},  # << Different checksum
+    )
+    self.assertEqual(dl_manager.download(old_a.url), new_a.file_path)
+    # url redownloaded
+    self.assertCountEqual(self.downloaded_urls, [old_a.url, old_a.url])
+    self.assertContainFiles([
+        # Old file still cached
+        old_a.url_path, _info_path(old_a.url_path),
+        # Re-downloaded with new checksum
+        new_a.file_path, _info_path(new_a.file_path),
+    ])
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,78 +13,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """This module contains the reader config.
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from typing import Callable, Optional, Sequence
 
-from absl import logging
-import attr
+import dataclasses
 
 import tensorflow.compat.v2 as tf
+from tensorflow_datasets.core.utils import shard_utils
 
 
-_OLD = 'interleave_parallel_reads'
-_NEW = 'interleave_cycle_length'
-_WARNING_MSG = (
-    '`{}` argument of `tfds.ReadConfig` is '
-    'deprecated and will be removed in a future version. Please use '
-    '`{}` instead.').format(_OLD, _NEW)
+InterleaveSortFn = Callable[
+    [Sequence[shard_utils.FileInstruction]],
+    Sequence[shard_utils.FileInstruction],
+]
 
 
-# TODO(tfds): Use dataclasses once Py2 support is dropped
-@attr.s
-class _ReadConfig(object):
-  """Configures input reading pipeline."""
-  # General tf.data.Dataset parametters
-  options = attr.ib(factory=tf.data.Options)
-  try_autocache = attr.ib(default=True)
-  # tf.data.Dataset.shuffle parameters
-  shuffle_seed = attr.ib(default=None)
-  shuffle_reshuffle_each_iteration = attr.ib(default=None)
-  # Interleave parameters
-  # Both parallel_reads and block_length have empirically been tested to give
-  # good results on imagenet.
-  # This values might be changes in the future, with more performance test runs.
-  interleave_cycle_length = attr.ib(default=16)
-  interleave_block_length = attr.ib(default=16)
-  input_context = attr.ib(default=None)
-  experimental_interleave_sort_fn = attr.ib(default=None)
-
-  @property
-  def interleave_parallel_reads(self):
-    logging.warning(_WARNING_MSG)
-    return self.interleave_cycle_length
-
-  @interleave_parallel_reads.setter
-  def interleave_parallel_reads(self, value):
-    logging.warning(_WARNING_MSG)
-    self.interleave_cycle_length = value
-
-
-class ReadConfig(_ReadConfig):
+@dataclasses.dataclass(eq=False)
+class ReadConfig:
   """Configures input reading pipeline.
 
   Attributes:
-    options: `tf.data.Options()`, dataset options. Those options are added to
-      the default values defined in `tfrecord_reader.py`.
+    options: `tf.data.Options()`, dataset options to use.
       Note that when `shuffle_files` is True and no seed is defined,
       experimental_deterministic will be set to False internally,
       unless it is defined here.
     try_autocache: If True (default) and the dataset satisfy the right
       conditions (dataset small enough, files not shuffled,...) the dataset
       will be cached during the first iteration (through `ds = ds.cache()`).
-    shuffle_seed: `tf.int64`, seeds forwarded to `tf.data.Dataset.shuffle` when
-      `shuffle_files=True`.
+    add_tfds_id: If True, examples `dict` in `tf.data.Dataset` will have an
+      additional key `'tfds_id': tf.Tensor(shape=(), dtype=tf.string)`
+      containing the example unique identifier (e.g.
+      'train.tfrecord-000045-of-001024__123').
+       Note: IDs might changes in future version of TFDS.
+    shuffle_seed: `tf.int64`, seed forwarded to `tf.data.Dataset.shuffle` during
+      file shuffling (which happens when `tfds.load(..., shuffle_files=True)`).
     shuffle_reshuffle_each_iteration: `bool`, forwarded to
-      `tf.data.Dataset.shuffle` when `shuffle_files=True`.
+      `tf.data.Dataset.shuffle` during file shuffling (which happens when
+      `tfds.load(..., shuffle_files=True)`).
     interleave_cycle_length: `int`, forwarded to `tf.data.Dataset.interleave`.
-      Default to 16.
     interleave_block_length: `int`, forwarded to `tf.data.Dataset.interleave`.
-      Default to 16.
     input_context: `tf.distribute.InputContext`, if set, each worker
       will read a different set of file. For more info, see the
       [distribute_datasets_from_function
@@ -101,12 +70,30 @@ class ReadConfig(_ReadConfig):
       `dict(file: str, take: int, skip: int)` and returns the modified version
       to read. This can be used to sort/shuffle the shards to read in
       a custom order, instead of relying on `shuffle_files=True`.
+    skip_prefetch: If False (default), add a `ds.prefetch()` op at the end.
+      Might be set for performance optimization in some cases (e.g. if you're
+      already calling `ds.prefetch()` at the end of your pipeline)
+    num_parallel_calls_for_decode: The number of parallel calls for decoding
+      record. By default using tf.data's AUTOTUNE.
+    num_parallel_calls_for_interleave_files: The number of parallel calls for
+      interleaving files. By default using tf.data's AUTOTUNE.
   """
-
-  def __init__(self, **kwargs):
-    if _OLD in kwargs:
-      if _NEW in kwargs:
-        raise ValueError('Cannot set both {} and {}'.format(_OLD, _NEW))
-      logging.warning(_WARNING_MSG)
-      kwargs[_NEW] = kwargs.pop(_OLD)
-    super(ReadConfig, self).__init__(**kwargs)
+  # General tf.data.Dataset parametters
+  options: tf.data.Options = dataclasses.field(default_factory=tf.data.Options)
+  try_autocache: bool = True
+  add_tfds_id: bool = False
+  # tf.data.Dataset.shuffle parameters
+  shuffle_seed: Optional[int] = None
+  shuffle_reshuffle_each_iteration: Optional[bool] = None
+  # Interleave parameters
+  # Ideally, we should switch interleave values to None to dynamically set
+  # those value depending on the user system. However, this would make the
+  # generation order non-deterministic accross machines.
+  interleave_cycle_length: Optional[int] = 16
+  interleave_block_length: Optional[int] = 16
+  input_context: Optional[tf.distribute.InputContext] = None
+  experimental_interleave_sort_fn: Optional[InterleaveSortFn] = None
+  skip_prefetch: bool = False
+  num_parallel_calls_for_decode: Optional[int] = tf.data.experimental.AUTOTUNE
+  num_parallel_calls_for_interleave_files: Optional[int] = (
+      tf.data.experimental.AUTOTUNE)

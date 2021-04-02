@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Amazon Customer Reviews Dataset --- US REVIEWS DATASET."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
 import csv
@@ -91,8 +86,7 @@ _DL_URLS = {
 class AmazonUSReviewsConfig(tfds.core.BuilderConfig):
   """BuilderConfig for AmazonUSReviews."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, data=None, **kwargs):
+  def __init__(self, *, data=None, **kwargs):
     """Constructs a AmazonUSReviewsConfig.
 
     Args:

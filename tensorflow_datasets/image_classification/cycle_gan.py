@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """CycleGAN dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -62,8 +57,7 @@ _DL_URLS = {name: _DL_URL + name + ".zip" for name in _DATA_OPTIONS}
 class CycleGANConfig(tfds.core.BuilderConfig):
   """BuilderConfig for CycleGAN."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, data=None, **kwargs):
+  def __init__(self, *, data=None, **kwargs):
     """Constructs a CycleGANConfig.
 
     Args:
@@ -83,11 +77,10 @@ class CycleGAN(tfds.core.GeneratorBasedBuilder):
   BUILDER_CONFIGS = [
       CycleGANConfig(  # pylint: disable=g-complex-comprehension
           name=config_name,
-          description=("A dataset consisting of images from two classes A and "
-                       "B (For example: horses/zebras, apple/orange,...)"),
-          version=tfds.core.Version(
-              "2.0.0",
-              "New split API (https://tensorflow.org/datasets/splits)"),
+          version=tfds.core.Version("2.0.0"),
+          release_notes={
+              "2.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+          },
           data=config_name,
       ) for config_name in _DATA_OPTIONS
   ]
@@ -95,7 +88,9 @@ class CycleGAN(tfds.core.GeneratorBasedBuilder):
   def _info(self):
     return tfds.core.DatasetInfo(
         builder=self,
-        description=self.builder_config.description,
+        description=
+        "A dataset consisting of images from two classes A and "
+        "B (For example: horses/zebras, apple/orange,...)",
         features=tfds.features.FeaturesDict({
             "image": tfds.features.Image(),
             "label": tfds.features.ClassLabel(names=["A", "B"]),

@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """BLiMP dataset with minimal pairs of grammatical phenomena in English."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import json
 
@@ -49,8 +44,7 @@ _DOWNLOAD_URL = 'https://raw.githubusercontent.com/alexwarstadt/blimp/master'
 class BlimpConfig(tfds.core.BuilderConfig):
   """BuilderConfig for Blimp."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, paradigm_uid, **kwargs):
+  def __init__(self, *, paradigm_uid, **kwargs):
     """BuilderConfig for Blimp.
 
     Args:
@@ -58,13 +52,9 @@ class BlimpConfig(tfds.core.BuilderConfig):
       **kwargs: keyword arguments forwarded to super.
     """
     name = paradigm_uid
-
-    description = _DESCRIPTION
-    description += ('This configuration includes the paradigm {}.').format(name)
-
     super(BlimpConfig, self).__init__(
         name=name,
-        description=description,
+        description=f'This configuration includes the paradigm {name}.',
         version=tfds.core.Version('0.1.0'),
         **kwargs)
 

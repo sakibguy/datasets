@@ -2,7 +2,6 @@
   <div itemscope itemprop="includedInDataCatalog" itemtype="http://schema.org/DataCatalog">
     <meta itemprop="name" content="TensorFlow Datasets" />
   </div>
-
   <meta itemprop="name" content="reddit" />
   <meta itemprop="description" content="This corpus contains preprocessed posts from the Reddit dataset.&#10;The dataset consists of 3,848,330 posts with an average length of 270 words for content,&#10;and 28 words for the summary.&#10;&#10;Features includes strings: author, body, normalizedBody, content, summary, subreddit, subreddit_id.&#10;Content is used as document and summary is used as summary.&#10;&#10;To use this dataset:&#10;&#10;```python&#10;import tensorflow_datasets as tfds&#10;&#10;ds = tfds.load(&#x27;reddit&#x27;, split=&#x27;train&#x27;)&#10;for ex in ds.take(4):&#10;  print(ex)&#10;```&#10;&#10;See [the guide](https://www.tensorflow.org/datasets/overview) for more&#10;informations on [tensorflow_datasets](https://www.tensorflow.org/datasets).&#10;&#10;" />
   <meta itemprop="url" content="https://www.tensorflow.org/datasets/catalog/reddit" />
@@ -24,20 +23,27 @@ summary.
 
 *   **Homepage**:
     [https://github.com/webis-de/webis-tldr-17-corpus](https://github.com/webis-de/webis-tldr-17-corpus)
+
 *   **Source code**:
-    [`tfds.summarization.reddit.Reddit`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/summarization/reddit.py)
+    [`tfds.summarization.Reddit`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/summarization/reddit.py)
+
 *   **Versions**:
+
     *   **`1.0.0`** (default): No release notes.
+
 *   **Download size**: `2.93 GiB`
+
 *   **Dataset size**: `18.09 GiB`
+
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
     No
+
 *   **Splits**:
 
-Split   | Examples
-:------ | --------:
-'train' | 3,848,330
+Split     | Examples
+:-------- | --------:
+`'train'` | 3,848,330
 
 *   **Features**:
 
@@ -57,6 +63,7 @@ FeaturesDict({
 *   **Supervised keys** (See
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('content', 'summary')`
+
 *   **Citation**:
 
 ```
@@ -78,6 +85,40 @@ FeaturesDict({
 }
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
     Not supported.
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/reddit-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->

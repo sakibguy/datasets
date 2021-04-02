@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """ARC dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import json
 import os
@@ -50,8 +45,7 @@ _BASE_URL = "https://github.com/fchollet/ARC/"
 class ARCConfig(tfds.core.BuilderConfig):
   """BuilderConfig for ARC."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, version, commit, **kwargs):
+  def __init__(self, *, version, commit, **kwargs):
     """BuilderConfig for ARC.
 
     Args:
@@ -63,8 +57,6 @@ class ARCConfig(tfds.core.BuilderConfig):
         version=tfds.core.Version(version), **kwargs)
     self.commit = commit
     self.download_url = "{}zipball/{}".format(_BASE_URL, self.commit)
-    self.download_resource = tfds.download.Resource(
-        url=self.download_url, extract_method=tfds.download.ExtractMethod.ZIP)
 
 
 class ARC(tfds.core.GeneratorBasedBuilder):
@@ -122,7 +114,7 @@ class ARC(tfds.core.GeneratorBasedBuilder):
     # dl_manager is a tfds.download.DownloadManager that can be used to
     # download and extract URLs
     extracted_dir = dl_manager.download_and_extract(
-        self.builder_config.download_resource)
+        self.builder_config.download_url)
     extract_subdir = [
         path for path in tf.io.gfile.listdir(extracted_dir)
         if path.startswith("fchollet-ARC-")

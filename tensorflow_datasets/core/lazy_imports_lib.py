@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Lazy imports for heavy dependencies."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import importlib
 
@@ -30,12 +25,12 @@ def _try_import(module_name):
   try:
     mod = importlib.import_module(module_name)
     return mod
-  except ImportError:
+  except ImportError as e:
     err_msg = ("Failed importing {name}. This likely means that the dataset "
                "requires additional dependencies that have to be "
                "manually installed (usually with `pip install {name}`). See "
                "setup.py extras_require.").format(name=module_name)
-    utils.reraise(suffix=err_msg)
+    utils.reraise(e, suffix=err_msg)
 
 
 class LazyImporter(object):
@@ -53,6 +48,11 @@ class LazyImporter(object):
 
   @utils.classproperty
   @classmethod
+  def bs4(cls):
+    return _try_import("bs4")
+
+  @utils.classproperty
+  @classmethod
   def crepe(cls):
     return _try_import("crepe")
 
@@ -60,6 +60,11 @@ class LazyImporter(object):
   @classmethod
   def cv2(cls):
     return _try_import("cv2")  # pylint: disable=unreachable
+
+  @utils.classproperty
+  @classmethod
+  def gcld3(cls):
+    return _try_import("gcld3")  # pylint: disable=unreachable
 
   @utils.classproperty
   @classmethod
@@ -75,6 +80,11 @@ class LazyImporter(object):
   @classmethod
   def librosa(cls):
     return _try_import("librosa")
+
+  @utils.classproperty
+  @classmethod
+  def lxml(cls):
+    return _try_import("lxml")
 
   @utils.classproperty
   @classmethod
@@ -107,8 +117,18 @@ class LazyImporter(object):
 
   @utils.classproperty
   @classmethod
+  def PIL_ImageDraw(cls):  # pylint: disable=invalid-name
+    return _try_import("PIL.ImageDraw")
+
+  @utils.classproperty
+  @classmethod
   def pretty_midi(cls):
     return _try_import("pretty_midi")
+
+  @utils.classproperty
+  @classmethod
+  def pycocotools(cls):
+    return _try_import("pycocotools.mask")
 
   @utils.classproperty
   @classmethod
@@ -119,6 +139,7 @@ class LazyImporter(object):
   @classmethod
   def scipy(cls):
     _try_import("scipy.io")
+    _try_import("scipy.io.wavfile")
     _try_import("scipy.ndimage")
     return _try_import("scipy")
 
@@ -127,8 +148,16 @@ class LazyImporter(object):
   def skimage(cls):
     _try_import("skimage.color")
     _try_import("skimage.filters")
-    _try_import("skimage.external.tifffile")
+    try:
+      _try_import("skimage.external.tifffile")
+    except ImportError:
+      pass
     return _try_import("skimage")
+
+  @utils.classproperty
+  @classmethod
+  def tifffile(cls):
+    return _try_import("tifffile")
 
   @utils.classproperty
   @classmethod

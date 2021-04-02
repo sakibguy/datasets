@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """BigEarthNet remote sensing dataset of Sentinel-2 image patches."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import io
 import json
@@ -94,7 +89,7 @@ _LABELS = [
 
 _DATA_OPTIONS = ['rgb', 'all']
 
-_ZIP_FILE = 'http://bigearth.net/downloads/BigEarthNet-v1.0.tar.gz'
+_ZIP_FILE = 'http://bigearth.net/downloads/BigEarthNet-S2-v1.0.tar.gz'
 _ZIP_SUBIDR = 'BigEarthNet-v1.0'
 
 # To clip and rescale the RGB channels for the JPEG images visualizatoin.
@@ -118,10 +113,11 @@ class BigearthnetConfig(tfds.core.BuilderConfig):
     if selection not in _DATA_OPTIONS:
       raise ValueError('selection must be one of %s' % _DATA_OPTIONS)
 
-    v100 = tfds.core.Version(
-        '1.0.0', 'New split API (https://tensorflow.org/datasets/splits)')
     super(BigearthnetConfig, self).__init__(
-        version=v100,
+        version=tfds.core.Version('1.0.0'),
+        release_notes={
+            '1.0.0': 'New split API (https://tensorflow.org/datasets/splits)',
+        },
         **kwargs)
     self.selection = selection
 

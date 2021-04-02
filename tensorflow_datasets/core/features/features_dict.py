@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """FeatureDict: Main feature connector container.
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import six
 import tensorflow.compat.v2 as tf
@@ -27,6 +22,23 @@ import tensorflow.compat.v2 as tf
 from tensorflow_datasets.core import utils
 from tensorflow_datasets.core.features import feature as feature_lib
 from tensorflow_datasets.core.features import top_level_feature
+from tensorflow_datasets.core.utils import type_utils
+
+Json = type_utils.Json
+
+
+class _DictGetCounter(object):
+  """Wraps dict.get and counts successful key accesses."""
+
+  def __init__(self, d):
+    self.count = 0
+    self.wrapped_mapping = d
+
+  def get(self, key: str):
+    if self.wrapped_mapping and key in self.wrapped_mapping:
+      self.count += 1
+      return self.wrapped_mapping[key]
+    return None
 
 
 class FeaturesDict(top_level_feature.TopLevelFeature):
@@ -68,7 +80,7 @@ class FeaturesDict(top_level_feature.TopLevelFeature):
 
   For nested features, the FeaturesDict will internally flatten the keys for the
   features and the conversion to tf.train.Example. Indeed, the tf.train.Example
-  proto do not support nested feature, while tf.data.Dataset does.
+  proto do not support nested features while tf.data.Dataset does.
   But internal transformation should be invisible to the user.
 
   Example:
@@ -162,13 +174,31 @@ class FeaturesDict(top_level_feature.TopLevelFeature):
         for feature_key, feature in self._feature_dict.items()
     }
 
+  @classmethod
+  def from_json_content(cls, value: Json) -> 'FeaturesDict':
+    return cls({
+        k: feature_lib.FeatureConnector.from_json(v)
+        for k, v in value.items()
+    })
+
+  def to_json_content(self) -> Json:
+    return {
+        feature_key: feature.to_json()
+        for feature_key, feature in self._feature_dict.items()
+    }
+
   def encode_example(self, example_dict):
     """See base class for details."""
-    return {
-        k: feature.encode_example(example_value)
-        for k, (feature, example_value)
-        in utils.zip_dict(self._feature_dict, example_dict)
-    }
+    example = {}
+    for k, (feature, example_value) in utils.zip_dict(self._feature_dict,
+                                                      example_dict):
+      try:
+        example[k] = feature.encode_example(example_value)
+      except Exception as e:  # pylint: disable=broad-except
+        utils.reraise(
+            e, prefix=f'In <{feature.__class__.__name__}> with name "{k}":\n'
+        )
+    return example
 
   def _flatten(self, x):
     """See base class for details."""
@@ -177,18 +207,12 @@ class FeaturesDict(top_level_feature.TopLevelFeature):
           'Error while flattening dict: FeaturesDict received a non dict item: '
           '{}'.format(x))
 
-    cache = {'counter': 0}  # Could use nonlocal in Python
-    def _get(k):
-      if x and k in x:
-        cache['counter'] += 1
-        return x[k]
-      return None
-
+    dict_counter = _DictGetCounter(x)
     out = []
     for k, f in sorted(self.items()):
-      out.extend(f._flatten(_get(k)))  # pylint: disable=protected-access
+      out.extend(f._flatten(dict_counter.get(k)))  # pylint: disable=protected-access
 
-    if x and cache['counter'] != len(x):
+    if x and dict_counter.count != len(x):
       raise ValueError(
           'Error while flattening dict: Not all dict items have been consumed, '
           'this means that the provided dict structure does not match the '

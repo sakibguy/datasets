@@ -2,20 +2,14 @@
   <div itemscope itemprop="includedInDataCatalog" itemtype="http://schema.org/DataCatalog">
     <meta itemprop="name" content="TensorFlow Datasets" />
   </div>
-
   <meta itemprop="name" content="visual_domain_decathlon" />
-  <meta itemprop="description" content="This contains the 10 datasets used in the Visual Domain Decathlon, part of&#10;the PASCAL in Detail Workshop Challenge (CVPR 2017).&#10;The goal of this challenge is to solve simultaneously ten image classification&#10;problems representative of very different visual domains.&#10;&#10;Some of the datasets included here are also available as separate datasets in&#10;TFDS. However, notice that images were preprocessed for the Visual Domain&#10;Decathlon (resized isotropically to have a shorter size of 72 pixels) and&#10;might have different train/validation/test splits. Here we use the official&#10;splits for the competition.&#10;&#10;To use this dataset:&#10;&#10;```python&#10;import tensorflow_datasets as tfds&#10;&#10;ds = tfds.load(&#x27;visual_domain_decathlon&#x27;, split=&#x27;train&#x27;)&#10;for ex in ds.take(4):&#10;  print(ex)&#10;```&#10;&#10;See [the guide](https://www.tensorflow.org/datasets/overview) for more&#10;informations on [tensorflow_datasets](https://www.tensorflow.org/datasets).&#10;&#10;&lt;img src=&quot;https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-aircraft-1.2.0.png&quot; alt=&quot;Visualization&quot; width=&quot;500px&quot;&gt;&#10;&#10;" />
+  <meta itemprop="description" content="This contains the 10 datasets used in the Visual Domain Decathlon, part of&#10;the PASCAL in Detail Workshop Challenge (CVPR 2017).&#10;The goal of this challenge is to solve simultaneously ten image classification&#10;problems representative of very different visual domains.&#10;&#10;Some of the datasets included here are also available as separate datasets in&#10;TFDS. However, notice that images were preprocessed for the Visual Domain&#10;Decathlon (resized isotropically to have a shorter size of 72 pixels) and&#10;might have different train/validation/test splits. Here we use the official&#10;splits for the competition.&#10;&#10;To use this dataset:&#10;&#10;```python&#10;import tensorflow_datasets as tfds&#10;&#10;ds = tfds.load(&#x27;visual_domain_decathlon&#x27;, split=&#x27;train&#x27;)&#10;for ex in ds.take(4):&#10;  print(ex)&#10;```&#10;&#10;See [the guide](https://www.tensorflow.org/datasets/overview) for more&#10;informations on [tensorflow_datasets](https://www.tensorflow.org/datasets).&#10;&#10;&lt;img src=&quot;https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-aircraft-1.2.0.png&quot; alt=&quot;Visualization&quot; width=&quot;500px&quot;&gt;&#10;&#10;" />
   <meta itemprop="url" content="https://www.tensorflow.org/datasets/catalog/visual_domain_decathlon" />
   <meta itemprop="sameAs" content="https://www.robots.ox.ac.uk/~vgg/decathlon/" />
   <meta itemprop="citation" content="@ONLINE{hakanbilensylvestrerebuffitomasjakab2017,&#10;    author = &quot;Hakan Bilen, Sylvestre Rebuffi, Tomas Jakab&quot;,&#10;    title  = &quot;Visual Domain Decathlon&quot;,&#10;    year   = &quot;2017&quot;,&#10;    url    = &quot;https://www.robots.ox.ac.uk/~vgg/decathlon/&quot;&#10;}" />
 </div>
 
 # `visual_domain_decathlon`
-
-Note: This dataset has been updated since the last stable release. The new
-versions and config marked with
-<span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>
-are only available in the `tfds-nightly` package.
 
 *   **Description**:
 
@@ -32,15 +26,18 @@ the competition.
 
 *   **Homepage**:
     [https://www.robots.ox.ac.uk/~vgg/decathlon/](https://www.robots.ox.ac.uk/~vgg/decathlon/)
+
 *   **Source code**:
-    [`tfds.image_classification.visual_domain_decathlon.VisualDomainDecathlon`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/image_classification/visual_domain_decathlon.py)
+    [`tfds.image_classification.VisualDomainDecathlon`](https://github.com/tensorflow/datasets/tree/master/tensorflow_datasets/image_classification/visual_domain_decathlon.py)
+
 *   **Versions**:
-    *   **`1.2.0`** (default)
-        <span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>:
-        No release notes.
+
+    *   **`1.2.0`** (default): No release notes.
+
 *   **Supervised keys** (See
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
+
 *   **Citation**:
 
 ```
@@ -67,11 +64,11 @@ the competition.
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 3,333
-'train'      | 3,334
-'validation' | 3,333
+Split          | Examples
+:------------- | -------:
+`'test'`       | 3,333
+`'train'`      | 3,334
+`'validation'` | 3,333
 
 *   **Features**:
 
@@ -83,10 +80,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-aircraft-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-aircraft-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-aircraft-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/cifar100
 
@@ -103,11 +134,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 10,000
-'train'      | 40,000
-'validation' | 10,000
+Split          | Examples
+:------------- | -------:
+`'test'`       | 10,000
+`'train'`      | 40,000
+`'validation'` | 10,000
 
 *   **Features**:
 
@@ -119,10 +150,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-cifar100-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-cifar100-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-cifar100-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/daimlerpedcls
 
@@ -139,11 +204,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 19,600
-'train'      | 23,520
-'validation' | 5,880
+Split          | Examples
+:------------- | -------:
+`'test'`       | 19,600
+`'train'`      | 23,520
+`'validation'` | 5,880
 
 *   **Features**:
 
@@ -155,10 +220,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-daimlerpedcls-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-daimlerpedcls-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-daimlerpedcls-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/dtd
 
@@ -175,11 +274,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 1,880
-'train'      | 1,880
-'validation' | 1,880
+Split          | Examples
+:------------- | -------:
+`'test'`       | 1,880
+`'train'`      | 1,880
+`'validation'` | 1,880
 
 *   **Features**:
 
@@ -191,10 +290,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-dtd-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-dtd-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-dtd-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/gtsrb
 
@@ -211,11 +344,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 12,630
-'train'      | 31,367
-'validation' | 7,842
+Split          | Examples
+:------------- | -------:
+`'test'`       | 12,630
+`'train'`      | 31,367
+`'validation'` | 7,842
 
 *   **Features**:
 
@@ -227,10 +360,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-gtsrb-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-gtsrb-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-gtsrb-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/imagenet12
 
@@ -247,11 +414,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | --------:
-'test'       | 48,238
-'train'      | 1,232,167
-'validation' | 49,000
+Split          | Examples
+:------------- | --------:
+`'test'`       | 48,238
+`'train'`      | 1,232,167
+`'validation'` | 49,000
 
 *   **Features**:
 
@@ -263,10 +430,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-imagenet12-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-imagenet12-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-imagenet12-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/omniglot
 
@@ -283,11 +484,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 8,115
-'train'      | 17,853
-'validation' | 6,492
+Split          | Examples
+:------------- | -------:
+`'test'`       | 8,115
+`'train'`      | 17,853
+`'validation'` | 6,492
 
 *   **Features**:
 
@@ -299,10 +500,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-omniglot-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-omniglot-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-omniglot-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/svhn
 
@@ -319,11 +554,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 26,032
-'train'      | 47,217
-'validation' | 26,040
+Split          | Examples
+:------------- | -------:
+`'test'`       | 26,032
+`'train'`      | 47,217
+`'validation'` | 26,040
 
 *   **Features**:
 
@@ -335,10 +570,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-svhn-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-svhn-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-svhn-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/ucf101
 
@@ -355,11 +624,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 3,783
-'train'      | 7,585
-'validation' | 1,952
+Split          | Examples
+:------------- | -------:
+`'test'`       | 3,783
+`'train'`      | 7,585
+`'validation'` | 1,952
 
 *   **Features**:
 
@@ -371,10 +640,44 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-ucf101-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-ucf101-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-ucf101-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 ## visual_domain_decathlon/vgg-flowers
 
@@ -391,11 +694,11 @@ FeaturesDict({
 
 *   **Splits**:
 
-Split        | Examples
-:----------- | -------:
-'test'       | 6,149
-'train'      | 1,020
-'validation' | 1,020
+Split          | Examples
+:------------- | -------:
+`'test'`       | 6,149
+`'train'`      | 1,020
+`'validation'` | 1,020
 
 *   **Features**:
 
@@ -407,7 +710,41 @@ FeaturesDict({
 })
 ```
 
-*   **Visualization
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples))**:
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
-<img src="https://storage.googleapis.com/tfds-data/visualization/visual_domain_decathlon-vgg-flowers-1.2.0.png" alt="Visualization" width="500px">
+<img src="https://storage.googleapis.com/tfds-data/visualization/fig/visual_domain_decathlon-vgg-flowers-1.2.0.png" alt="Visualization" width="500px">
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/visual_domain_decathlon-vgg-flowers-1.2.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->

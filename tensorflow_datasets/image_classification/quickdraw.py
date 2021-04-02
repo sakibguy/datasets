@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """QuickDraw dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import numpy as np
 import tensorflow.compat.v2 as tf
@@ -57,11 +52,13 @@ class QuickdrawBitmap(tfds.core.GeneratorBasedBuilder):
   are generated from the raw vector information (i.e. the 'bitmap' dataset, not
   the 'raw' or 'simplified drawings' datasets).
   """
-  VERSION = tfds.core.Version(
-      "3.0.0", "New split API (https://tensorflow.org/datasets/splits)")
+  VERSION = tfds.core.Version("3.0.0")
+  RELEASE_NOTES = {
+      "3.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+  }
 
   def _info(self):
-    labels_path = tfds.core.get_tfds_path(_QUICKDRAW_LABELS_FNAME)
+    labels_path = tfds.core.tfds_path(_QUICKDRAW_LABELS_FNAME)
     return tfds.core.DatasetInfo(
         builder=self,
         description=("The Quick Draw Dataset is a collection of 50 million "

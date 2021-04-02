@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 r"""Replace all images in the fake directory by more compressed version.
 
 This allow to reduce size of the images in the `fake_data/` directory.
 
 Instructions:
 
-python replace_fake_images.py \
+python -m tensorflow_datasets.scripts.replace_fake_images \
   --fake_dir=/path/to/tensorflow_datasets/testing/test_data/fake_examples
 
 

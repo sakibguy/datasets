@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Healthy and unhealthy plant leaves dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import re
@@ -110,7 +105,7 @@ class PlantLeaves(tfds.core.GeneratorBasedBuilder):
     """Returns SplitGenerators."""
     # Batch download for this dataset is broken, therefore images have to be
     # downloaded independently from a list of urls.
-    with tf.io.gfile.GFile(tfds.core.get_tfds_path(_URLS_FNAME)) as f:
+    with tf.io.gfile.GFile(os.fspath(tfds.core.tfds_path(_URLS_FNAME))) as f:
       name_to_url_map = {
           os.path.basename(l.strip()): l.strip() for l in f.readlines()
       }

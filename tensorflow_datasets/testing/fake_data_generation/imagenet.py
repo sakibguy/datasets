@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 r"""Generate ilsvrc2012 like files, smaller and with random data.
 
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import json
 import os
@@ -77,7 +72,7 @@ def _generate_train_archive():
   output_path = os.path.join(_ilsvrc2012_output_dir(),
                              'ILSVRC2012_img_train.tar')
   tar = tarfile.open(output_path, mode='w')
-  names_file = tfds.core.get_tfds_path(imagenet._LABELS_FNAME)  # pylint: disable=protected-access
+  names_file = tfds.core.tfds_path(imagenet._LABELS_FNAME)  # pylint: disable=protected-access
   label_names = tfds.features.ClassLabel(names_file=names_file).names
   for i in range(TRAIN_SYNSET_NUMBER):
     synset_name = label_names[i]

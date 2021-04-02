@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Downsampled Imagenet dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import tensorflow_datasets.public_api as tfds
 
@@ -55,8 +50,7 @@ _DATA_OPTIONS = ["32x32", "64x64"]
 class DownsampledImagenetConfig(tfds.core.BuilderConfig):
   """BuilderConfig for Downsampled Imagenet."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, data=None, **kwargs):
+  def __init__(self, *, data=None, **kwargs):
     """Constructs a DownsampledImagenetConfig.
 
     Args:
@@ -79,10 +73,11 @@ class DownsampledImagenet(tfds.core.GeneratorBasedBuilder):
           description=(
               "A dataset consisting of Train and Validation images of " +
               config_name + " resolution."),
-          version=tfds.core.Version(
-              "2.0.0",
-              "New split API (https://tensorflow.org/datasets/splits)"),
+          version=tfds.core.Version("2.0.0"),
           data=config_name,
+          release_notes={
+              "2.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+          },
       ) for config_name in _DATA_OPTIONS
   ]
 

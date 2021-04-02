@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Image Classification datasets."""
 
 from tensorflow_datasets.image_classification.beans import Beans
@@ -48,7 +47,10 @@ from tensorflow_datasets.image_classification.imagenet import Imagenet2012
 from tensorflow_datasets.image_classification.imagenet2012_corrupted import Imagenet2012Corrupted
 from tensorflow_datasets.image_classification.imagenet2012_real import Imagenet2012Real
 from tensorflow_datasets.image_classification.imagenet2012_subset import Imagenet2012Subset
+from tensorflow_datasets.image_classification.imagenet_a import ImagenetA
+from tensorflow_datasets.image_classification.imagenet_r import ImagenetR
 from tensorflow_datasets.image_classification.imagenet_resized import ImagenetResized
+from tensorflow_datasets.image_classification.imagenet_v2 import ImagenetV2
 from tensorflow_datasets.image_classification.imagenette import Imagenette
 from tensorflow_datasets.image_classification.imagewang import Imagewang
 from tensorflow_datasets.image_classification.inaturalist import INaturalist2017
@@ -71,6 +73,7 @@ from tensorflow_datasets.image_classification.plantae_k import PlantaeK
 from tensorflow_datasets.image_classification.quickdraw import QuickdrawBitmap
 from tensorflow_datasets.image_classification.resisc45 import Resisc45
 from tensorflow_datasets.image_classification.rock_paper_scissors import RockPaperScissors
+from tensorflow_datasets.image_classification.siscore import Siscore
 from tensorflow_datasets.image_classification.smallnorb import Smallnorb
 from tensorflow_datasets.image_classification.so2sat import So2sat
 from tensorflow_datasets.image_classification.stanford_dogs import StanfordDogs

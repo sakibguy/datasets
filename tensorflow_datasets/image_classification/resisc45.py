@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Remote Sensing Image Scene Classification (RESISC45) Dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -111,4 +106,4 @@ class Resisc45(tfds.core.GeneratorBasedBuilder):
             'label': label,
             'filename': os.path.basename(filename)
         }
-        yield filename, example
+        yield f'{label}_{os.path.basename(filename)}', example

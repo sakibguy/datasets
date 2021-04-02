@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """SCAN tasks with various different splits."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import json
 import os
@@ -90,8 +85,7 @@ class ScanConfig(tfds.core.BuilderConfig):
      (unsplit) dataset.
   """
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, name, directory=None, splitfile=None, **kwargs):
+  def __init__(self, *, name, directory=None, splitfile=None, **kwargs):
     """BuilderConfig for SCAN.
 
     Args:
@@ -105,7 +99,6 @@ class ScanConfig(tfds.core.BuilderConfig):
     super(ScanConfig, self).__init__(
         name=name,
         version=tfds.core.Version('1.1.1'),
-        description=_DESCRIPTION,
         **kwargs)
     self.splitfile = splitfile
     if 'mcd' in name:
@@ -158,12 +151,7 @@ class Scan(tfds.core.GeneratorBasedBuilder):
 
   def _split_generators(self, dl_manager):
     """Returns SplitGenerators."""
-    data_dir = dl_manager.download_and_extract(
-        tfds.download.Resource(
-            url=_DATA_URL,
-            # Specify extract method manually as filename reported by github.com
-            # misses the .zip extension so auto-detection doesn't work.
-            extract_method=tfds.download.ExtractMethod.ZIP))
+    data_dir = dl_manager.download_and_extract(_DATA_URL)
     data_dir = os.path.join(data_dir, 'SCAN-master',
                             self.builder_config.directory)
     split = self.builder_config.name

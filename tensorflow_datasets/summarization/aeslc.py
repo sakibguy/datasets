@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Annotated Enron Subject Line Corpus Dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -70,9 +65,7 @@ class Aeslc(tfds.core.GeneratorBasedBuilder):
 
   def _split_generators(self, dl_manager):
     """Returns SplitGenerators."""
-    dl_path = dl_manager.download_and_extract(tfds.download.Resource(
-        url=_URL,
-        extract_method=tfds.download.ExtractMethod.ZIP))
+    dl_path = dl_manager.download_and_extract(_URL)
     input_path = os.path.join(dl_path, "AESLC-master", "enron_subject_line")
     return [
         tfds.core.SplitGenerator(

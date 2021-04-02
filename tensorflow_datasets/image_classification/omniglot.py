@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Omniglot dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import tensorflow.compat.v2 as tf
@@ -59,8 +54,10 @@ _NUM_ALPHABETS = 50
 class Omniglot(tfds.core.GeneratorBasedBuilder):
   """Omniglot dataset."""
 
-  VERSION = tfds.core.Version(
-      "3.0.0", "New split API (https://tensorflow.org/datasets/splits)")
+  VERSION = tfds.core.Version("3.0.0")
+  RELEASE_NOTES = {
+      "3.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+  }
 
   def _info(self):
     return tfds.core.DatasetInfo(

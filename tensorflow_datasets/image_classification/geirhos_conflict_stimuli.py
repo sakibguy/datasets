@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Geirhos conflict stimulus set."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import re
@@ -68,7 +63,7 @@ class GeirhosConflictStimuli(tfds.core.GeneratorBasedBuilder):
   def _info(self):
     """Define dataset info."""
 
-    imagenet_names_file = tfds.core.get_tfds_path(_IMAGENET_LABELS_FNAME)
+    imagenet_names_file = tfds.core.tfds_path(_IMAGENET_LABELS_FNAME)
     return tfds.core.DatasetInfo(
         builder=self,
         description=(_DESCRIPTION),
@@ -90,8 +85,7 @@ class GeirhosConflictStimuli(tfds.core.GeneratorBasedBuilder):
     """Define splits."""
 
     dl_paths = dl_manager.download_and_extract({
-        "texture_vs_shape": tfds.download.Resource(
-            url=_DOWNLOAD_URL, extract_method=tfds.download.ExtractMethod.ZIP),
+        "texture_vs_shape": _DOWNLOAD_URL,
         "imagenet_mapping": _IMAGENET_MAPPING_URL
     })
 

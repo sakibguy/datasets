@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.utils.version."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 from tensorflow_datasets import testing
 from tensorflow_datasets.core.utils import version
 
@@ -40,6 +35,7 @@ class VersionTest(testing.TestCase):
     v = version.Version('1.3.534')
     self.assertEqual((v.major, v.minor, v.patch), (1, 3, 534))
     self.assertEqual(str(v), '1.3.534')
+    self.assertEqual(repr(v), "Version('1.3.534')")
     with self.assertRaisesWithPredicateMatch(ValueError, 'Format should be '):
       version.Version('1.3.-534')
     with self.assertRaisesWithPredicateMatch(ValueError, 'Format should be '):
@@ -131,6 +127,23 @@ class VersionTest(testing.TestCase):
   def test_experiment_override(self):
     v = version.Version('1.2.3', experiments={version.Experiment.DUMMY: True})
     self.assertTrue(v.implements(version.Experiment.DUMMY))
+
+  def test_hash(self):
+    self.assertIn(
+        version.Version('1.2.3'),
+        {version.Version('1.2.3'), version.Version('1.4.3')}
+    )
+
+    self.assertNotIn(
+        version.Version('1.2.3'),
+        {version.Version('1.1.3'), version.Version('1.4.3')}
+    )
+
+
+def test_str_to_version():
+  v0 = version.Version('1.2.3')
+  v1 = version.Version(v0)
+  assert v1 == v0
 
 
 if __name__ == '__main__':

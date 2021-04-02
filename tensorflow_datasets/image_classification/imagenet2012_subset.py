@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Imagenet subset datasets."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import io
 import os
@@ -76,13 +71,12 @@ class Imagenet2012Subset(Imagenet2012):
       tfds.core.BuilderConfig(  # pylint: disable=g-complex-comprehension
           name=subset_size,
           description='{} of total ImageNet training set.'.format(subset_size),
-          version=tfds.core.Version(
-              '5.0.0', ''),
+          version=tfds.core.Version('5.0.0'),
       ) for subset_size in SUBSET2FILES
   ]
 
   def _info(self):
-    names_file = tfds.core.get_tfds_path(_LABELS_FNAME)
+    names_file = tfds.core.tfds_path(_LABELS_FNAME)
     return tfds.core.DatasetInfo(
         builder=self,
         description=_DESCRIPTION,
@@ -156,4 +150,3 @@ class Imagenet2012Subset(Imagenet2012):
               'label': label,
           }
           yield image_fname, record
-

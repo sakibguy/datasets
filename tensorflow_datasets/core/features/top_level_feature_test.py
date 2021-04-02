@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.features.top_level_feature."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import tensorflow.compat.v2 as tf
 from tensorflow_datasets import testing
@@ -119,7 +114,6 @@ class FeaturesManagerTest(testing.TestCase):
             'c': tf.int32,
         },
     })
-    f._set_top_level()
 
     # Only top level can be decoded
     f.decode_example({
@@ -128,10 +122,6 @@ class FeaturesManagerTest(testing.TestCase):
             'c': 2,
         },
     })
-
-    with self.assertRaisesWithPredicateMatch(
-        AssertionError, 'decoded when defined as top-level'):
-      f['b'].decode_example({'c': 1})
 
 
 if __name__ == '__main__':

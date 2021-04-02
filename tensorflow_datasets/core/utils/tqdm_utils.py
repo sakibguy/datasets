@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,41 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Wrapper around tqdm.
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import contextlib
 import os
 
 from tqdm import auto as tqdm_lib
+
+
+class TqdmStream:
+  """File-object-like abstraction which wrap`tqdm.write`.
+
+  By default using `logging.info` inside a `tqdm` scope creates visual
+  artifacts. This simple wrapper uses `tqdm.write` instead.
+
+  Usage:
+
+  ```python
+  logger = logging.getLogger()
+  logger.addHandler(logging.StreamHandler(TqdmStream()))
+
+  for _ in tqdm.tqdm(range(10)):
+    logger.info('No visual artifacts')
+  ```
+
+  """
+
+  def write(self, x):
+    tqdm_lib.tqdm.write(x, end='')
+
+  def flush(self):
+    pass
+
+  def close(self):
+    pass
 
 
 class EmptyTqdm(object):
@@ -71,15 +94,33 @@ def async_tqdm(*args, **kwargs):
 
 
 def disable_progress_bar():
-  """Disabled Tqdm progress bar.
+  """Disables Tqdm progress bar.
 
   Usage:
 
+  ```
   tfds.disable_progress_bar()
+  ```
+
   """
   # Replace tqdm
   global _active
   _active = False
+
+
+def enable_progress_bar():
+  """Enables Tqdm progress bar.
+
+  Usage:
+
+  ```
+  tfds.enable_progress_bar()
+  ```
+
+  """
+  # Replace tqdm
+  global _active
+  _active = True
 
 
 @contextlib.contextmanager
@@ -106,7 +147,6 @@ def _async_tqdm(*args, **kwargs):
     pbar = _TqdmPbarAsync(pbar)
     yield pbar
     pbar.clear()  # pop pbar from the active list of pbar
-    print()  # Avoid the next log to overlapp with the bar
 
 
 class _TqdmPbarAsync(object):

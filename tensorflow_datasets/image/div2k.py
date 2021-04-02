@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """DIV2K dataset: DIVerse 2K resolution high quality images.
 
 As used for the challenges @ NTIRE (CVPR 2017 and CVPR 2018)
 and @ PIRM (ECCV 2018)
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os.path
 

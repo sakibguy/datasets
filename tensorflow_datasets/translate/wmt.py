@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """WMT: Translate dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import codecs
 import functools
@@ -239,6 +234,13 @@ _TRAIN_SUBSETS = [
         url="http://www.statmt.org/wmt13/training-parallel-un.tgz",
         path=("un/undoc.2000.{src}-en.{src}", "un/undoc.2000.{src}-en.en")),
     SubDataset(
+        name="newscommentary_v8",
+        target="en",
+        sources={"cs", "de", "fr", "es", "ru"},
+        url="http://www.statmt.org/wmt13/training-parallel-nc-v8.tgz",
+        path=("training/news-commentary-v8.{src}-en.{src}",
+              "training/news-commentary-v8.{src}-en.en")),
+    SubDataset(
         name="newscommentary_v9",
         target="en",
         sources={"cs", "de", "fr", "ru"},
@@ -361,7 +363,7 @@ _TRAIN_SUBSETS = [
         url="http://www.statmt.org/wmt14/wiki-titles.tgz",
         path="wiki/hi-en/wiki-titles.hi-en"),
     SubDataset(
-        # Verified that wmt14 and wmt15 files are identical.
+        # Verified that wmt13, wmt14 and wmt15 files are identical.
         name="wikiheadlines_ru",
         target="en",
         sources={"ru"},
@@ -576,13 +578,12 @@ _CZENG17_FILTER = SubDataset(
 class WmtConfig(tfds.core.BuilderConfig):
   """BuilderConfig for WMT."""
 
-  @tfds.core.disallow_positional_args
   def __init__(self,
+               *,
                url=None,
                citation=None,
                description=None,
                language_pair=(None, None),
-               text_encoder_config=None,
                subsets=None,
                **kwargs):
     """BuilderConfig for WMT.
@@ -593,16 +594,11 @@ class WmtConfig(tfds.core.BuilderConfig):
       description: The description of the dataset.
       language_pair: pair of languages that will be used for translation. Should
                  contain 2 letter coded strings. For example: ("en", "de").
-      text_encoder_config: `tfds.features.text.TextEncoderConfig` (optional),
-        configuration for the `tfds.features.text.TextEncoder` used for the
-        `tfds.features.text.Translation` features.
       subsets: Dict[split, list[str]]. List of the subset to use for each of the
         split. Note that WMT subclasses overwrite this parameter.
       **kwargs: keyword arguments forwarded to super.
     """
     name = "%s-%s" % (language_pair[0], language_pair[1])
-    if text_encoder_config:
-      name += "." + text_encoder_config.name
     if "name" in kwargs:  # Add name suffix for custom configs
       name += "." + kwargs.pop("name")
 
@@ -612,7 +608,6 @@ class WmtConfig(tfds.core.BuilderConfig):
     self.url = url or "http://www.statmt.org"
     self.citation = citation
     self.language_pair = language_pair
-    self.text_encoder_config = text_encoder_config
     self.subsets = subsets
 
 
@@ -664,15 +659,11 @@ class WmtTranslate(tfds.core.GeneratorBasedBuilder):
         description=_DESCRIPTION,
         features=tfds.features.Translation(
             languages=self.builder_config.language_pair,
-            encoder_config=self.builder_config.text_encoder_config),
+        ),
         supervised_keys=(src, target),
         homepage=self.builder_config.url,
         citation=self.builder_config.citation,
     )
-
-  def _vocab_text_gen(self, split_subsets, extraction_map, language):
-    for _, ex in self._generate_examples(split_subsets, extraction_map):
-      yield ex[language]
 
   def _split_generators(self, dl_manager):
     source, _ = self.builder_config.language_pair
@@ -711,13 +702,10 @@ class WmtTranslate(tfds.core.GeneratorBasedBuilder):
     # Extract manually downloaded files.
     manual_files = dl_manager.extract(manual_paths)
 
-    extraction_map = dict(downloaded_files, **manual_files)
+    manual_files = tf.nest.map_structure(os.fspath, manual_files)
+    downloaded_files = tf.nest.map_structure(os.fspath, downloaded_files)
 
-    # Generate vocabulary from training data if SubwordTextEncoder configured.
-    for language in self.builder_config.language_pair:
-      self.info.features[language].maybe_build_from_corpus(
-          self._vocab_text_gen(
-              self.subsets[tfds.Split.TRAIN], extraction_map, language))
+    extraction_map = dict(downloaded_files, **manual_files)
 
     return [
         tfds.core.SplitGenerator(  # pylint:disable=g-complex-comprehension
@@ -797,7 +785,7 @@ def _parse_parallel_sentences(f1, f2):
     if split_path[-1] == "gz":
       lang = split_path[-2]
       with tf.io.gfile.GFile(path, "rb") as f, gzip.GzipFile(fileobj=f) as g:
-        return g.read().decode("utf-8").splitlines(), lang
+        return g.read().decode("utf-8").split("\n"), lang
 
     if split_path[-1] == "txt":
       # CWMT
@@ -806,7 +794,7 @@ def _parse_parallel_sentences(f1, f2):
     else:
       lang = split_path[-1]
     with tf.io.gfile.GFile(path) as f:
-      return f.read().splitlines(), lang
+      return f.read().split("\n"), lang
 
   def _parse_sgm(path):
     """Returns sentences from a single SGML file."""
@@ -853,9 +841,9 @@ def _parse_parallel_sentences(f1, f2):
 
 def _parse_frde_bitext(fr_path, de_path):
   with tf.io.gfile.GFile(fr_path) as f:
-    fr_sentences = f.read().splitlines()
+    fr_sentences = f.read().split("\n")
   with tf.io.gfile.GFile(de_path) as f:
-    de_sentences = f.read().splitlines()
+    de_sentences = f.read().split("\n")
   assert len(fr_sentences) == len(de_sentences), (
       "Sizes do not match: %d vs %d for %s vs %s." % (
           len(fr_sentences), len(de_sentences), fr_path, de_path))

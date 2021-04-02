@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """TED talk high/low-resource paired language data set from Qi, et al. 2018."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 
@@ -62,8 +57,7 @@ _VALID_LANGUAGE_PAIRS = (
 class TedHrlrConfig(tfds.core.BuilderConfig):
   """BuilderConfig for TED talk data comparing high/low resource languages."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, language_pair=(None, None), **kwargs):
+  def __init__(self, *, language_pair=(None, None), **kwargs):
     """BuilderConfig for TED talk data comparing high/low resource languages.
 
     The first language in `language_pair` should either be a 2-letter coded
@@ -105,9 +99,10 @@ class TedHrlrTranslate(tfds.core.GeneratorBasedBuilder):
   BUILDER_CONFIGS = [
       TedHrlrConfig(  # pylint: disable=g-complex-comprehension
           language_pair=pair,
-          version=tfds.core.Version(
-              "1.0.0",
-              "New split API (https://tensorflow.org/datasets/splits)"),
+          version=tfds.core.Version("1.0.0"),
+          release_notes={
+              "1.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+          },
       ) for pair in _VALID_LANGUAGE_PAIRS
   ]
 

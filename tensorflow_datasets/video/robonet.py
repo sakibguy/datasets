@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """RoboNet dataset.
 
 RoboNet: Large-Scale Multi-Robot Learning
@@ -23,10 +22,6 @@ Karl Schmeckpeper, Siddharth Singh, Sergey Levine, Chelsea Finn
 
 https://www.robonet.wiki/
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import textwrap
@@ -60,8 +55,9 @@ _CITATION = """\
 class RobonetConfig(tfds.core.BuilderConfig):
   """"Configuration for RoboNet video rescaling."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, sample_dataset=False, width=None, height=None, **kwargs):
+  def __init__(
+      self, *, sample_dataset=False, width=None, height=None, **kwargs
+  ):
     """The parameters specifying how the dataset will be processed.
 
     The dataset comes with three separate splits. You can specify which split
@@ -75,7 +71,7 @@ class RobonetConfig(tfds.core.BuilderConfig):
       **kwargs: Passed on to the constructor of `BuilderConfig`.
     """
     super(RobonetConfig, self).__init__(
-        version=tfds.core.Version('4.0.0'), **kwargs)
+        version=tfds.core.Version('4.0.1'), **kwargs)
     if (width is None) ^ (height is None):
       raise ValueError('Either both dimensions should be set, or none of them')
     self.sample_dataset = sample_dataset
@@ -141,7 +137,9 @@ class Robonet(tfds.core.BeamBasedBuilder):
             shape=(None, ACTIONS_DIM), dtype=tf.float32),
         # Robot states: float32, [None, STATE_DIM]
         'states': tfds.features.Tensor(
-            shape=(None, STATES_DIM), dtype=tf.float32)
+            shape=(None, STATES_DIM), dtype=tf.float32),
+        # Filename: Text
+        'filename': tfds.features.Text()
     })
 
     return tfds.core.DatasetInfo(
@@ -188,12 +186,14 @@ class Robonet(tfds.core.BeamBasedBuilder):
         actions = np.pad(
             actions, ((0, 0), (0, ACTIONS_DIM-actions.shape[1])), 'constant')
 
+      basename = os.path.basename(filename)
       features = {
           'video': video_bytes,
           'actions': actions,
           'states': states,
+          'filename': basename,
       }
-      return os.path.basename(filename), features
+      return basename, features
 
     filenames = tf.io.gfile.glob(os.path.join(filedir, '*.hdf5'))
     return (

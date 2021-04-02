@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for tensorflow_datasets.core.dataset_builder."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import tempfile
+from unittest import mock
 
-from absl.testing import absltest
+import dataclasses
 import dill
 import numpy as np
 import tensorflow.compat.v2 as tf
@@ -34,7 +30,7 @@ from tensorflow_datasets.core import dataset_info
 from tensorflow_datasets.core import dataset_utils
 from tensorflow_datasets.core import download
 from tensorflow_datasets.core import features
-from tensorflow_datasets.core import registered
+from tensorflow_datasets.core import load
 from tensorflow_datasets.core import splits as splits_lib
 from tensorflow_datasets.core import utils
 from tensorflow_datasets.core.utils import read_config as read_config_lib
@@ -44,11 +40,9 @@ tf.enable_v2_behavior()
 DummyDatasetSharedGenerator = testing.DummyDatasetSharedGenerator
 
 
+@dataclasses.dataclass
 class DummyBuilderConfig(dataset_builder.BuilderConfig):
-
-  def __init__(self, increment=0, **kwargs):
-    super(DummyBuilderConfig, self).__init__(**kwargs)
-    self.increment = increment
+  increment: int = 0
 
 
 class DummyDatasetWithConfigs(dataset_builder.GeneratorBasedBuilder):
@@ -67,19 +61,6 @@ class DummyDatasetWithConfigs(dataset_builder.GeneratorBasedBuilder):
           increment=2),
   ]
 
-  def _split_generators(self, dl_manager):
-    del dl_manager
-    return [
-        splits_lib.SplitGenerator(
-            name=splits_lib.Split.TRAIN,
-            gen_kwargs={"range_": range(20)},
-        ),
-        splits_lib.SplitGenerator(
-            name=splits_lib.Split.TEST,
-            gen_kwargs={"range_": range(20, 30)},
-        ),
-    ]
-
   def _info(self):
 
     return dataset_info.DatasetInfo(
@@ -87,6 +68,13 @@ class DummyDatasetWithConfigs(dataset_builder.GeneratorBasedBuilder):
         features=features.FeaturesDict({"x": tf.int64}),
         supervised_keys=("x", "x"),
     )
+
+  def _split_generators(self, dl_manager):
+    del dl_manager
+    return {
+        "train": self._generate_examples(range(20)),
+        "test": self._generate_examples(range(20, 30)),
+    }
 
   def _generate_examples(self, range_):
     for i in range_:
@@ -99,11 +87,8 @@ class DummyDatasetWithConfigs(dataset_builder.GeneratorBasedBuilder):
 class InvalidSplitDataset(DummyDatasetWithConfigs):
 
   def _split_generators(self, _):
-    return [
-        splits_lib.SplitGenerator(
-            name="all",  # Error: ALL cannot be used as Split key
-        )
-    ]
+    # Error: ALL cannot be used as Split key
+    return {"all": self._generate_examples(range(5))}
 
 
 class DatasetBuilderTest(testing.TestCase):
@@ -111,7 +96,6 @@ class DatasetBuilderTest(testing.TestCase):
   @classmethod
   def setUpClass(cls):
     super(DatasetBuilderTest, cls).setUpClass()
-    dataset_builder._is_py2_download_and_prepare_disabled = False
     cls.builder = DummyDatasetSharedGenerator(
         data_dir=os.path.join(tempfile.gettempdir(), "tfds"))
     cls.builder.download_and_prepare()
@@ -119,7 +103,7 @@ class DatasetBuilderTest(testing.TestCase):
   @testing.run_in_graph_and_eager_modes()
   def test_load(self):
     with testing.tmp_dir(self.get_temp_dir()) as tmp_dir:
-      dataset = registered.load(
+      dataset = load.load(
           name="dummy_dataset_with_configs",
           data_dir=tmp_dir,
           download=True,
@@ -155,17 +139,17 @@ class DatasetBuilderTest(testing.TestCase):
   def test_load_from_gcs(self):
     from tensorflow_datasets.image_classification import mnist  # pylint:disable=import-outside-toplevel,g-import-not-at-top
     with testing.tmp_dir(self.get_temp_dir()) as tmp_dir:
-      with absltest.mock.patch.object(
+      with mock.patch.object(
           mnist.MNIST, "_download_and_prepare",
           side_effect=NotImplementedError):
         # Make sure the dataset cannot be generated.
         with self.assertRaises(NotImplementedError):
-          registered.load(
+          load.load(
               name="mnist",
               data_dir=tmp_dir)
         # Enable GCS access so that dataset will be loaded from GCS.
         with self.gcs_access():
-          _, info = registered.load(
+          _, info = load.load(
               name="mnist",
               data_dir=tmp_dir,
               with_info=True)
@@ -350,12 +334,51 @@ class DatasetBuilderTest(testing.TestCase):
   def test_invalid_split_dataset(self):
     with testing.tmp_dir(self.get_temp_dir()) as tmp_dir:
       with self.assertRaisesWithPredicateMatch(
-          ValueError, "`all` is a special"):
+          ValueError, "`all` is a reserved keyword"):
         # Raise error during .download_and_prepare()
-        registered.load(
+        load.load(
             name="invalid_split_dataset",
             data_dir=tmp_dir,
         )
+
+  def test_global_version(self):
+    global_version = utils.Version("1.0.0")
+    global_release_notes = {
+        "1.0.0": "Global release",
+    }
+    config_version = utils.Version("1.1.0")
+    config_release_notes = {
+        "1.1.0": "Some update",
+    }
+
+    class VersionDummyDataset(DummyDatasetWithConfigs):
+
+      BUILDER_CONFIGS = [
+          dataset_builder.BuilderConfig(
+              name="default",
+              description="Add 1 to the records",
+          ),
+          dataset_builder.BuilderConfig(
+              name="custom",
+              description="Add 2 to the records",
+              version=config_version,
+              release_notes=config_release_notes,
+          ),
+      ]
+      VERSION = global_version
+      RELEASE_NOTES = global_release_notes
+
+    tmp_path = "/tmp/non-existing-dir/"
+
+    # If version is not specified at the BuilderConfig level, then
+    # the default global values are used.
+    builder = VersionDummyDataset(config="default", data_dir=tmp_path)
+    self.assertEqual(builder.version, global_version)
+    self.assertEqual(builder.release_notes, global_release_notes)
+
+    builder = VersionDummyDataset(config="custom", data_dir=tmp_path)
+    self.assertEqual(builder.version, config_version)
+    self.assertEqual(builder.release_notes, config_release_notes)
 
 
 class DatasetBuilderMultiDirTest(testing.TestCase):
@@ -459,6 +482,22 @@ class DatasetBuilderMultiDirTest(testing.TestCase):
     self.assertBuildDataDir(
         self.builder._build_data_dir(self.other_data_dir), self.other_data_dir)
 
+  def test_load_data_dir(self):
+    """Ensure that `tfds.load` also supports multiple data_dir."""
+    constants.add_data_dir(self.other_data_dir)
+
+    class MultiDirDataset(DummyDatasetSharedGenerator):  # pylint: disable=unused-variable
+      VERSION = utils.Version("1.2.0")
+
+    data_dir = os.path.join(
+        self.other_data_dir, "multi_dir_dataset", "1.2.0"
+    )
+    tf.io.gfile.makedirs(data_dir)
+
+    with mock.patch.object(dataset_info.DatasetInfo, "read_from_directory"):
+      _, info = load.load("multi_dir_dataset", split=[], with_info=True)
+    self.assertEqual(info.data_dir, data_dir)
+
 
 class BuilderPickleTest(testing.TestCase):
 
@@ -472,28 +511,18 @@ class BuilderPickleTest(testing.TestCase):
 
 class BuilderRestoreGcsTest(testing.TestCase):
 
-  @classmethod
-  def setUpClass(cls):
-    super(BuilderRestoreGcsTest, cls).setUpClass()
-    dataset_builder._is_py2_download_and_prepare_disabled = False
-
-  @classmethod
-  def tearDownClass(cls):
-    dataset_builder._is_py2_download_and_prepare_disabled = True
-    super(BuilderRestoreGcsTest, cls).tearDownClass()
-
   def setUp(self):
     super(BuilderRestoreGcsTest, self).setUp()
 
     def load_mnist_dataset_info(self):
       mnist_info_path = os.path.join(
-          utils.tfds_dir(),
+          utils.tfds_path(),
           "testing/test_data/dataset_info/mnist/3.0.1",
       )
       mnist_info_path = os.path.normpath(mnist_info_path)
       self.read_from_directory(mnist_info_path)
 
-    patcher = absltest.mock.patch.object(
+    patcher = mock.patch.object(
         dataset_info.DatasetInfo,
         "initialize_from_bucket",
         new=load_mnist_dataset_info
@@ -502,7 +531,7 @@ class BuilderRestoreGcsTest(testing.TestCase):
     self.patch_gcs = patcher
     self.addCleanup(patcher.stop)
 
-    patcher = absltest.mock.patch.object(
+    patcher = mock.patch.object(
         dataset_info.DatasetInfo, "compute_dynamic_properties",
     )
     self.compute_dynamic_property = patcher.start()
@@ -527,7 +556,10 @@ class BuilderRestoreGcsTest(testing.TestCase):
       self.assertEqual(builder.info.splits["train"].statistics.num_examples, 20)
       self.assertFalse(self.compute_dynamic_property.called)
 
-      dl_config = download.DownloadConfig(max_examples_per_split=5)
+      dl_config = download.DownloadConfig(
+          max_examples_per_split=5,
+          compute_stats=download.ComputeStatsMode.AUTO,
+      )
       builder.download_and_prepare(download_config=dl_config)
 
       # Statistics should have been recomputed (split different from the
@@ -544,7 +576,10 @@ class BuilderRestoreGcsTest(testing.TestCase):
       self.assertEqual(builder.info.splits.total_num_examples, 0)
       self.assertFalse(self.compute_dynamic_property.called)
 
-      builder.download_and_prepare()
+      dl_config = download.DownloadConfig(
+          compute_stats=download.ComputeStatsMode.AUTO,
+      )
+      builder.download_and_prepare(download_config=dl_config)
 
       # Statistics should have been recomputed
       self.assertTrue(self.compute_dynamic_property.called)
@@ -594,16 +629,14 @@ class DatasetBuilderReadTest(testing.TestCase):
 
   @classmethod
   def setUpClass(cls):
-    super(DatasetBuilderReadTest, cls).setUpClass()
-    dataset_builder._is_py2_download_and_prepare_disabled = False
+    super().setUpClass()
     cls._tfds_tmp_dir = testing.make_tmp_dir()
     builder = DummyDatasetSharedGenerator(data_dir=cls._tfds_tmp_dir)
     builder.download_and_prepare()
 
   @classmethod
   def tearDownClass(cls):
-    super(DatasetBuilderReadTest, cls).tearDownClass()
-    dataset_builder._is_py2_download_and_prepare_disabled = True
+    super().tearDownClass()
     testing.rm_tmp_dir(cls._tfds_tmp_dir)
 
   def setUp(self):
@@ -703,6 +736,10 @@ class DatasetBuilderReadTest(testing.TestCase):
         read_config=read_config_lib.ReadConfig(),
     ))
 
+  def test_with_tfds_info(self):
+    ds = self.builder.as_dataset(split=splits_lib.Split.TRAIN)
+    self.assertEqual(0, len(tf.compat.v1.data.get_output_shapes(ds)["x"]))
+
 
 
 
@@ -725,12 +762,7 @@ class NestedSequenceBuilder(dataset_builder.GeneratorBasedBuilder):
 
   def _split_generators(self, dl_manager):
     del dl_manager
-    return [
-        splits_lib.SplitGenerator(
-            name=splits_lib.Split.TRAIN,
-            gen_kwargs={},
-        ),
-    ]
+    return {"train": self._generate_examples()}
 
   def _generate_examples(self):
     ex0 = [
@@ -763,7 +795,7 @@ class NestedSequenceBuilderTest(testing.TestCase):
   @testing.run_in_graph_and_eager_modes()
   def test_nested_sequence(self):
     with testing.tmp_dir(self.get_temp_dir()) as tmp_dir:
-      ds_train, ds_info = registered.load(
+      ds_train, ds_info = load.load(
           name="nested_sequence_builder",
           data_dir=tmp_dir,
           split="train",

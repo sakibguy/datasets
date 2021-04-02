@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """MNIST, Fashion MNIST, KMNIST and EMNIST."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import numpy as np
@@ -219,8 +214,7 @@ class KMNIST(MNIST):
 class EMNISTConfig(tfds.core.BuilderConfig):
   """BuilderConfig for EMNIST CONFIG."""
 
-  @tfds.core.disallow_positional_args
-  def __init__(self, class_number, train_examples, test_examples, **kwargs):
+  def __init__(self, *, class_number, train_examples, test_examples, **kwargs):
     """BuilderConfig for EMNIST class number.
 
     Args:
@@ -230,11 +224,7 @@ class EMNISTConfig(tfds.core.BuilderConfig):
       test_examples: number of test examples
       **kwargs: keyword arguments forwarded to super.
     """
-    super(EMNISTConfig, self).__init__(
-        version=tfds.core.Version(
-            "3.0.0",
-            "New split API (https://tensorflow.org/datasets/splits)"),
-        **kwargs)
+    super(EMNISTConfig, self).__init__(**kwargs)
     self.class_number = class_number
     self.train_examples = train_examples
     self.test_examples = test_examples
@@ -243,8 +233,10 @@ class EMNISTConfig(tfds.core.BuilderConfig):
 class EMNIST(MNIST):
   """Emnist dataset."""
   URL = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
-  VERSION = None  # Configs.
-
+  VERSION = tfds.core.Version("3.0.0")
+  RELEASE_NOTES = {
+      "3.0.0": "New split API (https://tensorflow.org/datasets/splits)",
+  }
   BUILDER_CONFIGS = [
       EMNISTConfig(
           name="byclass",

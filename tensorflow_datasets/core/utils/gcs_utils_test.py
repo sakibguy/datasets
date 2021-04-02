@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """GCS utils test."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import tempfile
@@ -59,7 +54,8 @@ class GcsUtilsTest(testing.TestCase):
     with self.gcs_access():
       mnist = tfds.image_classification.MNIST(
           data_dir=gcs_utils.gcs_path('datasets'))
-      example = next(tfds.as_numpy(mnist.as_dataset(split='train').take(1)))
+      ds = tfds.as_numpy(mnist.as_dataset(split='train').take(1))
+      example = next(iter(ds))
     _ = example['image'], example['label']
 
 

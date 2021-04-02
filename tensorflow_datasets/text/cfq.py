@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """CFQ (Compositional Freebase Question) dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import json
 import os
@@ -70,8 +65,8 @@ _RANDOM_SEEDS = [
 class CFQConfig(tfds.core.BuilderConfig):
   """BuilderConfig for CFQ splits."""
 
-  @tfds.core.disallow_positional_args
   def __init__(self,
+               *,
                name=None,
                directory=None,
                compound_divergence=None,
@@ -112,7 +107,6 @@ class CFQConfig(tfds.core.BuilderConfig):
     super(CFQConfig, self).__init__(
         name=name,
         version=tfds.core.Version('1.2.0'),
-        description=_DESCRIPTION,
         **kwargs)
     self.split_file = os.path.join(directory, split_name + '.json')
 

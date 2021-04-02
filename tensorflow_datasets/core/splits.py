@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,41 +13,76 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Splits related API."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import typing
-from typing import List, Union
+from typing import Any, List, Optional, Union
 
-from tensorflow_datasets.core import proto
+import dataclasses
+
+from tensorflow_datasets.core import proto as proto_lib
 from tensorflow_datasets.core import tfrecords_reader
 from tensorflow_datasets.core import utils
 from tensorflow_datasets.core.utils import shard_utils
+from tensorflow_metadata.proto.v0 import statistics_pb2
 
 
-@utils.as_proto_cls(proto.SplitInfo)
-class SplitInfo(object):
-  """Wraps `proto.SplitInfo` with an additional property."""
+@dataclasses.dataclass(eq=False, frozen=True)
+class SplitInfo:
+  """Wraps `proto.SplitInfo` with an additional property.
+
+  Attributes:
+    name: Name of the split (e.g. `train`, `test`,...)
+    shard_lengths: List of length <number of files> containing the number of
+      examples stored in each file.
+    num_examples: Total number of examples (`sum(shard_lengths)`)
+    num_shards: Number of files (`len(shard_lengths)`)
+    num_bytes: Size of the files
+    statistics: Additional statistics of the split.
+  """
+  name: str
+  shard_lengths: List[int]
+  num_bytes: int
+  statistics: statistics_pb2.DatasetFeatureStatistics = dataclasses.field(
+      default_factory=statistics_pb2.DatasetFeatureStatistics,
+  )
+  # Inside `SplitDict`, `SplitInfo` has additional arguments required for
+  # `file_instructions`
+  # Rather than `dataset_name`, should use a structure containing file format,
+  # data_dir,...
+  _dataset_name: Optional[str] = None
+
+  @classmethod
+  def from_proto(cls, proto: proto_lib.SplitInfo) -> "SplitInfo":
+    return cls(
+        name=proto.name,
+        shard_lengths=list(proto.shard_lengths),
+        num_bytes=proto.num_bytes,
+        statistics=proto.statistics,
+    )
+
+  def to_proto(self) -> proto_lib.SplitInfo:
+    return proto_lib.SplitInfo(
+        name=self.name,
+        shard_lengths=self.shard_lengths,
+        num_bytes=self.num_bytes,
+        statistics=self.statistics if self.statistics.ByteSize() else None,
+    )
 
   @property
   def num_examples(self) -> int:
-    if self.shard_lengths:  # pytype: disable=attribute-error
-      return sum(int(sl) for sl in self.shard_lengths)  # pytype: disable=attribute-error
-    return int(self.statistics.num_examples)  # pytype: disable=attribute-error
+    return sum(self.shard_lengths)
 
   @property
   def num_shards(self) -> int:
-    if self.shard_lengths:
-      return len(self.shard_lengths)
-    return self._ProtoCls__proto.num_shards
+    return len(self.shard_lengths)
 
   def __repr__(self) -> str:
     num_examples = self.num_examples or "unknown"
-    return "<tfds.core.SplitInfo num_examples=%s>" % str(num_examples)
+    return (
+        f"<SplitInfo num_examples={num_examples}, num_shards={self.num_shards}>"
+    )
 
   @property
   def file_instructions(self) -> List[shard_utils.FileInstruction]:
@@ -92,6 +127,10 @@ class SplitInfo(object):
     """Returns the list of filenames."""
     return sorted(f.filename for f in self.file_instructions)
 
+  def replace(self, **kwargs: Any) -> "SplitInfo":
+    """Returns a copy of the `SplitInfo` with updated attributes."""
+    return dataclasses.replace(self, **kwargs)
+
 
 class SubSplitInfo(object):
   """Wrapper around a sub split info.
@@ -117,6 +156,10 @@ class SubSplitInfo(object):
   def num_examples(self) -> int:
     """Returns the number of example in the subsplit."""
     return sum(f.num_examples for f in self._file_instructions)
+
+  @property
+  def num_shards(self) -> int:
+    return len(self.file_instructions)
 
   @property
   def file_instructions(self) -> List[shard_utils.FileInstruction]:
@@ -166,13 +209,25 @@ if typing.TYPE_CHECKING:
 class SplitDict(utils.NonMutableDict):
   """Split info object."""
 
-  def __init__(self, dataset_name):
-    super(SplitDict, self).__init__(error_msg="Split {key} already present")
+  def __init__(self, split_infos: List[SplitInfo], *, dataset_name: str):
+    # Forward the dataset name required to build file instructions:
+    # info.splits['train'].file_instructions
+    split_infos = [s.replace(_dataset_name=dataset_name) for s in split_infos]
+
+    super(SplitDict, self).__init__(
+        {split_info.name: split_info for split_info in split_infos},
+        error_msg="Split {key} already present"
+    )
     self._dataset_name = dataset_name
 
   def __getitem__(self, key):
+    if not self:
+      raise KeyError(
+          f"Trying to access `splits[{key!r}]` but `splits` is empty. "
+          "This likely indicate the dataset has not been generated yet."
+      )
     # 1st case: The key exists: `info.splits['train']`
-    if str(key) in self:
+    elif str(key) in self:
       return super(SplitDict, self).__getitem__(str(key))
     # 2nd case: Uses instructions: `info.splits['train[50%]']`
     else:
@@ -183,72 +238,46 @@ class SplitDict(utils.NonMutableDict):
       )
       return SubSplitInfo(instructions)
 
-  def __setitem__(self, key, value):
-    raise ValueError("Cannot add elem. Use .add() instead.")
-
-  def add(self, split_info):
-    """Add the split info."""
-    if split_info.name in self:
-      raise ValueError("Split {} already present".format(split_info.name))
-    # Forward the dataset name required to build file instructions:
-    # info.splits['train'].file_instructions
-    # Use `object.__setattr__`, because ProtoCls forbid new fields assignement.
-    object.__setattr__(split_info, "_dataset_name", self._dataset_name)
-    super(SplitDict, self).__setitem__(split_info.name, split_info)
-
   @classmethod
   def from_proto(cls, dataset_name, repeated_split_infos):
     """Returns a new SplitDict initialized from the `repeated_split_infos`."""
-    split_dict = cls(dataset_name)
-    for split_info_proto in repeated_split_infos:
-      split_info = SplitInfo()
-      split_info.CopyFrom(split_info_proto)
-      split_dict.add(split_info)
-    return split_dict
+    split_infos = [SplitInfo.from_proto(s) for s in repeated_split_infos]
+    return cls(split_infos, dataset_name=dataset_name)
 
   def to_proto(self):
     """Returns a list of SplitInfo protos that we have."""
-    # Return the proto.SplitInfo, sorted by name
-    return sorted((s.get_proto() for s in self.values()), key=lambda s: s.name)
+    return [s.to_proto() for s in self.values()]
 
   @property
   def total_num_examples(self):
     """Return the total number of examples."""
     return sum(s.num_examples for s in self.values())
 
-  def copy(self):
-    return SplitDict.from_proto(self._dataset_name, self.to_proto())
 
+def even_splits(
+    split: str,
+    n: int,
+) -> List[str]:
+  """Generates a list of sub-splits of same size.
 
-def check_splits_equals(splits1, splits2):
-  """Check two split dicts have same name, shard_lengths and num_shards."""
-  if set(splits1) ^ set(splits2):  # Name intersection should be null
-    return False
-  for _, (split1, split2) in utils.zip_dict(splits1, splits2):
-    if (split1.num_shards != split2.num_shards or
-        split1.shard_lengths != split2.shard_lengths):
-      return False
-  return True
+  Example:
 
+  ```python
+  assert tfds.even_splits('train', n=3) == [
+      'train[0%:33%]', 'train[33%:67%]', 'train[67%:100%]',
+  ]
+  ```
 
-class SplitGenerator(object):
-  """Defines the split information for the generator.
+  Args:
+    split: Split name (e.g. 'train', 'test',...)
+    n: Number of sub-splits to create
 
-  This should be used as returned value of
-  `GeneratorBasedBuilder._split_generators`.
-  See `GeneratorBasedBuilder._split_generators` for more info and example
-  of usage.
+  Returns:
+    The list of subsplits.
   """
-
-  def __init__(self, name, gen_kwargs=None):
-    """Constructs a `SplitGenerator`.
-
-    Args:
-      name: `str`, name of the Split for which the generator will
-        create the examples.
-      gen_kwargs: `dict`, kwargs to forward to the _generate_examples() method
-        of the builder.
-    """
-    self.name = name
-    self.gen_kwargs = gen_kwargs or {}
-    self.split_info = SplitInfo(name=str(name))
+  if n <= 0 or n > 100:
+    raise ValueError(f"n should be > 0 and <= 100. Got {n}")
+  partitions = [round(i * 100 / n) for i in range(n + 1)]
+  return [
+      f"{split}[{partitions[i]}%:{partitions[i+1]}%]" for i in range(n)
+  ]

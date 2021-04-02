@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 The TensorFlow Datasets Authors.
+# Copyright 2021 The TensorFlow Datasets Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """WMT15: Translate dataset."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import tensorflow_datasets.public_api as tfds
 from tensorflow_datasets.translate import wmt
@@ -54,21 +49,6 @@ class Wmt15Translate(wmt.WmtTranslate):
           language_pair=(l1, l2),
           version=tfds.core.Version("1.0.0"),
       ) for l1, l2 in _LANGUAGE_PAIRS
-  ] + [
-      wmt.WmtConfig(  # pylint:disable=g-complex-comprehension
-          description=(
-              "WMT 2015 %s-%s translation task dataset with subword encoding."
-              % (l1, l2)),
-          url=_URL,
-          citation=_CITATION,
-          language_pair=(l1, l2),
-          text_encoder_config=tfds.features.text.TextEncoderConfig(
-              encoder_cls=tfds.features.text.SubwordTextEncoder,
-              name="subwords8k",
-              vocab_size=2**13),
-          version=tfds.core.Version("1.0.0"),
-          )
-      for l1, l2 in _LANGUAGE_PAIRS
   ]
 
   @property
