@@ -11,6 +11,12 @@
 
 # `kitti`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=kitti">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 Kitti contains a suite of vision tasks built using an autonomous driving
@@ -71,17 +77,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
 
-*   **Citation**:
-
-```
-@inproceedings{Geiger2012CVPR,
-  author = {Andreas Geiger and Philip Lenz and Raquel Urtasun},
-  title = {Are we ready for Autonomous Driving? The KITTI Vision Benchmark Suite},
-  booktitle = {Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year = {2012}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -120,3 +115,14 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{Geiger2012CVPR,
+  author = {Andreas Geiger and Philip Lenz and Raquel Urtasun},
+  title = {Are we ready for Autonomous Driving? The KITTI Vision Benchmark Suite},
+  booktitle = {Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year = {2012}
+}
+```

@@ -11,6 +11,12 @@
 
 # `cifar10`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=cifar10">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with
@@ -55,17 +61,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
 
-*   **Citation**:
-
-```
-@TECHREPORT{Krizhevsky09learningmultiple,
-    author = {Alex Krizhevsky},
-    title = {Learning multiple layers of features from tiny images},
-    institution = {},
-    year = {2009}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -104,3 +99,14 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@TECHREPORT{Krizhevsky09learningmultiple,
+    author = {Alex Krizhevsky},
+    title = {Learning multiple layers of features from tiny images},
+    institution = {},
+    year = {2009}
+}
+```

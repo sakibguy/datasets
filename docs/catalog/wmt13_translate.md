@@ -11,10 +11,6 @@
 
 # `wmt13_translate`
 
-Note: This dataset was added recently and is only available in our
-`tfds-nightly` package
-<span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>.
-
 Warning: Manual download required. See instructions below.
 
 *   **Description**:
@@ -58,6 +54,10 @@ builder = tfds.builder("wmt_translate", config=config)
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
     No
 
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
+    Not supported.
+
 *   **Citation**:
 
 ```
@@ -73,10 +73,6 @@ builder = tfds.builder("wmt_translate", config=config)
   url       = {http://www.aclweb.org/anthology/W13-2201}
 }
 ```
-
-*   **Figure**
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
-    Not supported.
 
 ## wmt13_translate/cs-en (default config)
 

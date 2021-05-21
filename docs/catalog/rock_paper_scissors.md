@@ -11,6 +11,12 @@
 
 # `rock_paper_scissors`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=rock_paper_scissors">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 Images of hands playing rock, paper, scissor game.
@@ -54,18 +60,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
 
-*   **Citation**:
-
-```
-@ONLINE {rps,
-author = "Laurence Moroney",
-title = "Rock, Paper, Scissors Dataset",
-month = "feb",
-year = "2019",
-url = "http://laurencemoroney.com/rock-paper-scissors-dataset"
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -104,3 +98,15 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@ONLINE {rps,
+author = "Laurence Moroney",
+title = "Rock, Paper, Scissors Dataset",
+month = "feb",
+year = "2019",
+url = "http://laurencemoroney.com/rock-paper-scissors-dataset"
+}
+```

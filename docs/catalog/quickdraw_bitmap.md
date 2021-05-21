@@ -11,6 +11,12 @@
 
 # `quickdraw_bitmap`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=quickdraw_bitmap">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 The Quick Draw Dataset is a collection of 50 million drawings across 345
@@ -55,25 +61,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
 
-*   **Citation**:
-
-```
-@article{DBLP:journals/corr/HaE17,
-  author    = {David Ha and
-               Douglas Eck},
-  title     = {A Neural Representation of Sketch Drawings},
-  journal   = {CoRR},
-  volume    = {abs/1704.03477},
-  year      = {2017},
-  url       = {http://arxiv.org/abs/1704.03477},
-  archivePrefix = {arXiv},
-  eprint    = {1704.03477},
-  timestamp = {Mon, 13 Aug 2018 16:48:30 +0200},
-  biburl    = {https://dblp.org/rec/bib/journals/corr/HaE17},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -112,3 +99,22 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@article{DBLP:journals/corr/HaE17,
+  author    = {David Ha and
+               Douglas Eck},
+  title     = {A Neural Representation of Sketch Drawings},
+  journal   = {CoRR},
+  volume    = {abs/1704.03477},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1704.03477},
+  archivePrefix = {arXiv},
+  eprint    = {1704.03477},
+  timestamp = {Mon, 13 Aug 2018 16:48:30 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/corr/HaE17},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```

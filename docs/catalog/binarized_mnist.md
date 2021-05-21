@@ -11,6 +11,12 @@
 
 # `binarized_mnist`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=binarized_mnist">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 A specific binarization of the MNIST images originally used in (Salakhutdinov &
@@ -55,19 +61,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
 
-*   **Citation**:
-
-```
-@inproceedings{salakhutdinov2008quantitative,
-title={On the quantitative analysis of deep belief networks},
-author={Salakhutdinov, Ruslan and Murray, Iain},
-booktitle={Proceedings of the 25th international conference on Machine learning},
-pages={872--879},
-year={2008},
-organization={ACM}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -106,3 +99,16 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{salakhutdinov2008quantitative,
+title={On the quantitative analysis of deep belief networks},
+author={Salakhutdinov, Ruslan and Murray, Iain},
+booktitle={Proceedings of the 25th international conference on Machine learning},
+pages={872--879},
+year={2008},
+organization={ACM}
+}
+```

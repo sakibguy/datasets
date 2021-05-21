@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Wrapper around FeatureDict to allow better control over decoding.
-"""
+"""Wrapper around FeatureDict to allow better control over decoding."""
 
 from tensorflow_datasets.core.features import feature as feature_lib
 
@@ -37,9 +36,9 @@ class TopLevelFeature(feature_lib.FeatureConnector):
       serialized_example: Nested `dict` of `tf.Tensor`
       decoders: Nested dict of `Decoder` objects which allow to customize the
         decoding. The structure should match the feature structure, but only
-        customized feature keys need to be present. See
-        [the guide](https://github.com/tensorflow/datasets/tree/master/docs/decode.md)
-        for more info.
+        customized feature keys need to be present. See [the
+          guide](https://github.com/tensorflow/datasets/tree/master/docs/decode.md)
+            for more info.
 
     Returns:
       example: Nested `dict` containing the decoded nested examples.
@@ -62,12 +61,8 @@ class TopLevelFeature(feature_lib.FeatureConnector):
             example,
             serialized_info,
             decoder,
-        ) in zip(
-            flat_features,
-            flat_example,
-            flat_serialized_info,
-            flat_decoders
-        )
+        ) in zip(flat_features, flat_example, flat_serialized_info,
+                 flat_decoders)
     ]
 
     # Step 3: Restore nesting [] => {}
@@ -77,23 +72,29 @@ class TopLevelFeature(feature_lib.FeatureConnector):
 
 def _decode_feature(feature, example, serialized_info, decoder):
   """Decode a single feature."""
-  # TODO(tfds): Support decoders for tfds.features.Dataset
-
-  # Eventually overwrite the default decoding
   if decoder is not None:
-    decoder.setup(feature=feature)
+    # If the decoder is still a dict, it means that the feature is a Dataset
+    # (it wasn't flattened).
+    if isinstance(decoder, dict):
+      decode_kwargs = dict(decoders=decoder)
+      decoder = feature
+    else:
+      # Eventually overwrite the default decoding
+      decode_kwargs = {}
+      decoder.setup(feature=feature)
   else:
+    decode_kwargs = {}
     decoder = feature
 
   sequence_rank = _get_sequence_rank(serialized_info)
   if sequence_rank == 0:
-    return decoder.decode_example(example)
+    return decoder.decode_example(example, **decode_kwargs)
   elif sequence_rank == 1:
     # Return a batch of examples from a sequence
-    return decoder.decode_batch_example(example)
+    return decoder.decode_batch_example(example, **decode_kwargs)
   elif sequence_rank > 1:
     # Use ragged tensor if the sequance rank is greater than one
-    return decoder.decode_ragged_example(example)
+    return decoder.decode_ragged_example(example, **decode_kwargs)
 
 
 def _get_sequence_rank(serialized_info):
@@ -116,6 +117,5 @@ def _get_sequence_rank(serialized_info):
     raise NotImplementedError(
         'Decoding do not support mixing sequence and context features within a '
         'single FeatureConnector. Received inputs of different sequence_rank: '
-        '{}'.format(sequence_ranks)
-    )
+        '{}'.format(sequence_ranks))
   return next(iter(sequence_ranks))

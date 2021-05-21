@@ -11,6 +11,12 @@
 
 # `colorectal_histology`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=colorectal_histology">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 Classification of textures in colorectal cancer histology. Each example is a 150
@@ -55,20 +61,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
 
-*   **Citation**:
-
-```
-@article{kather2016multi,
-  title={Multi-class texture analysis in colorectal cancer histology},
-  author={Kather, Jakob Nikolas and Weis, Cleo-Aron and Bianconi, Francesco and Melchers, Susanne M and Schad, Lothar R and Gaiser, Timo and Marx, Alexander and Z{"o}llner, Frank Gerrit},
-  journal={Scientific reports},
-  volume={6},
-  pages={27988},
-  year={2016},
-  publisher={Nature Publishing Group}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -107,3 +99,17 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@article{kather2016multi,
+  title={Multi-class texture analysis in colorectal cancer histology},
+  author={Kather, Jakob Nikolas and Weis, Cleo-Aron and Bianconi, Francesco and Melchers, Susanne M and Schad, Lothar R and Gaiser, Timo and Marx, Alexander and Z{"o}llner, Frank Gerrit},
+  journal={Scientific reports},
+  volume={6},
+  pages={27988},
+  year={2016},
+  publisher={Nature Publishing Group}
+}
+```

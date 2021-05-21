@@ -44,8 +44,19 @@ toc:
     title: yes_no
   title: Audio
 - section:
-  - path: /datasets/catalog/ogbg_molpcba
+  - path: /datasets/catalog/d4rl_mujoco_ant
+    title: d4rl_mujoco_ant
+  - path: /datasets/catalog/d4rl_mujoco_halfcheetah
+    title: d4rl_mujoco_halfcheetah
+  - path: /datasets/catalog/d4rl_mujoco_hopper
     status: nightly
+    title: d4rl_mujoco_hopper
+  - path: /datasets/catalog/d4rl_mujoco_walker2d
+    status: nightly
+    title: d4rl_mujoco_walker2d
+  title: D4rl
+- section:
+  - path: /datasets/catalog/ogbg_molpcba
     title: ogbg_molpcba
   title: Graphs
 - section:
@@ -116,7 +127,6 @@ toc:
   - path: /datasets/catalog/cats_vs_dogs
     title: cats_vs_dogs
   - path: /datasets/catalog/chexpert
-    status: nightly
     title: chexpert (manual)
   - path: /datasets/catalog/cifar10
     title: cifar10
@@ -290,6 +300,11 @@ toc:
     title: xquad
   title: Question answering
 - section:
+  - path: /datasets/catalog/rlu_dmlab_seekavoid_arena01
+    status: nightly
+    title: rlu_dmlab_seekavoid_arena01
+  title: Rl unplugged
+- section:
   - path: /datasets/catalog/amazon_us_reviews
     title: amazon_us_reviews
   - path: /datasets/catalog/cherry_blossoms
@@ -299,7 +314,6 @@ toc:
   - path: /datasets/catalog/e2e_cleaned
     title: e2e_cleaned
   - path: /datasets/catalog/efron_morris75
-    status: nightly
     title: efron_morris75
   - path: /datasets/catalog/forest_fires
     title: forest_fires
@@ -390,7 +404,6 @@ toc:
   - path: /datasets/catalog/definite_pronoun_resolution
     title: definite_pronoun_resolution
   - path: /datasets/catalog/dolphin_number_word
-    status: nightly
     title: dolphin_number_word
   - path: /datasets/catalog/drop
     title: drop
@@ -401,7 +414,6 @@ toc:
   - path: /datasets/catalog/gap
     title: gap
   - path: /datasets/catalog/gem
-    status: nightly
     title: gem
   - path: /datasets/catalog/glue
     title: glue
@@ -451,6 +463,8 @@ toc:
     title: salient_span_wikipedia
   - path: /datasets/catalog/scan
     title: scan
+  - path: /datasets/catalog/schema_guided_dialogue
+    title: schema_guided_dialogue
   - path: /datasets/catalog/scicite
     title: scicite
   - path: /datasets/catalog/sentiment140
@@ -458,7 +472,6 @@ toc:
   - path: /datasets/catalog/snli
     title: snli
   - path: /datasets/catalog/star_cfq
-    status: nightly
     title: star_cfq
   - path: /datasets/catalog/story_cloze
     title: story_cloze (manual)
@@ -471,7 +484,6 @@ toc:
   - path: /datasets/catalog/wiki40b
     title: wiki40b
   - path: /datasets/catalog/wikiann
-    status: nightly
     title: wikiann
   - path: /datasets/catalog/wikipedia
     title: wikipedia
@@ -504,7 +516,6 @@ toc:
   - path: /datasets/catalog/ted_multi_translate
     title: ted_multi_translate
   - path: /datasets/catalog/wmt13_translate
-    status: nightly
     title: wmt13_translate (manual)
   - path: /datasets/catalog/wmt14_translate
     title: wmt14_translate (manual)
@@ -533,16 +544,16 @@ toc:
   - path: /datasets/catalog/starcraft_video
     title: starcraft_video
   - path: /datasets/catalog/tao
-    status: nightly
     title: tao (manual)
   - path: /datasets/catalog/ucf101
     title: ucf101
   - path: /datasets/catalog/youtube_vis
-    status: nightly
     title: youtube_vis (manual)
   title: Video
 - section:
   - path: /datasets/catalog/gref
-    status: nightly
     title: gref (manual)
+  - path: /datasets/catalog/ref_coco
+    status: nightly
+    title: ref_coco (manual)
   title: Vision language

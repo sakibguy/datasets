@@ -11,6 +11,12 @@
 
 # `scene_parse150`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=scene_parse150">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 Scene parsing is to segment and parse an image into different image regions
@@ -56,17 +62,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'annotation')`
 
-*   **Citation**:
-
-```
-@inproceedings{zhou2017scene,
-title={Scene Parsing through ADE20K Dataset},
-author={Zhou, Bolei and Zhao, Hang and Puig, Xavier and Fidler, Sanja and Barriuso, Adela and Torralba, Antonio},
-booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
-year={2017}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
     Not supported.
@@ -104,3 +99,14 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{zhou2017scene,
+title={Scene Parsing through ADE20K Dataset},
+author={Zhou, Bolei and Zhao, Hang and Puig, Xavier and Fidler, Sanja and Barriuso, Adela and Torralba, Antonio},
+booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+year={2017}
+}
+```

@@ -11,10 +11,6 @@
 
 # `youtube_vis`
 
-Note: This dataset was added recently and is only available in our
-`tfds-nightly` package
-<span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>.
-
 Warning: Manual download required. See instructions below.
 
 *   **Description**:
@@ -60,17 +56,13 @@ secure" warning when accessing codalab.
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
     No
 
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 343
-`'train'`      | 2,238
-`'validation'` | 302
-
 *   **Supervised keys** (See
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
+
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
+    Not supported.
 
 *   **Citation**:
 
@@ -92,16 +84,20 @@ Split          | Examples
 }
 ```
 
-*   **Figure**
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
-    Not supported.
-
 ## youtube_vis/full (default config)
 
 *   **Config description**: The full resolution version of the dataset, with all
     frames, including those without labels, included.
 
 *   **Dataset size**: `33.31 GiB`
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 343
+`'train'`      | 2,238
+`'validation'` | 302
 
 *   **Features**:
 
@@ -166,6 +162,14 @@ $(document).ready(() => {
 
 *   **Dataset size**: `130.02 GiB`
 
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 343
+`'train'`      | 2,238
+`'validation'` | 302
+
 *   **Features**:
 
 ```python
@@ -228,6 +232,14 @@ $(document).ready(() => {
     only frames with labels included.
 
 *   **Dataset size**: `26.27 GiB`
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 343
+`'train'`      | 2,238
+`'validation'` | 302
 
 *   **Features**:
 
@@ -292,6 +304,14 @@ $(document).ready(() => {
 
 *   **Dataset size**: `6.91 GiB`
 
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 343
+`'train'`      | 2,238
+`'validation'` | 302
+
 *   **Features**:
 
 ```python
@@ -326,6 +346,293 @@ FeaturesDict({
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
 var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/youtube_vis-only_frames_with_labels-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+## youtube_vis/full_train_split
+
+*   **Config description**: The full resolution version of the dataset, with all
+    frames, including those without labels, included. The val and test splits
+    are manufactured from the training data.
+
+*   **Dataset size**: `26.09 GiB`
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 200
+`'train'`      | 1,838
+`'validation'` | 200
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'metadata': FeaturesDict({
+        'height': tf.int32,
+        'num_frames': tf.int32,
+        'video_name': tf.string,
+        'width': tf.int32,
+    }),
+    'tracks': Sequence({
+        'areas': Sequence(tf.float32),
+        'bboxes': Sequence(BBoxFeature(shape=(4,), dtype=tf.float32)),
+        'category': ClassLabel(shape=(), dtype=tf.int64, num_classes=40),
+        'frames': Sequence(tf.int32),
+        'is_crowd': tf.bool,
+        'segmentations': Video(Image(shape=(None, None, 1), dtype=tf.uint8)),
+    }),
+    'video': Video(Image(shape=(None, None, 3), dtype=tf.uint8)),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/youtube_vis-full_train_split-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+## youtube_vis/480_640_full_train_split
+
+*   **Config description**: All images are bilinearly resized to 480 X 640 with
+    all frames included. The val and test splits are manufactured from the
+    training data.
+
+*   **Dataset size**: `101.57 GiB`
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 200
+`'train'`      | 1,838
+`'validation'` | 200
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'metadata': FeaturesDict({
+        'height': tf.int32,
+        'num_frames': tf.int32,
+        'video_name': tf.string,
+        'width': tf.int32,
+    }),
+    'tracks': Sequence({
+        'areas': Sequence(tf.float32),
+        'bboxes': Sequence(BBoxFeature(shape=(4,), dtype=tf.float32)),
+        'category': ClassLabel(shape=(), dtype=tf.int64, num_classes=40),
+        'frames': Sequence(tf.int32),
+        'is_crowd': tf.bool,
+        'segmentations': Video(Image(shape=(480, 640, 1), dtype=tf.uint8)),
+    }),
+    'video': Video(Image(shape=(480, 640, 3), dtype=tf.uint8)),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/youtube_vis-480_640_full_train_split-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+## youtube_vis/480_640_only_frames_with_labels_train_split
+
+*   **Config description**: All images are bilinearly resized to 480 X 640 with
+    only frames with labels included. The val and test splits are manufactured
+    from the training data.
+
+*   **Dataset size**: `20.55 GiB`
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 200
+`'train'`      | 1,838
+`'validation'` | 200
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'metadata': FeaturesDict({
+        'height': tf.int32,
+        'num_frames': tf.int32,
+        'video_name': tf.string,
+        'width': tf.int32,
+    }),
+    'tracks': Sequence({
+        'areas': Sequence(tf.float32),
+        'bboxes': Sequence(BBoxFeature(shape=(4,), dtype=tf.float32)),
+        'category': ClassLabel(shape=(), dtype=tf.int64, num_classes=40),
+        'frames': Sequence(tf.int32),
+        'is_crowd': tf.bool,
+        'segmentations': Video(Image(shape=(480, 640, 1), dtype=tf.uint8)),
+    }),
+    'video': Video(Image(shape=(480, 640, 3), dtype=tf.uint8)),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/youtube_vis-480_640_only_frames_with_labels_train_split-1.0.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+## youtube_vis/only_frames_with_labels_train_split
+
+*   **Config description**: Only images with labels included at their native
+    resolution. The val and test splits are manufactured from the training data.
+
+*   **Dataset size**: `5.46 GiB`
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 200
+`'train'`      | 1,838
+`'validation'` | 200
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'metadata': FeaturesDict({
+        'height': tf.int32,
+        'num_frames': tf.int32,
+        'video_name': tf.string,
+        'width': tf.int32,
+    }),
+    'tracks': Sequence({
+        'areas': Sequence(tf.float32),
+        'bboxes': Sequence(BBoxFeature(shape=(4,), dtype=tf.float32)),
+        'category': ClassLabel(shape=(), dtype=tf.int64, num_classes=40),
+        'frames': Sequence(tf.int32),
+        'is_crowd': tf.bool,
+        'segmentations': Video(Image(shape=(None, None, 1), dtype=tf.uint8)),
+    }),
+    'video': Video(Image(shape=(None, None, 3), dtype=tf.uint8)),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/youtube_vis-only_frames_with_labels_train_split-1.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).

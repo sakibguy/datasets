@@ -11,6 +11,12 @@
 
 # `tf_flowers`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=tf_flowers">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 A large set of images of flowers
@@ -52,17 +58,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
 
-*   **Citation**:
-
-```
-@ONLINE {tfflowers,
-author = "The TensorFlow Team",
-title = "Flowers",
-month = "jan",
-year = "2019",
-url = "http://download.tensorflow.org/example_images/flower_photos.tgz" }
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -101,3 +96,14 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@ONLINE {tfflowers,
+author = "The TensorFlow Team",
+title = "Flowers",
+month = "jan",
+year = "2019",
+url = "http://download.tensorflow.org/example_images/flower_photos.tgz" }
+```

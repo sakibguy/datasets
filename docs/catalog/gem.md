@@ -11,10 +11,6 @@
 
 # `gem`
 
-Note: This dataset was added recently and is only available in our
-`tfds-nightly` package
-<span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>.
-
 *   **Description**:
 
 **GEM** is a benchmark environment for Natural Language Generation with a focus
@@ -36,7 +32,8 @@ More information can be found at
 *   **Versions**:
 
     *   `1.0.0`: Initial version
-    *   **`1.0.1`** (default): Update bad links filter for MLSum
+    *   `1.0.1`: Update bad links filter for MLSum
+    *   **`1.1.0`** (default): Release of the Challenge Sets
 
 *   **Supervised keys** (See
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
@@ -54,9 +51,9 @@ More information can be found at
     the task is to generate a coherent sentence describing an everyday scenario
     using these concepts.
 
-*   **Download size**: `1.76 MiB`
+*   **Download size**: `1.84 MiB`
 
-*   **Dataset size**: `13.39 MiB`
+*   **Dataset size**: `16.84 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -64,11 +61,14 @@ More information can be found at
 
 *   **Splits**:
 
-Split          | Examples
-:------------- | -------:
-`'test'`       | 1,497
-`'train'`      | 67,389
-`'validation'` | 993
+Split                           | Examples
+:------------------------------ | -------:
+`'challenge_test_scramble'`     | 500
+`'challenge_train_sample'`      | 500
+`'challenge_validation_sample'` | 500
+`'test'`                        | 1,497
+`'train'`                       | 67,389
+`'validation'`                  | 993
 
 *   **Features**:
 
@@ -77,10 +77,45 @@ FeaturesDict({
     'concept_set_id': tf.int32,
     'concepts': Sequence(tf.string),
     'gem_id': tf.string,
+    'gem_parent_id': tf.string,
     'references': Sequence(tf.string),
     'target': tf.string,
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-common_gen-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 *   **Citation**:
 
@@ -172,6 +207,46 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
+## gem/cs_restaurants
+
+*   **Config description**: The task is generating responses in the context of a
+    (hypothetical) dialogue system that provides information about restaurants.
+    The input is a basic intent/dialogue act type and a list of slots
+    (attributes) and their values. The output is a natural language sentence.
+
+*   **Download size**: `1.46 MiB`
+
+*   **Dataset size**: `2.71 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split                           | Examples
+:------------------------------ | -------:
+`'challenge_test_scramble'`     | 500
+`'challenge_train_sample'`      | 500
+`'challenge_validation_sample'` | 500
+`'test'`                        | 842
+`'train'`                       | 3,569
+`'validation'`                  | 781
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'dialog_act': tf.string,
+    'dialog_act_delexicalized': tf.string,
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'target': tf.string,
+    'target_delexicalized': tf.string,
+})
+```
+
 *   **Examples**
     ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
 
@@ -183,7 +258,7 @@ the correct citation for each contained dataset."
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-common_gen-1.0.1.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-cs_restaurants-1.1.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -205,42 +280,6 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
-
-## gem/cs_restaurants
-
-*   **Config description**: The task is generating responses in the context of a
-    (hypothetical) dialogue system that provides information about restaurants.
-    The input is a basic intent/dialogue act type and a list of slots
-    (attributes) and their values. The output is a natural language sentence.
-
-*   **Download size**: `1.40 MiB`
-
-*   **Dataset size**: `1.80 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 842
-`'train'`      | 3,569
-`'validation'` | 781
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'dialog_act': tf.string,
-    'dialog_act_delexicalized': tf.string,
-    'gem_id': tf.string,
-    'references': Sequence(tf.string),
-    'target': tf.string,
-    'target_delexicalized': tf.string,
-})
-```
 
 *   **Citation**:
 
@@ -327,6 +366,44 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
+## gem/dart
+
+*   **Config description**: DART is a large and open-domain structured DAta
+    Record to Text generation corpus with high-quality sentence annotations with
+    each input being a set of entity-relation triples following a
+    tree-structured ontology.
+
+*   **Download size**: `28.01 MiB`
+
+*   **Dataset size**: `33.78 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 6,959
+`'train'`      | 62,659
+`'validation'` | 2,768
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'dart_id': tf.int32,
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'subtree_was_extended': tf.bool,
+    'target': tf.string,
+    'target_sources': Sequence(tf.string),
+    'tripleset': Sequence(tf.string),
+})
+```
+
 *   **Examples**
     ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
 
@@ -338,7 +415,7 @@ the correct citation for each contained dataset."
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-cs_restaurants-1.0.1.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-dart-1.1.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -360,43 +437,6 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
-
-## gem/dart
-
-*   **Config description**: DART is a large and open-domain structured DAta
-    Record to Text generation corpus with high-quality sentence annotations with
-    each input being a set of entity-relation triples following a
-    tree-structured ontology.
-
-*   **Download size**: `28.01 MiB`
-
-*   **Dataset size**: `31.11 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 6,959
-`'train'`      | 62,659
-`'validation'` | 2,768
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'dart_id': tf.int32,
-    'gem_id': tf.string,
-    'references': Sequence(tf.string),
-    'subtree_was_extended': tf.bool,
-    'target': tf.string,
-    'target_sources': Sequence(tf.string),
-    'tripleset': Sequence(tf.string),
-})
-```
 
 *   **Citation**:
 
@@ -478,6 +518,43 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
+## gem/e2e_nlg
+
+*   **Config description**: The E2E dataset is designed for a limited-domain
+    data-to-text task -- generation of restaurant descriptions/recommendations
+    based on up to 8 different attributes (name, area, price range etc.)
+
+*   **Download size**: `13.99 MiB`
+
+*   **Dataset size**: `16.92 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split                           | Examples
+:------------------------------ | -------:
+`'challenge_test_scramble'`     | 500
+`'challenge_train_sample'`      | 500
+`'challenge_validation_sample'` | 500
+`'test'`                        | 4,693
+`'train'`                       | 33,525
+`'validation'`                  | 4,299
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'meaning_representation': tf.string,
+    'references': Sequence(tf.string),
+    'target': tf.string,
+})
+```
+
 *   **Examples**
     ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
 
@@ -489,7 +566,7 @@ the correct citation for each contained dataset."
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-dart-1.0.1.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-e2e_nlg-1.1.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -511,39 +588,6 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
-
-## gem/e2e_nlg
-
-*   **Config description**: The E2E dataset is designed for a limited-domain
-    data-to-text task -- generation of restaurant descriptions/recommendations
-    based on up to 8 different attributes (name, area, price range etc.)
-
-*   **Download size**: `13.92 MiB`
-
-*   **Dataset size**: `14.51 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 4,693
-`'train'`      | 33,525
-`'validation'` | 4,299
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'gem_id': tf.string,
-    'meaning_representation': tf.string,
-    'references': Sequence(tf.string),
-    'target': tf.string,
-})
-```
 
 *   **Citation**:
 
@@ -627,6 +671,47 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
+## gem/mlsum_de
+
+*   **Config description**: MLSum is a large-scale multiLingual summarization
+    dataset. It is buillt from online news outlets, this split focusing on
+    German.
+
+*   **Download size**: `345.98 MiB`
+
+*   **Dataset size**: `963.60 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split                           | Examples
+:------------------------------ | -------:
+`'challenge_test_covid'`        | 5,058
+`'challenge_train_sample'`      | 500
+`'challenge_validation_sample'` | 500
+`'test'`                        | 10,695
+`'train'`                       | 220,748
+`'validation'`                  | 11,392
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'date': tf.string,
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'target': tf.string,
+    'text': tf.string,
+    'title': tf.string,
+    'topic': tf.string,
+    'url': tf.string,
+})
+```
+
 *   **Examples**
     ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
 
@@ -638,7 +723,7 @@ the correct citation for each contained dataset."
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-e2e_nlg-1.0.1.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-mlsum_de-1.1.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -660,43 +745,6 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
-
-## gem/mlsum_de
-
-*   **Config description**: MLSum is a large-scale multiLingual summarization
-    dataset. It is buillt from online news outlets, this split focusing on
-    German.
-
-*   **Download size**: `331.26 MiB`
-
-*   **Dataset size**: `930.06 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    No
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 10,695
-`'train'`      | 220,748
-`'validation'` | 11,392
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'date': tf.string,
-    'gem_id': tf.string,
-    'references': Sequence(tf.string),
-    'target': tf.string,
-    'text': tf.string,
-    'title': tf.string,
-    'topic': tf.string,
-    'url': tf.string,
-})
-```
 
 *   **Citation**:
 
@@ -776,40 +824,6 @@ FeaturesDict({
 Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
-
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-mlsum_de-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
 
 ## gem/mlsum_es
 
@@ -817,9 +831,9 @@ $(document).ready(() => {
     dataset. It is buillt from online news outlets, this split focusing on
     Spanish.
 
-*   **Download size**: `490.28 MiB`
+*   **Download size**: `501.27 MiB`
 
-*   **Dataset size**: `1.26 GiB`
+*   **Dataset size**: `1.29 GiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -827,11 +841,14 @@ $(document).ready(() => {
 
 *   **Splits**:
 
-Split          | Examples
-:------------- | -------:
-`'test'`       | 13,366
-`'train'`      | 259,888
-`'validation'` | 9,977
+Split                           | Examples
+:------------------------------ | -------:
+`'challenge_test_covid'`        | 1,938
+`'challenge_train_sample'`      | 500
+`'challenge_validation_sample'` | 500
+`'test'`                        | 13,366
+`'train'`                       | 259,888
+`'validation'`                  | 9,977
 
 *   **Features**:
 
@@ -839,6 +856,7 @@ Split          | Examples
 FeaturesDict({
     'date': tf.string,
     'gem_id': tf.string,
+    'gem_parent_id': tf.string,
     'references': Sequence(tf.string),
     'target': tf.string,
     'text': tf.string,
@@ -847,6 +865,40 @@ FeaturesDict({
     'url': tf.string,
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-mlsum_es-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 *   **Citation**:
 
@@ -926,40 +978,6 @@ FeaturesDict({
 Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
-
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-mlsum_es-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
 
 ## gem/schema_guided_dialog
 
@@ -968,26 +986,37 @@ $(document).ready(() => {
     assistant, which covers 17 domains ranging from banks and events to media,
     calendar, travel, and weather.
 
-*   **Download size**: `8.24 MiB`
+*   **Download size**: `17.00 MiB`
 
-*   **Dataset size**: `77.86 MiB`
+*   **Dataset size**: `201.19 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes
+    Yes (challenge_test_backtranslation, challenge_test_bfp02,
+    challenge_test_bfp05, challenge_test_nopunc, challenge_test_scramble,
+    challenge_train_sample, challenge_validation_sample, test, validation), Only
+    when `shuffle_files=False` (train)
 
 *   **Splits**:
 
-Split          | Examples
-:------------- | -------:
-`'test'`       | 10,000
-`'train'`      | 164,982
-`'validation'` | 10,000
+Split                              | Examples
+:--------------------------------- | -------:
+`'challenge_test_backtranslation'` | 500
+`'challenge_test_bfp02'`           | 500
+`'challenge_test_bfp05'`           | 500
+`'challenge_test_nopunc'`          | 500
+`'challenge_test_scramble'`        | 500
+`'challenge_train_sample'`         | 500
+`'challenge_validation_sample'`    | 500
+`'test'`                           | 10,000
+`'train'`                          | 164,982
+`'validation'`                     | 10,000
 
 *   **Features**:
 
 ```python
 FeaturesDict({
+    'context': Sequence(tf.string),
     'dialog_acts': Sequence({
         'act': ClassLabel(shape=(), dtype=tf.int64, num_classes=18),
         'slot': tf.string,
@@ -995,12 +1024,48 @@ FeaturesDict({
     }),
     'dialog_id': tf.string,
     'gem_id': tf.string,
+    'gem_parent_id': tf.string,
     'prompt': tf.string,
     'references': Sequence(tf.string),
+    'service': tf.string,
     'target': tf.string,
     'turn_id': tf.int32,
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-schema_guided_dialog-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 *   **Citation**:
 
@@ -1081,40 +1146,6 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-schema_guided_dialog-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
-
 ## gem/totto
 
 *   **Config description**: ToTTo is a Table-to-Text NLG task. The task is as
@@ -1122,9 +1153,9 @@ $(document).ready(() => {
     cells, with a subset of cells highlighted, generate a natural language
     description for the highlighted part of the table.
 
-*   **Download size**: `179.03 MiB`
+*   **Download size**: `180.75 MiB`
 
-*   **Dataset size**: `633.59 MiB`
+*   **Dataset size**: `645.86 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -1132,11 +1163,14 @@ $(document).ready(() => {
 
 *   **Splits**:
 
-Split          | Examples
-:------------- | -------:
-`'test'`       | 7,700
-`'train'`      | 121,153
-`'validation'` | 7,700
+Split                           | Examples
+:------------------------------ | -------:
+`'challenge_test_scramble'`     | 500
+`'challenge_train_sample'`      | 500
+`'challenge_validation_sample'` | 500
+`'test'`                        | 7,700
+`'train'`                       | 121,153
+`'validation'`                  | 7,700
 
 *   **Features**:
 
@@ -1144,6 +1178,7 @@ Split          | Examples
 FeaturesDict({
     'example_id': tf.string,
     'gem_id': tf.string,
+    'gem_parent_id': tf.string,
     'highlighted_cells': Sequence(Sequence(tf.int32)),
     'overlap_subset': tf.string,
     'references': Sequence(tf.string),
@@ -1167,6 +1202,40 @@ FeaturesDict({
     'totto_id': tf.int32,
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-totto-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 *   **Citation**:
 
@@ -1248,6 +1317,48 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
+## gem/web_nlg_en
+
+*   **Config description**: WebNLG is a bi-lingual dataset (English, Russian) of
+    parallel DBpedia triple sets and short texts that cover about 450 different
+    DBpedia properties. The WebNLG data was originally created to promote the
+    development of RDF verbalisers able to generate short text and to handle
+    micro-planning.
+
+*   **Download size**: `12.57 MiB`
+
+*   **Dataset size**: `19.91 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split                           | Examples
+:------------------------------ | -------:
+`'challenge_test_numbers'`      | 500
+`'challenge_test_scramble'`     | 500
+`'challenge_train_sample'`      | 502
+`'challenge_validation_sample'` | 499
+`'test'`                        | 1,779
+`'train'`                       | 35,426
+`'validation'`                  | 1,667
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'category': tf.string,
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'input': Sequence(tf.string),
+    'references': Sequence(tf.string),
+    'target': tf.string,
+    'webnlg_id': tf.string,
+})
+```
+
 *   **Examples**
     ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
 
@@ -1259,7 +1370,7 @@ the correct citation for each contained dataset."
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-totto-1.0.1.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-web_nlg_en-1.1.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -1281,43 +1392,6 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
-
-## gem/web_nlg_en
-
-*   **Config description**: WebNLG is a bi-lingual dataset (English, Russian) of
-    parallel DBpedia triple sets and short texts that cover about 450 different
-    DBpedia properties. The WebNLG data was originally created to promote the
-    development of RDF verbalisers able to generate short text and to handle
-    micro-planning.
-
-*   **Download size**: `12.35 MiB`
-
-*   **Dataset size**: `16.77 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 1,779
-`'train'`      | 35,426
-`'validation'` | 1,667
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'category': tf.string,
-    'gem_id': tf.string,
-    'input': Sequence(tf.string),
-    'references': Sequence(tf.string),
-    'target': tf.string,
-    'webnlg_id': tf.string,
-})
-```
 
 *   **Citation**:
 
@@ -1405,40 +1479,6 @@ FeaturesDict({
 Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
-
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-web_nlg_en-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
 
 ## gem/web_nlg_ru
 
@@ -1448,9 +1488,9 @@ $(document).ready(() => {
     development of RDF verbalisers able to generate short text and to handle
     micro-planning.
 
-*   **Download size**: `7.28 MiB`
+*   **Download size**: `7.49 MiB`
 
-*   **Dataset size**: `9.24 MiB`
+*   **Dataset size**: `11.30 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -1458,11 +1498,14 @@ $(document).ready(() => {
 
 *   **Splits**:
 
-Split          | Examples
-:------------- | -------:
-`'test'`       | 1,102
-`'train'`      | 14,630
-`'validation'` | 790
+Split                           | Examples
+:------------------------------ | -------:
+`'challenge_test_scramble'`     | 500
+`'challenge_train_sample'`      | 501
+`'challenge_validation_sample'` | 500
+`'test'`                        | 1,102
+`'train'`                       | 14,630
+`'validation'`                  | 790
 
 *   **Features**:
 
@@ -1470,12 +1513,47 @@ Split          | Examples
 FeaturesDict({
     'category': tf.string,
     'gem_id': tf.string,
+    'gem_parent_id': tf.string,
     'input': Sequence(tf.string),
     'references': Sequence(tf.string),
     'target': tf.string,
     'webnlg_id': tf.string,
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-web_nlg_ru-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 *   **Citation**:
 
@@ -1564,6 +1642,57 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
+## gem/wiki_auto_asset_turk
+
+*   **Config description**: WikiAuto provides a set of aligned sentences from
+    English Wikipedia and Simple English Wikipedia as a resource to train
+    sentence simplification systems. ASSET and TURK are high-quality
+    simplification datasets used for testing.
+
+*   **Download size**: `121.01 MiB`
+
+*   **Dataset size**: `202.40 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes (challenge_test_asset_backtranslation, challenge_test_asset_bfp02,
+    challenge_test_asset_bfp05, challenge_test_asset_nopunc,
+    challenge_test_turk_backtranslation, challenge_test_turk_bfp02,
+    challenge_test_turk_bfp05, challenge_test_turk_nopunc,
+    challenge_train_sample, challenge_validation_sample, test_asset, test_turk,
+    validation), Only when `shuffle_files=False` (train)
+
+*   **Splits**:
+
+Split                                    | Examples
+:--------------------------------------- | -------:
+`'challenge_test_asset_backtranslation'` | 359
+`'challenge_test_asset_bfp02'`           | 359
+`'challenge_test_asset_bfp05'`           | 359
+`'challenge_test_asset_nopunc'`          | 359
+`'challenge_test_turk_backtranslation'`  | 359
+`'challenge_test_turk_bfp02'`            | 359
+`'challenge_test_turk_bfp05'`            | 359
+`'challenge_test_turk_nopunc'`           | 359
+`'challenge_train_sample'`               | 500
+`'challenge_validation_sample'`          | 500
+`'test_asset'`                           | 359
+`'test_turk'`                            | 359
+`'train'`                                | 483,801
+`'validation'`                           | 20,000
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'target': tf.string,
+})
+```
+
 *   **Examples**
     ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
 
@@ -1575,7 +1704,7 @@ the correct citation for each contained dataset."
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-web_nlg_ru-1.0.1.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_auto_asset_turk-1.1.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -1597,44 +1726,6 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
-
-## gem/wiki_auto_asset_turk
-
-*   **Config description**: WikiAuto provides a set of aligned sentences from
-    English Wikipedia and Simple English Wikipedia as a resource to train
-    sentence simplification systems. ASSET and TURK are high-quality
-    simplification datasets used for testing.
-
-*   **Download size**: `121.37 MiB`
-
-*   **Dataset size**: `182.31 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes (test_asset, test_turk, validation), Only when `shuffle_files=False`
-    (train)
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test_asset'` | 359
-`'test_turk'`  | 359
-`'train'`      | 373,801
-`'validation'` | 73,249
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'gem_id': tf.string,
-    'references': Sequence(tf.string),
-    'source': tf.string,
-    'source_id': tf.string,
-    'target': tf.string,
-    'target_id': tf.string,
-})
-```
 
 *   **Citation**:
 
@@ -1725,629 +1816,15 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_auto_asset_turk-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
-
-## gem/wiki_lingua_es_en
-
-*   **Config description**: Wikilingua is a large-scale, multilingual dataset
-    for the evaluation of cross-lingual abstractive summarization systems..
-
-*   **Download size**: `161.56 MiB`
-
-*   **Dataset size**: `280.48 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    No
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 19,797
-`'train'`      | 79,515
-`'validation'` | 8,835
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'gem_id': tf.string,
-    'references': Sequence(tf.string),
-    'source': tf.string,
-    'target': tf.string,
-})
-```
-
-*   **Citation**:
-
-```
-@inproceedings{ladhak-wiki-2020,
-  title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
-  author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
-  booktitle={Findings of EMNLP, 2020},
-  year={2020}
-}
-@article{gehrmann2021gem,
-  author    = {Sebastian Gehrmann and
-               Tosin P. Adewumi and
-               Karmanya Aggarwal and
-               Pawan Sasanka Ammanamanchi and
-               Aremu Anuoluwapo and
-               Antoine Bosselut and
-               Khyathi Raghavi Chandu and
-               Miruna{-}Adriana Clinciu and
-               Dipanjan Das and
-               Kaustubh D. Dhole and
-               Wanyu Du and
-               Esin Durmus and
-               Ondrej Dusek and
-               Chris Emezue and
-               Varun Gangal and
-               Cristina Garbacea and
-               Tatsunori Hashimoto and
-               Yufang Hou and
-               Yacine Jernite and
-               Harsh Jhamtani and
-               Yangfeng Ji and
-               Shailza Jolly and
-               Dhruv Kumar and
-               Faisal Ladhak and
-               Aman Madaan and
-               Mounica Maddela and
-               Khyati Mahajan and
-               Saad Mahamood and
-               Bodhisattwa Prasad Majumder and
-               Pedro Henrique Martins and
-               Angelina McMillan{-}Major and
-               Simon Mille and
-               Emiel van Miltenburg and
-               Moin Nadeem and
-               Shashi Narayan and
-               Vitaly Nikolaev and
-               Rubungo Andre Niyongabo and
-               Salomey Osei and
-               Ankur P. Parikh and
-               Laura Perez{-}Beltrachini and
-               Niranjan Ramesh Rao and
-               Vikas Raunak and
-               Juan Diego Rodriguez and
-               Sashank Santhanam and
-               Jo{\~{a}}o Sedoc and
-               Thibault Sellam and
-               Samira Shaikh and
-               Anastasia Shimorina and
-               Marco Antonio Sobrevilla Cabezudo and
-               Hendrik Strobelt and
-               Nishant Subramani and
-               Wei Xu and
-               Diyi Yang and
-               Akhila Yerukola and
-               Jiawei Zhou},
-  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
-               Metrics},
-  journal   = {CoRR},
-  volume    = {abs/2102.01672},
-  year      = {2021},
-  url       = {https://arxiv.org/abs/2102.01672},
-  archivePrefix = {arXiv},
-  eprint    = {2102.01672}
-}
-
-Note that each GEM dataset has its own citation. Please see the source to see
-the correct citation for each contained dataset."
-```
-
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_es_en-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
-
-## gem/wiki_lingua_ru_en
-
-*   **Config description**: Wikilingua is a large-scale, multilingual dataset
-    for the evaluation of cross-lingual abstractive summarization systems..
-
-*   **Download size**: `161.56 MiB`
-
-*   **Dataset size**: `204.29 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes (test, validation), Only when `shuffle_files=False` (train)
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 9,094
-`'train'`      | 36,898
-`'validation'` | 4,100
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'gem_id': tf.string,
-    'references': Sequence(tf.string),
-    'source': tf.string,
-    'target': tf.string,
-})
-```
-
-*   **Citation**:
-
-```
-@inproceedings{ladhak-wiki-2020,
-  title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
-  author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
-  booktitle={Findings of EMNLP, 2020},
-  year={2020}
-}
-@article{gehrmann2021gem,
-  author    = {Sebastian Gehrmann and
-               Tosin P. Adewumi and
-               Karmanya Aggarwal and
-               Pawan Sasanka Ammanamanchi and
-               Aremu Anuoluwapo and
-               Antoine Bosselut and
-               Khyathi Raghavi Chandu and
-               Miruna{-}Adriana Clinciu and
-               Dipanjan Das and
-               Kaustubh D. Dhole and
-               Wanyu Du and
-               Esin Durmus and
-               Ondrej Dusek and
-               Chris Emezue and
-               Varun Gangal and
-               Cristina Garbacea and
-               Tatsunori Hashimoto and
-               Yufang Hou and
-               Yacine Jernite and
-               Harsh Jhamtani and
-               Yangfeng Ji and
-               Shailza Jolly and
-               Dhruv Kumar and
-               Faisal Ladhak and
-               Aman Madaan and
-               Mounica Maddela and
-               Khyati Mahajan and
-               Saad Mahamood and
-               Bodhisattwa Prasad Majumder and
-               Pedro Henrique Martins and
-               Angelina McMillan{-}Major and
-               Simon Mille and
-               Emiel van Miltenburg and
-               Moin Nadeem and
-               Shashi Narayan and
-               Vitaly Nikolaev and
-               Rubungo Andre Niyongabo and
-               Salomey Osei and
-               Ankur P. Parikh and
-               Laura Perez{-}Beltrachini and
-               Niranjan Ramesh Rao and
-               Vikas Raunak and
-               Juan Diego Rodriguez and
-               Sashank Santhanam and
-               Jo{\~{a}}o Sedoc and
-               Thibault Sellam and
-               Samira Shaikh and
-               Anastasia Shimorina and
-               Marco Antonio Sobrevilla Cabezudo and
-               Hendrik Strobelt and
-               Nishant Subramani and
-               Wei Xu and
-               Diyi Yang and
-               Akhila Yerukola and
-               Jiawei Zhou},
-  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
-               Metrics},
-  journal   = {CoRR},
-  volume    = {abs/2102.01672},
-  year      = {2021},
-  url       = {https://arxiv.org/abs/2102.01672},
-  archivePrefix = {arXiv},
-  eprint    = {2102.01672}
-}
-
-Note that each GEM dataset has its own citation. Please see the source to see
-the correct citation for each contained dataset."
-```
-
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_ru_en-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
-
-## gem/wiki_lingua_tr_en
-
-*   **Config description**: Wikilingua is a large-scale, multilingual dataset
-    for the evaluation of cross-lingual abstractive summarization systems..
-
-*   **Download size**: `161.56 MiB`
-
-*   **Dataset size**: `10.12 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 808
-`'train'`      | 3,193
-`'validation'` | 355
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'gem_id': tf.string,
-    'references': Sequence(tf.string),
-    'source': tf.string,
-    'target': tf.string,
-})
-```
-
-*   **Citation**:
-
-```
-@inproceedings{ladhak-wiki-2020,
-  title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
-  author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
-  booktitle={Findings of EMNLP, 2020},
-  year={2020}
-}
-@article{gehrmann2021gem,
-  author    = {Sebastian Gehrmann and
-               Tosin P. Adewumi and
-               Karmanya Aggarwal and
-               Pawan Sasanka Ammanamanchi and
-               Aremu Anuoluwapo and
-               Antoine Bosselut and
-               Khyathi Raghavi Chandu and
-               Miruna{-}Adriana Clinciu and
-               Dipanjan Das and
-               Kaustubh D. Dhole and
-               Wanyu Du and
-               Esin Durmus and
-               Ondrej Dusek and
-               Chris Emezue and
-               Varun Gangal and
-               Cristina Garbacea and
-               Tatsunori Hashimoto and
-               Yufang Hou and
-               Yacine Jernite and
-               Harsh Jhamtani and
-               Yangfeng Ji and
-               Shailza Jolly and
-               Dhruv Kumar and
-               Faisal Ladhak and
-               Aman Madaan and
-               Mounica Maddela and
-               Khyati Mahajan and
-               Saad Mahamood and
-               Bodhisattwa Prasad Majumder and
-               Pedro Henrique Martins and
-               Angelina McMillan{-}Major and
-               Simon Mille and
-               Emiel van Miltenburg and
-               Moin Nadeem and
-               Shashi Narayan and
-               Vitaly Nikolaev and
-               Rubungo Andre Niyongabo and
-               Salomey Osei and
-               Ankur P. Parikh and
-               Laura Perez{-}Beltrachini and
-               Niranjan Ramesh Rao and
-               Vikas Raunak and
-               Juan Diego Rodriguez and
-               Sashank Santhanam and
-               Jo{\~{a}}o Sedoc and
-               Thibault Sellam and
-               Samira Shaikh and
-               Anastasia Shimorina and
-               Marco Antonio Sobrevilla Cabezudo and
-               Hendrik Strobelt and
-               Nishant Subramani and
-               Wei Xu and
-               Diyi Yang and
-               Akhila Yerukola and
-               Jiawei Zhou},
-  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
-               Metrics},
-  journal   = {CoRR},
-  volume    = {abs/2102.01672},
-  year      = {2021},
-  url       = {https://arxiv.org/abs/2102.01672},
-  archivePrefix = {arXiv},
-  eprint    = {2102.01672}
-}
-
-Note that each GEM dataset has its own citation. Please see the source to see
-the correct citation for each contained dataset."
-```
-
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_tr_en-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
-
-## gem/wiki_lingua_vi_en
-
-*   **Config description**: Wikilingua is a large-scale, multilingual dataset
-    for the evaluation of cross-lingual abstractive summarization systems..
-
-*   **Download size**: `161.56 MiB`
-
-*   **Dataset size**: `39.83 MiB`
-
-*   **Auto-cached**
-    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
-    Yes
-
-*   **Splits**:
-
-Split          | Examples
-:------------- | -------:
-`'test'`       | 2,167
-`'train'`      | 9,206
-`'validation'` | 1,023
-
-*   **Features**:
-
-```python
-FeaturesDict({
-    'gem_id': tf.string,
-    'references': Sequence(tf.string),
-    'source': tf.string,
-    'target': tf.string,
-})
-```
-
-*   **Citation**:
-
-```
-@inproceedings{ladhak-wiki-2020,
-  title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
-  author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
-  booktitle={Findings of EMNLP, 2020},
-  year={2020}
-}
-@article{gehrmann2021gem,
-  author    = {Sebastian Gehrmann and
-               Tosin P. Adewumi and
-               Karmanya Aggarwal and
-               Pawan Sasanka Ammanamanchi and
-               Aremu Anuoluwapo and
-               Antoine Bosselut and
-               Khyathi Raghavi Chandu and
-               Miruna{-}Adriana Clinciu and
-               Dipanjan Das and
-               Kaustubh D. Dhole and
-               Wanyu Du and
-               Esin Durmus and
-               Ondrej Dusek and
-               Chris Emezue and
-               Varun Gangal and
-               Cristina Garbacea and
-               Tatsunori Hashimoto and
-               Yufang Hou and
-               Yacine Jernite and
-               Harsh Jhamtani and
-               Yangfeng Ji and
-               Shailza Jolly and
-               Dhruv Kumar and
-               Faisal Ladhak and
-               Aman Madaan and
-               Mounica Maddela and
-               Khyati Mahajan and
-               Saad Mahamood and
-               Bodhisattwa Prasad Majumder and
-               Pedro Henrique Martins and
-               Angelina McMillan{-}Major and
-               Simon Mille and
-               Emiel van Miltenburg and
-               Moin Nadeem and
-               Shashi Narayan and
-               Vitaly Nikolaev and
-               Rubungo Andre Niyongabo and
-               Salomey Osei and
-               Ankur P. Parikh and
-               Laura Perez{-}Beltrachini and
-               Niranjan Ramesh Rao and
-               Vikas Raunak and
-               Juan Diego Rodriguez and
-               Sashank Santhanam and
-               Jo{\~{a}}o Sedoc and
-               Thibault Sellam and
-               Samira Shaikh and
-               Anastasia Shimorina and
-               Marco Antonio Sobrevilla Cabezudo and
-               Hendrik Strobelt and
-               Nishant Subramani and
-               Wei Xu and
-               Diyi Yang and
-               Akhila Yerukola and
-               Jiawei Zhou},
-  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
-               Metrics},
-  journal   = {CoRR},
-  volume    = {abs/2102.01672},
-  year      = {2021},
-  url       = {https://arxiv.org/abs/2102.01672},
-  archivePrefix = {arXiv},
-  eprint    = {2102.01672}
-}
-
-Note that each GEM dataset has its own citation. Please see the source to see
-the correct citation for each contained dataset."
-```
-
-*   **Examples**
-    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
-
-<!-- mdformat off(HTML should not be auto-formatted) -->
-
-{% framebox %}
-
-<button id="displaydataframe">Display examples...</button>
-<div id="dataframecontent" style="overflow-x:scroll"></div>
-<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
-<script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_vi_en-1.0.1.html";
-$(document).ready(() => {
-  $("#displaydataframe").click((event) => {
-    // Disable the button after clicking (dataframe loaded only once).
-    $("#displaydataframe").prop("disabled", true);
-
-    // Pre-fetch and display the content
-    $.get(url, (data) => {
-      $("#dataframecontent").html(data);
-    }).fail(() => {
-      $("#dataframecontent").html(
-        'Error loading examples. If the error persist, please open '
-        + 'a new issue.'
-      );
-    });
-  });
-});
-</script>
-
-{% endframebox %}
-
-<!-- mdformat on -->
-
 ## gem/xsum
 
 *   **Config description**: The dataset is for the task of abstractive
     summarization in its extreme form, its about summarizing a document in a
     single sentence.
 
-*   **Download size**: `243.08 MiB`
+*   **Download size**: `246.31 MiB`
 
-*   **Dataset size**: `69.20 MiB`
+*   **Dataset size**: `78.89 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -2355,11 +1832,18 @@ $(document).ready(() => {
 
 *   **Splits**:
 
-Split          | Examples
-:------------- | -------:
-`'test'`       | 1,166
-`'train'`      | 23,206
-`'validation'` | 1,117
+Split                              | Examples
+:--------------------------------- | -------:
+`'challenge_test_backtranslation'` | 500
+`'challenge_test_bfp_02'`          | 500
+`'challenge_test_bfp_05'`          | 500
+`'challenge_test_covid'`           | 401
+`'challenge_test_nopunc'`          | 500
+`'challenge_train_sample'`         | 500
+`'challenge_validation_sample'`    | 500
+`'test'`                           | 1,166
+`'train'`                          | 23,206
+`'validation'`                     | 1,117
 
 *   **Features**:
 
@@ -2367,11 +1851,46 @@ Split          | Examples
 FeaturesDict({
     'document': tf.string,
     'gem_id': tf.string,
+    'gem_parent_id': tf.string,
     'references': Sequence(tf.string),
     'target': tf.string,
     'xsum_id': tf.string,
 })
 ```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-xsum-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
 
 *   **Citation**:
 
@@ -2453,6 +1972,47 @@ Note that each GEM dataset has its own citation. Please see the source to see
 the correct citation for each contained dataset."
 ```
 
+## gem/wiki_lingua_arabic_ar
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `56.25 MiB`
+
+*   **Dataset size**: `291.42 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 5,841
+`'train'`      | 20,441
+`'validation'` | 2,919
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'ar': Text(shape=(), dtype=tf.string),
+        'en': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'ar': Text(shape=(), dtype=tf.string),
+        'en': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
 *   **Examples**
     ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
 
@@ -2464,7 +2024,7 @@ the correct citation for each contained dataset."
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-xsum-1.0.1.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_arabic_ar-1.1.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -2486,3 +2046,2698 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_chinese_zh
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `31.38 MiB`
+
+*   **Dataset size**: `122.06 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 3,775
+`'train'`      | 13,211
+`'validation'` | 1,886
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'zh': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'zh': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_chinese_zh-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_czech_cs
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `13.84 MiB`
+
+*   **Dataset size**: `58.05 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 1,438
+`'train'`      | 5,033
+`'validation'` | 718
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'cs': Text(shape=(), dtype=tf.string),
+        'en': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'cs': Text(shape=(), dtype=tf.string),
+        'en': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_czech_cs-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_dutch_nl
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `53.88 MiB`
+
+*   **Dataset size**: `237.97 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes (test, validation), Only when `shuffle_files=False` (train)
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 6,248
+`'train'`      | 21,866
+`'validation'` | 3,123
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'nl': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'nl': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_dutch_nl-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_english_en
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `112.56 MiB`
+
+*   **Dataset size**: `657.51 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 28,614
+`'train'`      | 99,020
+`'validation'` | 13,823
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_english_en-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_french_fr
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `113.26 MiB`
+
+*   **Dataset size**: `522.28 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 12,731
+`'train'`      | 44,556
+`'validation'` | 6,364
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'fr': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'fr': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_french_fr-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_german_de
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `102.65 MiB`
+
+*   **Dataset size**: `452.46 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 11,669
+`'train'`      | 40,839
+`'validation'` | 5,833
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'de': Text(shape=(), dtype=tf.string),
+        'en': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'de': Text(shape=(), dtype=tf.string),
+        'en': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_german_de-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_hindi_hi
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `20.07 MiB`
+
+*   **Dataset size**: `138.06 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 1,984
+`'train'`      | 6,942
+`'validation'` | 991
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'hi': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'hi': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_hindi_hi-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_indonesian_id
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `80.08 MiB`
+
+*   **Dataset size**: `370.63 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 9,497
+`'train'`      | 33,237
+`'validation'` | 4,747
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'id': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'id': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_indonesian_id-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_italian_it
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `84.80 MiB`
+
+*   **Dataset size**: `374.40 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 10,189
+`'train'`      | 35,661
+`'validation'` | 5,093
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'it': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'it': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_italian_it-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_japanese_ja
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `21.75 MiB`
+
+*   **Dataset size**: `103.19 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 2,530
+`'train'`      | 8,853
+`'validation'` | 1,264
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'ja': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'ja': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_japanese_ja-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_korean_ko
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `22.26 MiB`
+
+*   **Dataset size**: `102.35 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 2,436
+`'train'`      | 8,524
+`'validation'` | 1,216
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'ko': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'ko': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_korean_ko-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_portuguese_pt
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `131.17 MiB`
+
+*   **Dataset size**: `570.46 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 16,331
+`'train'`      | 57,159
+`'validation'` | 8,165
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'pt': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'pt': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_portuguese_pt-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_russian_ru
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `101.36 MiB`
+
+*   **Dataset size**: `564.69 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 10,580
+`'train'`      | 37,028
+`'validation'` | 5,288
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'ru': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'ru': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_russian_ru-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_spanish_es
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `189.06 MiB`
+
+*   **Dataset size**: `849.75 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    No
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 22,632
+`'train'`      | 79,212
+`'validation'` | 11,316
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'es': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'es': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_spanish_es-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_thai_th
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `28.60 MiB`
+
+*   **Dataset size**: `193.77 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes (test, validation), Only when `shuffle_files=False` (train)
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 2,950
+`'train'`      | 10,325
+`'validation'` | 1,475
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'th': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'th': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_thai_th-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_turkish_tr
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `6.73 MiB`
+
+*   **Dataset size**: `30.75 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 900
+`'train'`      | 3,148
+`'validation'` | 449
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'tr': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'tr': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_turkish_tr-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```
+
+## gem/wiki_lingua_vietnamese_vi
+
+*   **Config description**: Wikilingua is a large-scale, multilingual dataset
+    for the evaluation of cross-lingual abstractive summarization systems..
+
+*   **Download size**: `36.27 MiB`
+
+*   **Dataset size**: `179.77 MiB`
+
+*   **Auto-cached**
+    ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
+    Yes
+
+*   **Splits**:
+
+Split          | Examples
+:------------- | -------:
+`'test'`       | 3,917
+`'train'`      | 13,707
+`'validation'` | 1,957
+
+*   **Features**:
+
+```python
+FeaturesDict({
+    'gem_id': tf.string,
+    'gem_parent_id': tf.string,
+    'references': Sequence(tf.string),
+    'source': tf.string,
+    'source_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'vi': Text(shape=(), dtype=tf.string),
+    }),
+    'target': tf.string,
+    'target_aligned': Translation({
+        'en': Text(shape=(), dtype=tf.string),
+        'vi': Text(shape=(), dtype=tf.string),
+    }),
+})
+```
+
+*   **Examples**
+    ([tfds.as_dataframe](https://www.tensorflow.org/datasets/api_docs/python/tfds/as_dataframe)):
+
+<!-- mdformat off(HTML should not be auto-formatted) -->
+
+{% framebox %}
+
+<button id="displaydataframe">Display examples...</button>
+<div id="dataframecontent" style="overflow-x:scroll"></div>
+<script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
+<script>
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/gem-wiki_lingua_vietnamese_vi-1.1.0.html";
+$(document).ready(() => {
+  $("#displaydataframe").click((event) => {
+    // Disable the button after clicking (dataframe loaded only once).
+    $("#displaydataframe").prop("disabled", true);
+
+    // Pre-fetch and display the content
+    $.get(url, (data) => {
+      $("#dataframecontent").html(data);
+    }).fail(() => {
+      $("#dataframecontent").html(
+        'Error loading examples. If the error persist, please open '
+        + 'a new issue.'
+      );
+    });
+  });
+});
+</script>
+
+{% endframebox %}
+
+<!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{ladhak-wiki-2020,
+title=WikiLingua: A New Benchmark Dataset for Multilingual Abstractive Summarization,
+author={Faisal Ladhak, Esin Durmus, Claire Cardie and Kathleen McKeown},
+booktitle={Findings of EMNLP, 2020},
+year={2020}
+}
+@article{gehrmann2021gem,
+  author    = {Sebastian Gehrmann and
+               Tosin P. Adewumi and
+               Karmanya Aggarwal and
+               Pawan Sasanka Ammanamanchi and
+               Aremu Anuoluwapo and
+               Antoine Bosselut and
+               Khyathi Raghavi Chandu and
+               Miruna{-}Adriana Clinciu and
+               Dipanjan Das and
+               Kaustubh D. Dhole and
+               Wanyu Du and
+               Esin Durmus and
+               Ondrej Dusek and
+               Chris Emezue and
+               Varun Gangal and
+               Cristina Garbacea and
+               Tatsunori Hashimoto and
+               Yufang Hou and
+               Yacine Jernite and
+               Harsh Jhamtani and
+               Yangfeng Ji and
+               Shailza Jolly and
+               Dhruv Kumar and
+               Faisal Ladhak and
+               Aman Madaan and
+               Mounica Maddela and
+               Khyati Mahajan and
+               Saad Mahamood and
+               Bodhisattwa Prasad Majumder and
+               Pedro Henrique Martins and
+               Angelina McMillan{-}Major and
+               Simon Mille and
+               Emiel van Miltenburg and
+               Moin Nadeem and
+               Shashi Narayan and
+               Vitaly Nikolaev and
+               Rubungo Andre Niyongabo and
+               Salomey Osei and
+               Ankur P. Parikh and
+               Laura Perez{-}Beltrachini and
+               Niranjan Ramesh Rao and
+               Vikas Raunak and
+               Juan Diego Rodriguez and
+               Sashank Santhanam and
+               Jo{\~{a}}o Sedoc and
+               Thibault Sellam and
+               Samira Shaikh and
+               Anastasia Shimorina and
+               Marco Antonio Sobrevilla Cabezudo and
+               Hendrik Strobelt and
+               Nishant Subramani and
+               Wei Xu and
+               Diyi Yang and
+               Akhila Yerukola and
+               Jiawei Zhou},
+  title     = {The {GEM} Benchmark: Natural Language Generation, its Evaluation and
+               Metrics},
+  journal   = {CoRR},
+  volume    = {abs/2102.01672},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2102.01672},
+  archivePrefix = {arXiv},
+  eprint    = {2102.01672}
+}
+
+Note that each GEM dataset has its own citation. Please see the source to see
+the correct citation for each contained dataset."
+```

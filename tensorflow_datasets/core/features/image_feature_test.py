@@ -23,16 +23,14 @@ import numpy as np
 import tensorflow.compat.v2 as tf
 from tensorflow_datasets import testing
 from tensorflow_datasets.core import features as features_lib
-from tensorflow_datasets.core.features import image_feature
 
 tf.enable_v2_behavior()
-
 
 randint = np.random.randint
 
 
-class ImageFeatureTest(
-    testing.FeatureExpectationsTestCase, parameterized.TestCase):
+class ImageFeatureTest(testing.FeatureExpectationsTestCase,
+                       parameterized.TestCase):
 
   @parameterized.parameters(
       (tf.uint8, 3),
@@ -50,14 +48,15 @@ class ImageFeatureTest(
     }[channels]
 
     img_file_path = os.path.join(
-        os.path.dirname(__file__), '../../testing/test_data', filename
-    )
+        os.path.dirname(__file__), '../../testing/test_data', filename)
     with tf.io.gfile.GFile(img_file_path, 'rb') as f:
       img_byte_content = f.read()
-    img_file_expected_content = np.array([  # see tests_data/README.md
-        [[0, 255, 0, 255], [255, 0, 0, 255], [255, 0, 255, 255]],
-        [[0, 0, 255, 255], [255, 255, 0, 255], [126, 127, 128, 255]],
-    ], dtype=np_dtype)[:, :, :channels]  # Truncate (h, w, 4) -> (h, w, c)
+    img_file_expected_content = np.array(
+        [  # see tests_data/README.md
+            [[0, 255, 0, 255], [255, 0, 0, 255], [255, 0, 255, 255]],
+            [[0, 0, 255, 255], [255, 255, 0, 255], [126, 127, 128, 255]],
+        ],
+        dtype=np_dtype)[:, :, :channels]  # Truncate (h, w, 4) -> (h, w, c)
     if dtype == tf.uint16:
       img_file_expected_content *= 257  # Scale int16 images
 
@@ -113,8 +112,7 @@ class ImageFeatureTest(
         test_attributes=dict(
             _encoding_format=None,
             _use_colormap=False,
-        )
-    )
+        ))
 
   def test_image_shaped(self):
 
@@ -144,29 +142,7 @@ class ImageFeatureTest(
         test_attributes=dict(
             _encoding_format='png',
             _use_colormap=True,
-        )
-    )
-
-
-def test_apply_colormap():
-  assert image_feature._get_colormap().shape == (256, 3)
-
-  gray_img = np.array(
-      [
-          [[0], [2]],
-          [[1234], [2]],
-      ],
-      dtype=np.uint16,
-  )
-  assert gray_img.shape == (2, 2, 1)
-  colored_img = image_feature._apply_colormap(gray_img)
-  assert colored_img.shape == (2, 2, 3)
-  assert colored_img.dtype == np.uint8
-
-  np.testing.assert_array_equal(colored_img, [
-      [[0, 0, 0], [55, 126, 184]],
-      [[71, 84, 183], [55, 126, 184]],
-  ])
+        ))
 
 
 if __name__ == '__main__':

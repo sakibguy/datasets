@@ -11,6 +11,12 @@
 
 # `stanford_online_products`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=stanford_online_products">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 Stanford Online Products Dataset
@@ -55,17 +61,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
 
-*   **Citation**:
-
-```
-@inproceedings{song2016deep,
- author    = {Song, Hyun Oh and Xiang, Yu and Jegelka, Stefanie and Savarese, Silvio},
- title     = {Deep Metric Learning via Lifted Structured Feature Embedding},
- booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
- year      = {2016}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -104,3 +99,14 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{song2016deep,
+ author    = {Song, Hyun Oh and Xiang, Yu and Jegelka, Stefanie and Savarese, Silvio},
+ title     = {Deep Metric Learning via Lifted Structured Feature Embedding},
+ booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+ year      = {2016}
+}
+```

@@ -11,6 +11,12 @@
 
 # `beans`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=beans">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 Beans is a dataset of images of beans taken in the field using smartphone
@@ -58,18 +64,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
 
-*   **Citation**:
-
-```
-@ONLINE {beansdata,
-    author="Makerere AI Lab",
-    title="Bean disease dataset",
-    month="January",
-    year="2020",
-    url="https://github.com/AI-Lab-Makerere/ibean/"
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -108,3 +102,15 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@ONLINE {beansdata,
+    author="Makerere AI Lab",
+    title="Bean disease dataset",
+    month="January",
+    year="2020",
+    url="https://github.com/AI-Lab-Makerere/ibean/"
+}
+```

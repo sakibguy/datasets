@@ -35,7 +35,9 @@ to run XQuAD in the "translate-train" or "translate-test" settings.
 
 *   **Versions**:
 
-    *   **`2.0.0`** (default): No release notes.
+    *   **`3.0.0`** (default): Fixes issue with a number of examples where
+        answer spans are misaligned due to context white-space removal. This
+        change impacts roughly 14% of test examples.
 
 *   **Features**:
 
@@ -56,6 +58,10 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
 
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
+    Not supported.
+
 *   **Citation**:
 
 ```
@@ -70,10 +76,6 @@ FeaturesDict({
 }
 ```
 
-*   **Figure**
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
-    Not supported.
-
 ## xquad/ar (default config)
 
 *   **Config description**: XQuAD 'ar' test split, with machine-translated
@@ -82,7 +84,7 @@ FeaturesDict({
 
 *   **Download size**: `420.97 MiB`
 
-*   **Dataset size**: `134.78 MiB`
+*   **Dataset size**: `134.83 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -108,7 +110,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-ar-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-ar-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -139,7 +141,7 @@ $(document).ready(() => {
 
 *   **Download size**: `127.04 MiB`
 
-*   **Dataset size**: `98.75 MiB`
+*   **Dataset size**: `98.80 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -165,7 +167,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-de-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-de-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -196,7 +198,7 @@ $(document).ready(() => {
 
 *   **Download size**: `499.40 MiB`
 
-*   **Dataset size**: `157.85 MiB`
+*   **Dataset size**: `157.90 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -223,7 +225,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-el-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-el-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -254,7 +256,7 @@ $(document).ready(() => {
 
 *   **Download size**: `138.41 MiB`
 
-*   **Dataset size**: `104.91 MiB`
+*   **Dataset size**: `104.96 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -280,7 +282,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-es-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-es-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -311,7 +313,7 @@ $(document).ready(() => {
 
 *   **Download size**: `472.23 MiB`
 
-*   **Dataset size**: `207.80 MiB`
+*   **Dataset size**: `207.85 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -338,7 +340,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-hi-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-hi-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -369,7 +371,7 @@ $(document).ready(() => {
 
 *   **Download size**: `513.80 MiB`
 
-*   **Dataset size**: `159.33 MiB`
+*   **Dataset size**: `159.38 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -396,7 +398,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-ru-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-ru-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -427,7 +429,7 @@ $(document).ready(() => {
 
 *   **Download size**: `461.54 MiB`
 
-*   **Dataset size**: `199.52 MiB`
+*   **Dataset size**: `199.57 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -454,7 +456,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-th-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-th-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -485,7 +487,7 @@ $(document).ready(() => {
 
 *   **Download size**: `151.08 MiB`
 
-*   **Dataset size**: `97.51 MiB`
+*   **Dataset size**: `97.56 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -511,7 +513,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-tr-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-tr-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -542,7 +544,7 @@ $(document).ready(() => {
 
 *   **Download size**: `218.09 MiB`
 
-*   **Dataset size**: `119.98 MiB`
+*   **Dataset size**: `120.03 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -568,7 +570,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-vi-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-vi-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -599,7 +601,7 @@ $(document).ready(() => {
 
 *   **Download size**: `174.57 MiB`
 
-*   **Dataset size**: `80.74 MiB`
+*   **Dataset size**: `80.79 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -625,7 +627,7 @@ Split               | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-zh-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-zh-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -677,7 +679,7 @@ Split    | Examples
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-en-2.0.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/xquad-en-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).

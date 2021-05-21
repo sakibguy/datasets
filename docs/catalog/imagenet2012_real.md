@@ -13,6 +13,12 @@
 
 Warning: Manual download required. See instructions below.
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=imagenet2012_real">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 This dataset contains ILSVRC-2012 (ImageNet) validation images augmented with a
@@ -75,27 +81,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'real_label')`
 
-*   **Citation**:
-
-```
-@article{beyer2020imagenet,
-  title={Are we done with ImageNet?},
-  author={Lucas Beyer and Olivier J. Henaff and Alexander Kolesnikov and Xiaohua Zhai and Aaron van den Oord},
-  journal={arXiv preprint arXiv:2002.05709},
-  year={2020}
-}
-@article{ILSVRC15,
-  Author={Olga Russakovsky and Jia Deng and Hao Su and Jonathan Krause and Sanjeev Satheesh and Sean Ma and Zhiheng Huang and Andrej Karpathy and Aditya Khosla and Michael Bernstein and Alexander C. Berg and Li Fei-Fei},
-  Title={{ImageNet Large Scale Visual Recognition Challenge}},
-  Year={2015},
-  journal={International Journal of Computer Vision (IJCV)},
-  doi={10.1007/s11263-015-0816-y},
-  volume={115},
-  number={3},
-  pages={211-252}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -134,3 +119,24 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@article{beyer2020imagenet,
+  title={Are we done with ImageNet?},
+  author={Lucas Beyer and Olivier J. Henaff and Alexander Kolesnikov and Xiaohua Zhai and Aaron van den Oord},
+  journal={arXiv preprint arXiv:2002.05709},
+  year={2020}
+}
+@article{ILSVRC15,
+  Author={Olga Russakovsky and Jia Deng and Hao Su and Jonathan Krause and Sanjeev Satheesh and Sean Ma and Zhiheng Huang and Andrej Karpathy and Aditya Khosla and Michael Bernstein and Alexander C. Berg and Li Fei-Fei},
+  Title={{ImageNet Large Scale Visual Recognition Challenge}},
+  Year={2015},
+  journal={International Journal of Computer Vision (IJCV)},
+  doi={10.1007/s11263-015-0816-y},
+  volume={115},
+  number={3},
+  pages={211-252}
+}
+```

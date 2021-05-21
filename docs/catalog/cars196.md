@@ -11,6 +11,12 @@
 
 # `cars196`
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=cars196">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 The Cars dataset contains 16,185 images of 196 classes of cars. The data is
@@ -58,18 +64,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
 
-*   **Citation**:
-
-```
-@inproceedings{KrauseStarkDengFei-Fei_3DRR2013,
-title = {3D Object Representations for Fine-Grained Categorization},
-booktitle = {4th International IEEE Workshop on  3D Representation and Recognition (3dRR-13)},
-year = {2013},
-address = {Sydney, Australia},
-author = {Jonathan Krause and Michael Stark and Jia Deng and Li Fei-Fei}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -108,3 +102,15 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{KrauseStarkDengFei-Fei_3DRR2013,
+title = {3D Object Representations for Fine-Grained Categorization},
+booktitle = {4th International IEEE Workshop on  3D Representation and Recognition (3dRR-13)},
+year = {2013},
+address = {Sydney, Australia},
+author = {Jonathan Krause and Michael Stark and Jia Deng and Li Fei-Fei}
+}
+```

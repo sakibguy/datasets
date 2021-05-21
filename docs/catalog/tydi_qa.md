@@ -11,11 +11,6 @@
 
 # `tydi_qa`
 
-Note: This dataset has been updated since the last stable release. The new
-versions and config marked with
-<span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>
-are only available in the `tfds-nightly` package.
-
 *   **Description**:
 
 TyDi QA is a question answering dataset covering 11 typologically diverse
@@ -58,13 +53,13 @@ both.
 
 *   **Versions**:
 
-    *   **`2.1.0`** (default)
-        <span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>:
-        No release notes.
+    *   **`3.0.0`** (default): Fixes issue with a number of examples where
+        answer spans are misaligned due to context white-space removal. This
+        change impacts roughly 25% of train and dev examples.
 
 *   **Download size**: `121.30 MiB`
 
-*   **Dataset size**: `98.32 MiB`
+*   **Dataset size**: `98.35 MiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -113,17 +108,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
 
-*   **Citation**:
-
-```
-@article{tydiqa,
-   title = {TyDi QA: A Benchmark for Information-Seeking Question Answering in Typologically Diverse Languages},
-  author = {Jonathan H. Clark and Eunsol Choi and Michael Collins and Dan Garrette and Tom Kwiatkowski and Vitaly Nikolaev and Jennimaria Palomaki}
-    year = {2020},
- journal = {Transactions of the Association for Computational Linguistics}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
     Not supported.
@@ -139,7 +123,7 @@ FeaturesDict({
 <div id="dataframecontent" style="overflow-x:scroll"></div>
 <script src="https://www.gstatic.com/external_hosted/jquery2.min.js"></script>
 <script>
-var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/tydi_qa-goldp-2.1.0.html";
+var url = "https://storage.googleapis.com/tfds-data/visualization/dataframe/tydi_qa-goldp-3.0.0.html";
 $(document).ready(() => {
   $("#displaydataframe").click((event) => {
     // Disable the button after clicking (dataframe loaded only once).
@@ -161,5 +145,16 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@article{tydiqa,
+   title = {TyDi QA: A Benchmark for Information-Seeking Question Answering in Typologically Diverse Languages},
+  author = {Jonathan H. Clark and Eunsol Choi and Michael Collins and Dan Garrette and Tom Kwiatkowski and Vitaly Nikolaev and Jennimaria Palomaki}
+    year = {2020},
+ journal = {Transactions of the Association for Computational Linguistics}
+}
+```
 
 ## tydi_qa/goldp (default config)

@@ -11,11 +11,6 @@
 
 # `davis`
 
-Note: This dataset has been updated since the last stable release. The new
-versions and config marked with
-<span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>
-are only available in the `tfds-nightly` package.
-
 *   **Description**:
 
 The DAVIS 2017 video object segmentation dataset.
@@ -29,9 +24,7 @@ The DAVIS 2017 video object segmentation dataset.
 
     *   `1.0.0`: Initial release.
     *   `2.0.0`: Change instance ids to be 0, 1, 2, ...
-    *   **`2.1.0`** (default)
-        <span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>:
-        Fix instance ids order.
+    *   **`2.1.0`** (default): Fix instance ids order.
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
@@ -63,6 +56,10 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
 
+*   **Figure**
+    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
+    Not supported.
+
 *   **Citation**:
 
 ```
@@ -85,10 +82,6 @@ FeaturesDict({
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 ```
-
-*   **Figure**
-    ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
-    Not supported.
 
 ## davis/480p (default config)
 

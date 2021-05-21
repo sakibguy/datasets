@@ -13,6 +13,12 @@
 
 Warning: Manual download required. See instructions below.
 
+*   **Visualization**:
+    <a class="button button-with-icon" href="https://knowyourdata-tfds.withgoogle.com/#tab=STATS&dataset=vgg_face2">
+    Explore in Know Your Data
+    <span class="material-icons icon-after" aria-hidden="true"> north_east
+    </span> </a>
+
 *   **Description**:
 
 VGGFace2 is a large-scale face recognition dataset. Images are downloaded from
@@ -71,16 +77,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `('image', 'label')`
 
-*   **Citation**:
-
-```
-@InProceedings{Cao18,
-author = "Cao, Q. and Shen, L. and Xie, W. and Parkhi, O. M. and Zisserman, A.",
-title  = "VGGFace2: A dataset for recognising faces across pose and age",
-booktitle = "International Conference on Automatic Face and Gesture Recognition",
-year  = "2018"}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
 
@@ -119,3 +115,13 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@InProceedings{Cao18,
+author = "Cao, Q. and Shen, L. and Xie, W. and Parkhi, O. M. and Zisserman, A.",
+title  = "VGGFace2: A dataset for recognising faces across pose and age",
+booktitle = "International Conference on Automatic Face and Gesture Recognition",
+year  = "2018"}
+```

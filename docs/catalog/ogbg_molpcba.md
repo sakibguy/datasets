@@ -11,10 +11,6 @@
 
 # `ogbg_molpcba`
 
-Note: This dataset was added recently and is only available in our
-`tfds-nightly` package
-<span class="material-icons" title="Available only in the tfds-nightly package">nights_stay</span>.
-
 *   **Description**:
 
 'ogbg-molpcba' is a molecular dataset sampled from PubChem BioAssay. It is a
@@ -99,35 +95,6 @@ FeaturesDict({
     [`as_supervised` doc](https://www.tensorflow.org/datasets/api_docs/python/tfds/load#args)):
     `None`
 
-*   **Citation**:
-
-```
-@inproceedings{DBLP:conf/nips/HuFZDRLCL20,
-  author    = {Weihua Hu and
-               Matthias Fey and
-               Marinka Zitnik and
-               Yuxiao Dong and
-               Hongyu Ren and
-               Bowen Liu and
-               Michele Catasta and
-               Jure Leskovec},
-  editor    = {Hugo Larochelle and
-               Marc{'}Aurelio Ranzato and
-               Raia Hadsell and
-               Maria{-}Florina Balcan and
-               Hsuan{-}Tien Lin},
-  title     = {Open Graph Benchmark: Datasets for Machine Learning on Graphs},
-  booktitle = {Advances in Neural Information Processing Systems 33: Annual Conference
-               on Neural Information Processing Systems 2020, NeurIPS 2020, December
-               6-12, 2020, virtual},
-  year      = {2020},
-  url       = {https://proceedings.neurips.cc/paper/2020/hash/fb60d411a5c5b72b2e7d3527cfc84fd0-Abstract.html},
-  timestamp = {Tue, 19 Jan 2021 15:57:06 +0100},
-  biburl    = {https://dblp.org/rec/conf/nips/HuFZDRLCL20.bib},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
-}
-```
-
 *   **Figure**
     ([tfds.show_examples](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)):
     Not supported.
@@ -165,3 +132,32 @@ $(document).ready(() => {
 {% endframebox %}
 
 <!-- mdformat on -->
+
+*   **Citation**:
+
+```
+@inproceedings{DBLP:conf/nips/HuFZDRLCL20,
+  author    = {Weihua Hu and
+               Matthias Fey and
+               Marinka Zitnik and
+               Yuxiao Dong and
+               Hongyu Ren and
+               Bowen Liu and
+               Michele Catasta and
+               Jure Leskovec},
+  editor    = {Hugo Larochelle and
+               Marc{'}Aurelio Ranzato and
+               Raia Hadsell and
+               Maria{-}Florina Balcan and
+               Hsuan{-}Tien Lin},
+  title     = {Open Graph Benchmark: Datasets for Machine Learning on Graphs},
+  booktitle = {Advances in Neural Information Processing Systems 33: Annual Conference
+               on Neural Information Processing Systems 2020, NeurIPS 2020, December
+               6-12, 2020, virtual},
+  year      = {2020},
+  url       = {https://proceedings.neurips.cc/paper/2020/hash/fb60d411a5c5b72b2e7d3527cfc84fd0-Abstract.html},
+  timestamp = {Tue, 19 Jan 2021 15:57:06 +0100},
+  biburl    = {https://dblp.org/rec/conf/nips/HuFZDRLCL20.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
