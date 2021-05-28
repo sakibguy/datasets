@@ -50,21 +50,14 @@ are interested in large-scale offline RL models with memory.
 
 *   **Versions**:
 
-    *   **`1.0.0`** (default): Initial release.
+    *   `1.0.0`: Initial release.
+    *   **`1.0.1`** (default): Complete list of builder configs.
 
 *   **Download size**: `Unknown size`
-
-*   **Dataset size**: `381.09 GiB`
 
 *   **Auto-cached**
     ([documentation](https://www.tensorflow.org/datasets/performances#auto-caching)):
     No
-
-*   **Splits**:
-
-Split     | Examples
-:-------- | -------:
-`'train'` | 134,707
 
 *   **Features**:
 
@@ -123,3 +116,91 @@ FeaturesDict({
 ```
 
 ## rlu_dmlab_seekavoid_arena01/training_0 (default config)
+
+*   **Dataset size**: `381.09 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 134,707
+
+## rlu_dmlab_seekavoid_arena01/training_1
+
+*   **Dataset size**: `360.73 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 128,472
+
+## rlu_dmlab_seekavoid_arena01/training_2
+
+*   **Dataset size**: `378.54 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 133,545
+
+## rlu_dmlab_seekavoid_arena01/snapshot_0_eps_0.0
+
+*   **Dataset size**: `94.82 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 33,340
+
+## rlu_dmlab_seekavoid_arena01/snapshot_1_eps_0.0
+
+*   **Dataset size**: `94.67 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 33,340
+
+## rlu_dmlab_seekavoid_arena01/snapshot_0_eps_0.01
+
+*   **Dataset size**: `94.76 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 33,340
+
+## rlu_dmlab_seekavoid_arena01/snapshot_1_eps_0.01
+
+*   **Dataset size**: `94.64 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 33,340
+
+## rlu_dmlab_seekavoid_arena01/snapshot_0_eps_0.25
+
+*   **Dataset size**: `93.95 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 33,340
+
+## rlu_dmlab_seekavoid_arena01/snapshot_1_eps_0.25
+
+*   **Dataset size**: `93.92 GiB`
+
+*   **Splits**:
+
+Split     | Examples
+:-------- | -------:
+`'train'` | 33,340
