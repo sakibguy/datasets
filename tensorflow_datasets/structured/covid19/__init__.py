@@ -13,19 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Test for VGGFace2 dataset."""
+"""covid-19 dataset."""
 
-from tensorflow_datasets import testing
-from tensorflow_datasets.image_classification import vgg_face2
-
-
-class VggFace2Test(testing.DatasetBuilderTestCase):
-  DATASET_CLASS = vgg_face2.VggFace2
-  SPLITS = {
-      "train": 6,  # Number of fake train example
-      "test": 5,  # Number of fake test example
-  }
-
-
-if __name__ == "__main__":
-  testing.test_main()
+from tensorflow_datasets.structured.covid19.covid19 import Covid19
