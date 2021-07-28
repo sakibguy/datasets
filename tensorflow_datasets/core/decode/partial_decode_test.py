@@ -47,7 +47,7 @@ def test_extract_features():
       feature=features,
       expected_feature={},
   )
-  _assert_features_equal(result, features_lib.FeaturesDict({}))
+  testing.assert_features_equal(result, features_lib.FeaturesDict({}))
 
   # Feature spec accepted
   result = _extract_features(
@@ -62,7 +62,7 @@ def test_extract_features():
           }),
       },
   )
-  _assert_features_equal(
+  testing.assert_features_equal(
       result,
       features_lib.FeaturesDict({
           'img': features_lib.Image(shape=(256, 256, 3)),
@@ -143,12 +143,14 @@ def test_extract_features_values():
       feature=features,
       expected_feature={
           'img': True,
+          'img2': False,
+          'unknown_key': False,  # Extra keys are filtered
           'metadata': ['label'],
           'sequence': {'y'},
           'sequence_flat': True,
       },
   )
-  _assert_features_equal(
+  testing.assert_features_equal(
       result,
       features_lib.FeaturesDict({
           'img': features_lib.Image(shape=(256, 256, 3)),
@@ -166,7 +168,7 @@ def test_extract_features_values():
       feature=features,
       expected_feature={'metadata', 'sequence'},
   )
-  _assert_features_equal(
+  testing.assert_features_equal(
       result,
       features_lib.FeaturesDict({
           'metadata': {
@@ -187,17 +189,16 @@ def test_extract_features_values():
           'img': features_lib.Image(),
           'sequence': {
               'x': tf.int64,
-              'y': True,
+              'y': False,
           },
       },
   )
-  _assert_features_equal(
+  testing.assert_features_equal(
       result,
       features_lib.FeaturesDict({
           'img': features_lib.Image(shape=(256, 256, 3)),
           'sequence': features_lib.Sequence({
               'x': tf.int64,
-              'y': tf.int64,
           }),
       }),
   )
@@ -232,20 +233,3 @@ def test_partial_decode_with_skip_decode(dummy_mnist: testing.DummyMnist):
   assert ds.element_spec == {'image': tf.TensorSpec(shape=(), dtype=tf.string)}
   for ex in ds.take(2):
     assert ex['image'].dtype == tf.string
-
-
-def _assert_features_equal(features0, features1):
-  tf.nest.map_structure(_assert_feature_equal, features0, features1)
-
-
-def _assert_feature_equal(feature0, feature1):
-  """Assert that 2 features are equals."""
-  assert type(feature0) == type(feature1)  # pylint: disable=unidiomatic-typecheck
-  assert repr(feature0) == repr(feature1)
-  assert feature0.shape == feature1.shape
-  assert feature0.dtype == feature1.dtype
-  if isinstance(feature0, features_lib.FeaturesDict):
-    _assert_features_equal(dict(feature0), dict(feature1))
-  if isinstance(feature0, features_lib.Sequence):
-    assert feature0._length == feature1._length
-    _assert_features_equal(feature0.feature, feature1.feature)
