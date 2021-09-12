@@ -22,11 +22,11 @@ import html
 import importlib
 import json
 import os
-from typing import Dict, List, Type, TypeVar
+from typing import Dict, List, Type, TypeVar, Union
 
 import numpy as np
 import six
-import tensorflow.compat.v2 as tf
+import tensorflow as tf
 
 from tensorflow_datasets.core.utils import type_utils
 
@@ -34,6 +34,10 @@ Json = type_utils.Json
 Shape = type_utils.Shape
 
 T = TypeVar('T', bound='FeatureConnector')
+
+# FeatureConnector-like input accepted by `Sequence()`, `Optional()`,...
+FeatureConnectorArg = Union['FeatureConnector',
+                            Dict[str, 'FeatureConnectorArg'], tf.dtypes.DType]  # pytype: disable=not-supported-yet
 
 
 class TensorInfo(object):

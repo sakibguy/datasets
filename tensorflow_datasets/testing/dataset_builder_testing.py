@@ -29,7 +29,7 @@ from unittest import mock
 from absl import logging
 from absl.testing import parameterized
 import numpy as np
-import tensorflow.compat.v2 as tf
+import tensorflow as tf
 
 from tensorflow_datasets.core import dataset_builder
 from tensorflow_datasets.core import dataset_info
@@ -148,7 +148,6 @@ class DatasetBuilderTestCase(parameterized.TestCase,
 
   @classmethod
   def setUpClass(cls):
-    tf.enable_v2_behavior()
     super().setUpClass()
     name = cls.__name__
     # Check class has the right attributes
@@ -479,9 +478,9 @@ class DatasetBuilderTestCase(parameterized.TestCase,
   def _assertNumSamples(self, builder):
     for split_name, expected_num_examples in self.SPLITS.items():
       self.assertEqual(
-          builder.info.splits[split_name].num_examples,
-          expected_num_examples,
-      )
+          builder.info.splits[split_name].num_examples, expected_num_examples,
+          f"Number of examples in split '{split_name}' "
+          "do not match what is expected.")
     self.assertEqual(
         builder.info.splits.total_num_examples,
         sum(self.SPLITS.values()),

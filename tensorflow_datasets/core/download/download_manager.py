@@ -16,15 +16,15 @@
 """Download manager interface."""
 
 import concurrent.futures
+import dataclasses
 import hashlib
 import typing
 from typing import Any, Dict, Iterator, Optional, Tuple, Union
 import uuid
 
 from absl import logging
-import dataclasses
 import promise
-import tensorflow.compat.v2 as tf
+import tensorflow as tf
 
 from tensorflow_datasets.core import utils
 from tensorflow_datasets.core.download import checksums
@@ -765,5 +765,4 @@ def _map_promise(map_fn, all_inputs):
   """Map the function into each element and resolve the promise."""
   all_promises = tf.nest.map_structure(map_fn, all_inputs)  # Apply the function
   res = tf.nest.map_structure(lambda p: p.get(), all_promises)  # Wait promises
-
   return res
